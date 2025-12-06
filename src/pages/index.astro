@@ -8,11 +8,19 @@ import Skills from '../components/sections/Skills.astro';
 
 <BaseLayout>
 	<Hero />
-	<div class="w-full h-[1px] bg-white/10 my-24"></div>
-	<Experience />
-	<div class="container mx-auto px-6 lg:px-12">
-		<div class="w-full h-[1px] bg-white/10"></div>
+
+	<!-- Gradient Divider -->
+	<div class="w-full my-16 lg:my-24">
+		<div class="h-[1px] divider-gradient"></div>
 	</div>
+
+	<Experience />
+
+	<!-- Container Divider with accent hint -->
+	<div class="container mx-auto px-6 lg:px-12 my-8">
+		<div class="h-[1px] divider-gradient"></div>
+	</div>
+
 	<FeaturedProject />
 	<Skills />
 </BaseLayout>

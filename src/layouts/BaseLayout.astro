@@ -38,23 +38,54 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
         window.lucide.createIcons();
       }
 
-       // Intersection Observer for Reveal Animations
-       const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px"
-        };
+      // ===== SCROLL ANIMATION SYSTEM =====
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
+      // Observer for scroll-triggered animations
+      const scrollObserverOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+      };
 
-        document.querySelectorAll('.reveal-text').forEach(el => {
-            observer.observe(el);
+      const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            // Optionally unobserve after animation
+            // scrollObserver.unobserve(entry.target);
+          }
         });
+      }, scrollObserverOptions);
+
+      // Observe all animate-on-scroll elements
+      document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        scrollObserver.observe(el);
+      });
+
+      // Observer for legacy reveal-text animations
+      const revealObserverOptions = {
+        threshold: 0.1,
+        rootMargin: "0px"
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, revealObserverOptions);
+
+      document.querySelectorAll('.reveal-text').forEach(el => {
+        revealObserver.observe(el);
+      });
+
+      // Auto-stagger children in containers with .stagger-children class
+      document.querySelectorAll('.stagger-children').forEach(container => {
+        const children = container.querySelectorAll('.animate-on-scroll');
+        children.forEach((child, index) => {
+          child.classList.add(`stagger-${Math.min(index + 1, 8)}`);
+        });
+      });
     </script>
   </body>
 </html>

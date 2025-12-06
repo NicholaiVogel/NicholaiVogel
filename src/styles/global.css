@@ -10,16 +10,75 @@
   --font-sans: "Inter", sans-serif;
   --font-mono: "Space Mono", monospace;
 
+  /* Animation keyframes */
   --animate-reveal: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-left: slide-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-right: slide-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-in: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   @keyframes reveal {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-left {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-right {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }
@@ -30,20 +89,20 @@
 }
 
 @utility text-stroke {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
   color: transparent;
 }
 
 @utility skill-tag {
-  @apply text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-2 border border-slate-700 text-slate-400 hover:border-brand-accent hover:text-white transition-colors cursor-default select-none;
+  @apply text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 border border-slate-700 text-slate-400 hover:border-brand-accent hover:text-white transition-all duration-300 cursor-default select-none;
 }
 
 @utility btn-primary {
-  @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors inline-block;
+  @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 inline-block;
 }
 
 @utility btn-ghost {
-  @apply border border-slate-600 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-colors inline-block;
+  @apply border border-slate-600 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
 }
 
 @utility grid-overlay {
@@ -58,7 +117,11 @@ body {
   background-color: var(--color-brand-dark);
   color: #ffffff;
   overflow-x: hidden;
-  /* cursor: none; Handled by CustomCursor component logic, but we might want it here if we implement the custom cursor fully */
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Custom Scrollbar */
@@ -72,16 +135,67 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #334155;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-brand-accent);
 }
 
-/* Reveal Animation Class (handled by JS intersection observer usually, but basic class here) */
+/* ===== SCROLL ANIMATION SYSTEM ===== */
+
+/* Base animation classes - elements start hidden */
+.animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Slide up variant */
+.animate-on-scroll.slide-up {
+  transform: translateY(40px);
+}
+
+/* Slide left variant (comes from right) */
+.animate-on-scroll.slide-left {
+  transform: translateX(40px);
+}
+
+/* Slide right variant (comes from left) */
+.animate-on-scroll.slide-right {
+  transform: translateX(-40px);
+}
+
+/* Scale in variant */
+.animate-on-scroll.scale-in {
+  transform: scale(0.95);
+}
+
+/* Fade only */
+.animate-on-scroll.fade-in {
+  transform: none;
+}
+
+/* Active state - when element is in view */
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* Stagger delay classes for sequential animations */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+.stagger-6 { transition-delay: 0.6s; }
+.stagger-7 { transition-delay: 0.7s; }
+.stagger-8 { transition-delay: 0.8s; }
+
+/* Legacy reveal-text support */
 .reveal-text {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(30px);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -90,7 +204,14 @@ body {
   transform: translateY(0);
 }
 
-/* Cursor Styles */
+/* Delay variants for reveal-text */
+.reveal-text.delay-100 { transition-delay: 0.1s; }
+.reveal-text.delay-200 { transition-delay: 0.2s; }
+.reveal-text.delay-300 { transition-delay: 0.3s; }
+.reveal-text.delay-400 { transition-delay: 0.4s; }
+.reveal-text.delay-500 { transition-delay: 0.5s; }
+
+/* ===== CURSOR STYLES ===== */
 .cursor-dot,
 .cursor-outline {
   position: fixed;
@@ -111,8 +232,10 @@ body {
 .cursor-outline {
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(255, 184, 76, 0.5);
-  transition: width 0.2s, height 0.2s, background-color 0.2s;
+  border: 1px solid rgba(255, 77, 0, 0.5);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease;
 }
 
 /* Interactive Elements Cursor Hover Effect */
@@ -121,6 +244,59 @@ a:hover ~ .cursor-outline,
 button:hover ~ .cursor-outline {
   width: 60px;
   height: 60px;
-  background-color: rgba(255, 184, 76, 0.05);
+  background-color: rgba(255, 77, 0, 0.05);
   border-color: var(--color-brand-accent);
+}
+
+/* ===== ENHANCED TRANSITIONS ===== */
+
+/* Smooth link transitions */
+a {
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Image hover zoom - smoother */
+.hover-zoom {
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-zoom:hover,
+.group:hover .hover-zoom {
+  transform: scale(1.05);
+}
+
+/* Line expand animation */
+.line-expand {
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Border glow on hover - subtle */
+.hover-border-glow {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-border-glow:hover {
+  border-color: var(--color-brand-accent);
+  box-shadow: 0 0 20px rgba(255, 77, 0, 0.1);
+}
+
+/* Gradient divider */
+.divider-gradient {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.1) 80%,
+    transparent
+  );
+}
+
+/* Divider with accent hint */
+.divider-accent {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 77, 0, 0.2) 50%,
+    transparent
+  );
 }
