@@ -1,0 +1,61 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import GridOverlay from '../components/GridOverlay.astro';
+import Navigation from '../components/Navigation.astro';
+import CustomCursor from '../components/CustomCursor';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class="antialiased selection:bg-brand-accent selection:text-brand-dark bg-brand-dark text-white">
+    <CustomCursor client:load />
+    <GridOverlay />
+    <Navigation />
+
+    <main class="relative z-10 pt-32 lg:pt-48 pb-24 min-h-screen">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Initialize Lucide icons
+      // @ts-ignore
+      if (window.lucide) {
+        // @ts-ignore
+        window.lucide.createIcons();
+      }
+
+       // Intersection Observer for Reveal Animations
+       const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-text').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+  </body>
+</html>
+

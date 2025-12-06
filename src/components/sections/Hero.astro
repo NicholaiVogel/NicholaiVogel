@@ -1,0 +1,60 @@
+---
+---
+<section id="about" class="container mx-auto px-6 lg:px-12 min-h-[70vh] flex flex-col justify-center relative">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div class="col-span-12">
+            <p class="font-mono text-brand-accent mb-4 ml-1 reveal-text">/// TECHNICAL GENERALIST & VFX
+                SUPERVISOR</p>
+            <h1
+                class="text-6xl md:text-8xl lg:text-[10rem] font-bold text-massive uppercase leading-none tracking-tighter mb-8 text-white">
+                <span class="reveal-text block delay-100">Visual</span>
+                <span
+                    class="reveal-text block delay-200 text-transparent bg-clip-text bg-gradient-to-tr from-brand-accent to-white">Alchemist</span>
+            </h1>
+        </div>
+        <div
+            class="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-8 mt-12 border-l border-brand-accent/30 pl-8 reveal-text delay-300">
+            <p class="text-slate-400 text-lg leading-relaxed mb-8">
+                I am a problem solver who loves visual effects. With 10 years of experience creating end-to-end
+                visual content for clients like <span class="text-white font-semibold">Post Malone</span>, <span
+                    class="text-white font-semibold">Stinkfilms</span>, and <span
+                    class="text-white font-semibold">Adidas</span>. Comfortable managing teams while staying
+                knee-deep in hands-on shot work.
+            </p>
+            <div class="flex gap-4">
+                <a href="#work"
+                    class="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-colors">
+                    <span class="w-8 h-[1px] bg-brand-accent group-hover:w-12 transition-all"></span>
+                    View Selected Works
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Footer -->
+    <div
+        class="absolute bottom-0 w-full left-0 px-6 lg:px-12 pb-12 hidden md:flex justify-between items-end opacity-50">
+        <div class="font-mono text-xs text-slate-500">
+            LOC: COLORADO SPRINGS<br>
+            TIME: <span id="clock">00:00:00</span>
+        </div>
+        <div class="font-mono text-xs text-slate-500 text-right">
+            SCROLL<br>
+            ↓
+        </div>
+    </div>
+</section>
+
+<script>
+    function updateClock() {
+        const clock = document.getElementById('clock');
+        if (clock) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {hour12: false, timeZone: 'America/Denver'});
+            clock.textContent = timeString + " MST";
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
+

@@ -1,10 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
@@ -12,103 +10,49 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="container mx-auto px-6 lg:px-12">
+		<div class="mb-16">
+			<h1 class="text-6xl md:text-8xl font-bold uppercase text-white mb-4 tracking-tighter">Blog</h1>
+			<p class="text-slate-400 font-mono">/// THOUGHTS & PROCESS</p>
+		</div>
+		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+			{
+				posts.map((post) => (
+					<li class="group">
+						<a href={`/blog/${post.id}/`} class="block">
+							<div class="relative aspect-[16/9] mb-6 overflow-hidden border border-white/10 group-hover:border-brand-accent/50 transition-colors">
+								{post.data.heroImage && (
+									<Image
+										width={720}
+										height={360}
+										src={post.data.heroImage}
+										alt=""
+										class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+									/>
+								)}
+								<div class="absolute inset-0 bg-brand-dark/20 group-hover:bg-transparent transition-colors"></div>
+							</div>
+							<div class="flex flex-col">
+								<div class="flex items-center gap-2 mb-3">
+									<span class="text-xs font-mono text-brand-accent uppercase tracking-widest">
 										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+									</span>
+								</div>
+								<h4 class="text-2xl font-bold text-white uppercase mb-2 group-hover:text-brand-accent transition-colors leading-tight">
+									{post.data.title}
+								</h4>
+								<p class="text-slate-400 line-clamp-2">
+									{/* We could add a description field to blog posts or just show title */}
+								</p>
+								<span class="mt-4 text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors flex items-center gap-2">
+									Read Article <span class="block w-4 h-[1px] bg-slate-500 group-hover:bg-brand-accent transition-colors"></span>
+								</span>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</BaseLayout>
