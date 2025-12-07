@@ -22,15 +22,118 @@
         </div>
 
         <a href="/contact"
-            class="border border-slate-600 px-5 lg:px-6 py-2.5 lg:py-3 text-xs font-bold uppercase tracking-[0.15em] text-white hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300">
+            class="hidden md:block border border-slate-600 px-5 lg:px-6 py-2.5 lg:py-3 text-xs font-bold uppercase tracking-[0.15em] text-white hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300">
             Let's Talk
         </a>
     </div>
 
-    <!-- Mobile menu button (optional, for future) -->
-    <button class="md:hidden p-2 text-slate-400 hover:text-white transition-colors" aria-label="Menu">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    <!-- Mobile menu button -->
+    <button
+        id="mobile-menu-toggle"
+        class="md:hidden p-2 text-slate-400 hover:text-white transition-colors z-[60]"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+    >
+        <!-- Hamburger icon -->
+        <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <!-- Close icon (hidden by default) -->
+        <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
     </button>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div
+    id="mobile-menu"
+    class="fixed inset-0 z-40 bg-brand-dark/98 backdrop-blur-xl transform translate-x-full transition-transform duration-300 ease-out md:hidden"
+>
+    <!-- Menu Content -->
+    <div class="flex flex-col justify-center items-center h-full px-8">
+        <!-- Navigation Links -->
+        <nav class="flex flex-col items-center gap-8 mb-12">
+            <a
+                href="/"
+                class="mobile-nav-link text-3xl font-bold uppercase tracking-wider text-white hover:text-brand-accent transition-colors duration-300"
+            >
+                Home
+            </a>
+            <a
+                href="/blog"
+                class="mobile-nav-link text-3xl font-bold uppercase tracking-wider text-white hover:text-brand-accent transition-colors duration-300"
+            >
+                Blog
+            </a>
+            <a
+                href="/contact"
+                class="mobile-nav-link text-3xl font-bold uppercase tracking-wider text-white hover:text-brand-accent transition-colors duration-300"
+            >
+                Contact
+            </a>
+        </nav>
+
+        <!-- CTA Button -->
+        <a
+            href="/contact"
+            class="border border-brand-accent px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300"
+        >
+            Let's Talk
+        </a>
+
+        <!-- Decorative Elements -->
+        <div class="absolute bottom-12 left-8 right-8">
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-600 uppercase tracking-widest">
+                <span>NV / 2026</span>
+                <span>Menu</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    let isOpen = false;
+
+    function toggleMenu() {
+        isOpen = !isOpen;
+
+        if (isOpen) {
+            menu?.classList.remove('translate-x-full');
+            menu?.classList.add('translate-x-0');
+            iconOpen?.classList.add('hidden');
+            iconClose?.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            toggle?.setAttribute('aria-expanded', 'true');
+        } else {
+            menu?.classList.add('translate-x-full');
+            menu?.classList.remove('translate-x-0');
+            iconOpen?.classList.remove('hidden');
+            iconClose?.classList.add('hidden');
+            document.body.style.overflow = '';
+            toggle?.setAttribute('aria-expanded', 'false');
+        }
+    }
+
+    toggle?.addEventListener('click', toggleMenu);
+
+    // Close menu when clicking a link
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (isOpen) toggleMenu();
+        });
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen) {
+            toggleMenu();
+        }
+    });
+</script>

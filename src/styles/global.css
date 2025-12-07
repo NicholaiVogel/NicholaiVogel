@@ -120,9 +120,21 @@ body {
   overflow-x: hidden;
 }
 
-/* Smooth scroll behavior */
+/* Smooth scroll behavior - disabled on mobile for better performance */
 html {
   scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Mobile viewport height fix - uses dvh with vh fallback */
+:root {
+  --vh-full: 100vh;
+  --vh-full: 100dvh;
 }
 
 /* Custom Scrollbar */
