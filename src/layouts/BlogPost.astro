@@ -11,27 +11,41 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
 <BaseLayout title={title} description={description}>
 	<article class="container mx-auto px-6 lg:px-12 max-w-4xl">
-		<div class="mb-12">
-			<div class="mb-6">
-				{heroImage && <Image width={1020} height={510} src={heroImage} alt="" class="w-full h-auto rounded-none border border-white/10" />}
+		<!-- Back Navigation -->
+		<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 mb-12 group">
+			<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
+			Back to Blog
+		</a>
+
+		<div class="mb-12 animate-on-scroll slide-up">
+			<div class="mb-8">
+				{heroImage && <Image width={1020} height={510} src={heroImage} alt="" class="w-full h-auto border border-white/10" />}
 			</div>
-			<div class="border-b border-white/10 pb-8 mb-8">
-				<div class="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+			<div class="border-b border-white/10 pb-10 mb-10">
+				<div class="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest mb-6">
 					<FormattedDate date={pubDate} />
 					{
 						updatedDate && (
-							<div class="italic">
+							<span class="text-slate-600">
 								(Updated: <FormattedDate date={updatedDate} />)
-							</div>
+							</span>
 						)
 					}
 				</div>
-				<h1 class="text-4xl md:text-6xl font-bold text-white uppercase leading-tight mb-4">{title}</h1>
-				<p class="text-xl text-slate-400 leading-relaxed">{description}</p>
+				<h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase leading-tight tracking-tight mb-6">{title}</h1>
+				<p class="text-lg lg:text-xl text-slate-400 leading-relaxed font-light">{description}</p>
 			</div>
 		</div>
-		<div class="prose prose-invert prose-lg max-w-none text-slate-300 prose-headings:text-white prose-headings:uppercase prose-headings:font-bold prose-a:text-brand-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-brand-accent prose-code:bg-brand-accent/10 prose-code:px-1 prose-code:rounded-sm prose-pre:bg-brand-panel prose-pre:border prose-pre:border-white/10">
+		<div class="prose-custom animate-on-scroll slide-up stagger-1">
 			<slot />
+		</div>
+
+		<!-- Bottom Navigation -->
+		<div class="mt-20 pt-10 border-t border-white/10">
+			<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
+				<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
+				Back to All Posts
+			</a>
 		</div>
 	</article>
 </BaseLayout>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-brand-dark: #0B0D11;
@@ -299,4 +300,149 @@ a {
     rgba(255, 77, 0, 0.2) 50%,
     transparent
   );
+}
+
+/* ===== PROSE / MARKDOWN STYLES ===== */
+.prose-custom {
+  color: #94A3B8;
+  line-height: 1.8;
+}
+
+.prose-custom h2 {
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose-custom h3 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-custom h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom p {
+  margin-bottom: 1.5rem;
+}
+
+.prose-custom a {
+  color: var(--color-brand-accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.prose-custom a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.prose-custom strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.prose-custom em {
+  color: #CBD5E1;
+  font-style: italic;
+}
+
+.prose-custom ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.prose-custom ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom ul li::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: var(--color-brand-accent);
+}
+
+.prose-custom ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.prose-custom ol li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.prose-custom ol li::marker {
+  color: var(--color-brand-accent);
+  font-weight: 600;
+}
+
+.prose-custom blockquote {
+  border-left: 3px solid var(--color-brand-accent);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: #CBD5E1;
+}
+
+.prose-custom code {
+  color: var(--color-brand-accent);
+  background-color: rgba(255, 77, 0, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.prose-custom pre {
+  background-color: var(--color-brand-panel);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.prose-custom pre code {
+  background: none;
+  padding: 0;
+  color: #CBD5E1;
+}
+
+.prose-custom hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent
+  );
+  margin: 3rem 0;
+}
+
+.prose-custom img {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 2rem 0;
 }

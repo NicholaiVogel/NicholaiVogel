@@ -28,21 +28,48 @@
     </div>
 
     <!-- Hero Footer -->
-    <div class="absolute bottom-8 w-full left-0 px-6 lg:px-12 hidden md:flex justify-between items-end opacity-60 animate-on-scroll fade-in stagger-5">
-        <div class="font-mono text-xs text-slate-500 tracking-wide">
+    <div class="absolute bottom-8 w-full left-0 px-6 lg:px-12 hidden md:flex justify-between items-end animate-on-scroll fade-in stagger-5">
+        <div class="font-mono text-xs text-slate-500 tracking-wide opacity-60">
             <span class="block text-slate-600 mb-1">LOCATION</span>
             COLORADO SPRINGS, CO<br>
             <span id="clock" class="text-slate-400">00:00:00</span>
         </div>
-        <div class="font-mono text-xs text-slate-500 text-right tracking-wide">
+
+        <!-- Scroll Indicator with animation -->
+        <div id="scroll-indicator" class="font-mono text-xs text-slate-500 text-right tracking-wide transition-all duration-500">
             <span class="block text-slate-600 mb-1">EXPLORE</span>
             <span class="inline-flex flex-col items-center">
                 SCROLL
-                <span class="block mt-2 w-[1px] h-6 bg-gradient-to-b from-slate-500 to-transparent"></span>
+                <span class="scroll-arrow block mt-2 w-[1px] h-8 bg-gradient-to-b from-brand-accent to-transparent"></span>
             </span>
         </div>
     </div>
 </section>
+
+<style>
+    /* Scroll arrow bounce animation */
+    .scroll-arrow {
+        animation: scrollBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+        0%, 100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(8px);
+            opacity: 0.6;
+        }
+    }
+
+    /* Fade out on scroll */
+    #scroll-indicator.scrolled {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+    }
+</style>
 
 <script>
     function updateClock() {
@@ -55,4 +82,28 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    // Scroll-driven fade for scroll indicator
+    const scrollIndicator = document.getElementById('scroll-indicator');
+
+    function handleScroll() {
+        if (scrollIndicator) {
+            const scrollY = window.scrollY;
+            // Start fading at 50px, fully hidden at 200px
+            const opacity = Math.max(0, 1 - (scrollY / 150));
+            const translateY = Math.min(20, scrollY / 10);
+
+            scrollIndicator.style.opacity = opacity.toString();
+            scrollIndicator.style.transform = `translateY(${translateY}px)`;
+
+            if (scrollY > 50) {
+                scrollIndicator.classList.add('scrolled');
+            } else {
+                scrollIndicator.classList.remove('scrolled');
+            }
+        }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
 </script>

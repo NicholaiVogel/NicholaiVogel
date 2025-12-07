@@ -3,10 +3,13 @@
 <section id="experience" class="container mx-auto px-6 lg:px-12 py-32">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         <div class="lg:col-span-4 animate-on-scroll slide-right">
-            <h2 class="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-2 text-stroke">Experience</h2>
+            <!-- Experience heading with scroll-driven fill effect -->
+            <h2 class="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-2 relative">
+                <span class="text-stroke-fill" data-text="Experience">Experience</span>
+            </h2>
             <h2 class="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-10">History</h2>
             <p class="text-slate-400 text-base leading-relaxed mb-10 max-w-sm font-light">
-                From founding my own VFX house to supervising global campaigns. I bridge the gap between
+                Running my own VFX studio while taking on select freelance projects. I bridge the gap between
                 creative vision and technical execution.
             </p>
             <a href="https://biohazardvfx.com" target="_blank"
@@ -20,17 +23,17 @@
             <!-- Vertical line -->
             <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-brand-accent via-slate-700/50 to-transparent"></div>
 
-            <!-- Item 1 -->
+            <!-- Item 1: Biohazard VFX -->
             <div class="pl-10 lg:pl-14 mb-20 relative animate-on-scroll slide-up stagger-1">
                 <div class="absolute left-[-5px] top-2 w-3 h-3 bg-brand-dark border-2 border-brand-accent rounded-full"></div>
                 <div class="flex flex-col md:flex-row md:items-baseline gap-3 md:gap-4 mb-5">
                     <h3 class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">Biohazard VFX</h3>
-                    <span class="font-mono text-[10px] text-brand-accent bg-brand-accent/10 px-3 py-1.5 tracking-wide">FOUNDER / VFX SUPERVISOR</span>
-                    <span class="font-mono text-xs text-slate-500 md:ml-auto">MAR 2022 — OCT 2025</span>
+                    <span class="font-mono text-[10px] text-brand-accent bg-brand-accent/10 px-3 py-1.5 tracking-wide">FOUNDER & OWNER</span>
+                    <span class="font-mono text-xs text-slate-500 md:ml-auto">2022 — PRESENT</span>
                 </div>
                 <p class="text-slate-400 mb-8 leading-relaxed font-light">
-                    Founded and led a VFX studio specializing in high-end commercial and music video work for
-                    Post Malone, ENHYPEN, and Nike. Architected a custom pipeline combining cloud and
+                    Founded and continue to lead a VFX studio specializing in high-end commercial and music video work.
+                    Delivered projects for Post Malone, ENHYPEN, and Nike. Architected a custom pipeline combining cloud and
                     self-hosted infrastructure.
                 </p>
                 <ul class="space-y-3">
@@ -47,7 +50,7 @@
                 </ul>
             </div>
 
-            <!-- Item 2 -->
+            <!-- Item 2: Stinkfilms / G-Star -->
             <div class="pl-10 lg:pl-14 mb-20 relative animate-on-scroll slide-up stagger-2">
                 <div class="absolute left-[-5px] top-2 w-3 h-3 bg-slate-700 rounded-full transition-colors duration-300"></div>
                 <div class="flex flex-col md:flex-row md:items-baseline gap-3 md:gap-4 mb-5">
@@ -59,7 +62,7 @@
                     Led Biohazard VFX team (60+ artists) alongside director Felix Brady to create a brand film
                     for G-Star Raw.
                 </p>
-                <div class="border border-white/10 bg-white/[0.02] p-6 lg:p-8 backdrop-blur-sm hover:border-brand-accent/30 transition-all duration-500 cursor-pointer group">
+                <a href="/blog/gstar-raw-olympics/" class="block border border-white/10 bg-white/[0.02] p-6 lg:p-8 backdrop-blur-sm hover:border-brand-accent/30 transition-all duration-500 cursor-pointer group">
                     <h4 class="text-sm font-bold uppercase text-white mb-3 flex justify-between items-center tracking-wide">
                         Project: G-Star Raw Olympics Campaign
                         <i data-lucide="arrow-right"
@@ -68,26 +71,73 @@
                     <p class="text-sm text-slate-400 mb-5 leading-relaxed font-light">
                         Managed full CG environments in Blender/Houdini and integrated AI/ML workflows (Stable Diffusion reference gen, Copycat cleanup).
                     </p>
-                    <a href="https://stinkfilms.com"
-                        class="text-[10px] font-bold text-brand-accent uppercase tracking-widest hover:text-white transition-colors duration-300">
-                        View Case Study
-                    </a>
-                </div>
+                    <span class="text-[10px] font-bold text-brand-accent uppercase tracking-widest group-hover:text-white transition-colors duration-300">
+                        Read Case Study
+                    </span>
+                </a>
             </div>
 
-            <!-- Item 3 -->
+            <!-- Item 3: Freelance -->
             <div class="pl-10 lg:pl-14 relative animate-on-scroll slide-up stagger-3">
                 <div class="absolute left-[-5px] top-2 w-3 h-3 bg-slate-700 rounded-full"></div>
                 <div class="flex flex-col md:flex-row md:items-baseline gap-3 md:gap-4 mb-5">
                     <h3 class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">Freelance</h3>
-                    <span class="font-mono text-[10px] text-slate-400 border border-slate-700 px-3 py-1.5 tracking-wide">2D/3D ARTIST</span>
-                    <span class="font-mono text-xs text-slate-500 md:ml-auto">2015 — PRESENT</span>
+                    <span class="font-mono text-[10px] text-slate-400 border border-slate-700 px-3 py-1.5 tracking-wide">SELECT PROJECTS</span>
+                    <span class="font-mono text-xs text-slate-500 md:ml-auto">ONGOING</span>
                 </div>
                 <p class="text-slate-400 leading-relaxed font-light">
-                    Compositor for Abyss Digital and major labels (Atlantic, Interscope). Clients: David
-                    Kushner, Opium, Lil Durk, Don Toliver.
+                    Taking on select freelance compositing and 3D work alongside studio operations.
+                    Previous clients include Abyss Digital and major labels (Atlantic, Interscope) —
+                    David Kushner, Opium, Lil Durk, Don Toliver.
                 </p>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* Text stroke fill effect */
+    .text-stroke-fill {
+        position: relative;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+        color: transparent;
+    }
+
+    .text-stroke-fill::before {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: var(--color-brand-accent);
+        -webkit-text-stroke: 0;
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .text-stroke-fill.filled::before {
+        clip-path: inset(0 0 0 0);
+    }
+</style>
+
+<script>
+    // Scroll-driven fill effect for Experience heading
+    const experienceHeading = document.querySelector('.text-stroke-fill');
+
+    const fillObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add a slight delay for better effect
+                setTimeout(() => {
+                    entry.target.classList.add('filled');
+                }, 200);
+            }
+        });
+    }, {
+        threshold: 0.5,
+        rootMargin: "0px 0px -100px 0px"
+    });
+
+    if (experienceHeading) {
+        fillObserver.observe(experienceHeading);
+    }
+</script>
