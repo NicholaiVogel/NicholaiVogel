@@ -1,112 +1,287 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE } from '../consts';
+
+const pageTitle = `Contact | ${SITE_TITLE}`;
 ---
 
-<BaseLayout title={`Contact | ${SITE_TITLE}`} description="Get in touch for collaboration or inquiries.">
-	<section class="container mx-auto px-6 lg:px-12">
-		<div class="mb-20 animate-on-scroll slide-up">
-			<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase text-white mb-5 tracking-tighter">
-				Let's <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-orange-400 to-white">Talk</span>
-			</h1>
-			<p class="text-slate-500 font-mono text-sm tracking-wide">/// GET IN TOUCH</p>
-		</div>
+<BaseLayout title={pageTitle} description="Get in touch for collaboration or inquiries." usePadding={false}>
 
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-			<!-- Contact Form -->
-			<div class="lg:col-span-7 animate-on-scroll slide-up stagger-1">
-				<form class="space-y-8" action="#" method="POST">
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div class="space-y-3">
-							<label for="name" class="text-xs font-bold uppercase tracking-widest text-slate-500 block">Name</label>
-							<input
-								type="text"
-								id="name"
-								name="name"
-								placeholder="Your Name"
-								class="w-full bg-white/[0.03] border border-slate-700 text-white px-5 py-4 focus:border-brand-accent focus:bg-white/[0.05] focus:outline-none transition-all duration-300 placeholder:text-slate-600"
-								required
-							/>
-						</div>
-						<div class="space-y-3">
-							<label for="email" class="text-xs font-bold uppercase tracking-widest text-slate-500 block">Email</label>
-							<input
-								type="email"
-								id="email"
-								name="email"
-								placeholder="name@example.com"
-								class="w-full bg-white/[0.03] border border-slate-700 text-white px-5 py-4 focus:border-brand-accent focus:bg-white/[0.05] focus:outline-none transition-all duration-300 placeholder:text-slate-600"
-								required
-							/>
-						</div>
-					</div>
+    <!-- Background Grid (Optional, low opacity) -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="w-full h-full grid grid-cols-12 gap-4 opacity-[0.03]">
+            {Array.from({ length: 12 }).map((_) => (
+                <div class="h-full border-r border-white"></div>
+            ))}
+        </div>
+    </div>
 
-					<div class="space-y-3">
-						<label for="subject" class="text-xs font-bold uppercase tracking-widest text-slate-500 block">Subject</label>
-						<select
-							id="subject"
-							name="subject"
-							class="w-full bg-white/[0.03] border border-slate-700 text-white px-5 py-4 focus:border-brand-accent focus:bg-white/[0.05] focus:outline-none transition-all duration-300 appearance-none cursor-pointer"
-						>
-							<option value="general" class="bg-brand-dark">General Inquiry</option>
-							<option value="project" class="bg-brand-dark">Project Collaboration</option>
-							<option value="freelance" class="bg-brand-dark">Freelance Availability</option>
-							<option value="other" class="bg-brand-dark">Other</option>
-						</select>
-					</div>
+    <section class="relative z-10 min-h-screen flex flex-col pt-32 lg:pt-48 pb-20 px-6 lg:px-12">
 
-					<div class="space-y-3">
-						<label for="message" class="text-xs font-bold uppercase tracking-widest text-slate-500 block">Message</label>
-						<textarea
-							id="message"
-							name="message"
-							rows="6"
-							placeholder="Tell me about your project..."
-							class="w-full bg-white/[0.03] border border-slate-700 text-white px-5 py-4 focus:border-brand-accent focus:bg-white/[0.05] focus:outline-none transition-all duration-300 placeholder:text-slate-600 resize-none"
-							required
-						></textarea>
-					</div>
+        <!-- Page Header -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-white/10 pb-12">
+            <div class="lg:col-span-8">
+                <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white mb-8">
+                    <span class="block animate-on-scroll slide-up">Project</span>
+                    <span class="block text-brand-accent animate-on-scroll slide-up stagger-1">Inquiry</span>
+                </h1>
+            </div>
+            <div class="lg:col-span-4 flex flex-col justify-end">
+                <p class="font-mono text-sm text-slate-400 leading-relaxed mb-8 border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+                    Available for freelance commissions and studio collaborations.
+                    Currently booking Q3 2026.
+                </p>
+            </div>
+        </div>
 
-					<div class="pt-6">
-						<button type="submit" class="btn-primary group relative overflow-hidden">
-							<span class="relative z-10">Send Message</span>
-							<div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-						</button>
-					</div>
-				</form>
-			</div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 flex-grow">
 
-			<!-- Sidebar Info -->
-			<div class="lg:col-span-5 space-y-12 animate-on-scroll slide-left stagger-2">
-				<div>
-					<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6">Contact Info</h3>
-					<a href="mailto:nicholai@nicholai.work" class="text-lg lg:text-xl text-white hover:text-brand-accent transition-colors duration-300 font-mono block">
-						nicholai@nicholai.work
-					</a>
-				</div>
+            <!-- Left Column: Contact Form -->
+            <div class="lg:col-span-7 animate-on-scroll slide-up stagger-3">
+                <div class="mb-8 flex items-center gap-3">
+                    <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
+                    <span class="font-mono text-xs text-brand-accent uppercase tracking-widest">Transmission Uplink</span>
+                </div>
 
-				<div>
-					<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6">Location</h3>
-					<p class="text-base lg:text-lg text-slate-300 leading-relaxed font-light">
-						Colorado Springs, CO<br/>
-						Mountain Standard Time (MST)
-					</p>
-				</div>
+                <form class="space-y-12" action="#" method="POST">
+                    <div class="group relative">
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
+                            placeholder="Name"
+                            required
+                        />
+                        <label for="name" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                            /// Identification Name
+                        </label>
+                    </div>
 
-				<div class="pt-10 border-t border-white/10">
-					<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6">Availability</h3>
-					<div class="flex items-center gap-3 mb-4">
-						<span class="relative flex h-2.5 w-2.5">
-						  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
-						  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-accent"></span>
-						</span>
-						<span class="text-sm font-bold text-brand-accent uppercase tracking-wide">Open to opportunities</span>
-					</div>
-					<p class="text-slate-400 text-sm leading-relaxed font-light">
-						Currently accepting new projects for Q3 2026. Reach out to schedule a discovery call.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
+                    <div class="group relative">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
+                            placeholder="Email"
+                            required
+                        />
+                        <label for="email" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                            /// Return Address
+                        </label>
+                    </div>
+
+                    <!-- Custom Dropdown -->
+                    <div class="group relative" id="custom-select">
+                        <input type="hidden" name="subject" id="subject-input" required>
+
+                        <button type="button" id="select-trigger" class="block w-full text-left bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 flex justify-between items-center group-hover:border-white/40">
+                            <span id="select-value" class="text-transparent">Select</span> <!-- Hidden placeholder text to keep height -->
+                            <div class="text-brand-accent transform transition-transform duration-300" id="select-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </button>
+
+                        <label id="select-label" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 pointer-events-none">
+                            /// Subject Protocol
+                        </label>
+
+                        <!-- Dropdown Menu -->
+                        <div id="select-options" class="absolute left-0 top-full w-full bg-brand-dark border border-white/20 shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2">
+                            <div class="p-1">
+                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="project">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
+                                    New Project Commission
+                                </div>
+                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="collab">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
+                                    Studio Collaboration
+                                </div>
+                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="press">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
+                                    Press / Media
+                                </div>
+                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="other">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
+                                    Other Inquiry
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="4"
+                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer resize-none"
+                            placeholder="Message"
+                            required
+                        ></textarea>
+                        <label for="message" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                            /// Message Data
+                        </label>
+                    </div>
+
+                    <div class="pt-8">
+                        <button type="submit" class="group relative inline-flex items-center justify-center gap-4 px-8 py-4 bg-transparent border border-white/20 hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300">
+                            <span class="font-mono text-xs font-bold uppercase tracking-widest text-white group-hover:text-brand-accent transition-colors">Transmit Message</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-brand-accent group-hover:translate-x-1 transition-all"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Column: System Status / Info -->
+            <div class="lg:col-span-5 space-y-16 animate-on-scroll slide-left stagger-4">
+
+                <!-- Data Block 1 -->
+                <div class="relative pl-6 border-l border-white/10">
+                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Direct Link</h3>
+                    <a href="mailto:nicholai@nicholai.work" class="text-2xl md:text-3xl font-bold text-white hover:text-brand-accent transition-colors break-all">
+                        nicholai@nicholai.work
+                    </a>
+                </div>
+
+                <!-- Data Block 2 -->
+                <div class="relative pl-6 border-l border-white/10">
+                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Coordinates</h3>
+                    <p class="text-xl text-white font-light">
+                        Colorado Springs, CO<br>
+                        <span class="text-slate-500 text-base">United States</span>
+                    </p>
+                    <div class="mt-4 font-mono text-xs text-brand-accent">
+                        38.8339° N, 104.8214° W
+                    </div>
+                </div>
+
+                <!-- Data Block 3 -->
+                <div class="relative pl-6 border-l border-white/10">
+                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Social Feed</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#" class="flex items-center gap-4 group">
+                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">Instagram</span>
+                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center gap-4 group">
+                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">LinkedIn</span>
+                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center gap-4 group">
+                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">Vimeo</span>
+                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
 </BaseLayout>
+
+<style>
+    /* Custom autofill styles to match dark theme */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus {
+        -webkit-text-fill-color: white;
+        -webkit-box-shadow: 0 0 0px 1000px #0B0D11 inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* Label active state */
+    .label-active {
+        top: -1.5rem !important;
+        font-size: 0.75rem !important;
+        color: #94A3B8 !important;
+    }
+
+    /* Dropdown open state */
+    .dropdown-open #select-arrow {
+        transform: rotate(180deg);
+        color: white;
+    }
+</style>
+
+<script>
+    const selectContainer = document.getElementById('custom-select');
+    const selectTrigger = document.getElementById('select-trigger');
+    const selectOptions = document.getElementById('select-options');
+    const selectValue = document.getElementById('select-value');
+    const hiddenInput = document.getElementById('subject-input') as HTMLInputElement;
+    const selectLabel = document.getElementById('select-label');
+    const options = document.querySelectorAll('.option');
+    const arrow = document.getElementById('select-arrow');
+
+    if (selectTrigger && selectOptions && selectValue && hiddenInput && selectLabel) {
+
+        // Toggle Dropdown
+        selectTrigger.addEventListener('click', () => {
+            const isOpen = !selectOptions.classList.contains('hidden');
+
+            if (isOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        });
+
+        // Option Selection
+        options.forEach(option => {
+            option.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLElement;
+                const value = target.dataset.value || '';
+                const text = target.innerText;
+
+                // Update UI
+                selectValue.textContent = text;
+                selectValue.classList.remove('text-transparent');
+                selectValue.classList.add('text-white');
+
+                // Update Data
+                hiddenInput.value = value;
+
+                // Update Label Style
+                selectLabel.classList.add('label-active');
+                selectLabel.classList.add('text-brand-accent'); // Highlight when selected
+
+                closeDropdown();
+            });
+        });
+
+        // Close clicking outside
+        document.addEventListener('click', (e) => {
+            if (selectContainer && !selectContainer.contains(e.target as Node)) {
+                closeDropdown();
+            }
+        });
+
+        function openDropdown() {
+            selectOptions?.classList.remove('hidden');
+            // Small delay for opacity transition
+            requestAnimationFrame(() => {
+                selectOptions?.classList.remove('opacity-0', 'translate-y-2');
+            });
+            selectContainer?.classList.add('dropdown-open');
+        }
+
+        function closeDropdown() {
+            selectOptions?.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => {
+                selectOptions?.classList.add('hidden');
+            }, 200);
+            selectContainer?.classList.remove('dropdown-open');
+        }
+    }
+</script>

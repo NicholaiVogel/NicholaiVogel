@@ -1,54 +1,100 @@
 ---
 ---
-<section id="work" class="py-32">
-    <div class="container mx-auto px-6 lg:px-12 mb-14 animate-on-scroll slide-up">
-        <span class="text-xs font-mono text-brand-accent mb-4 block tracking-wide">/// HIGHLIGHT</span>
-        <h2 class="text-4xl md:text-6xl lg:text-7xl font-bold uppercase text-white tracking-tight">
-            G-Star Raw <span class="text-stroke">Olympics</span>
-        </h2>
+<section id="work" class="relative overflow-hidden group min-h-screen flex flex-col cursor-pointer">
+    <!-- Main Link Overlay -->
+    <a href="/blog/gstar-raw-olympics/" class="absolute inset-0 z-30" aria-label="View G-Star Raw Olympics Case Study"></a>
+
+    <!-- Video Background -->
+    <div class="absolute inset-0 z-0">
+        <video
+            autoplay
+            loop
+            muted
+            playsinline
+            class="w-full h-full object-cover opacity-70 transition-opacity duration-700 group-hover:opacity-100"
+        >
+            <source src="/media/FF_PUFF_GStar_DC_v08_4608x3164.mp4" type="video/mp4" />
+        </video>
+        <!-- Cinematic Letterboxing / Gradient Vignette -->
+        <div class="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-transparent to-brand-dark/80 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-dark/40 via-transparent to-brand-dark/40 pointer-events-none"></div>
+
+        <!-- Subtle Grid Overlay -->
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none opacity-30"></div>
     </div>
 
-    <!-- Full Width Project Card -->
-    <div class="w-full h-[75vh] lg:h-[80vh] relative group overflow-hidden border-y border-white/10 animate-on-scroll scale-in">
-        <!-- Abstract Background representing the project -->
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-[1.5s] ease-out group-hover:scale-105"></div>
-        <div class="absolute inset-0 bg-brand-dark/75 mix-blend-multiply transition-colors duration-700 group-hover:bg-brand-dark/60"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/30 to-transparent opacity-95"></div>
+    <!-- Main Content Container - Spaced to frame the video -->
+    <div class="container mx-auto px-6 lg:px-12 relative z-10 flex-1 flex flex-col justify-between py-12 lg:py-16 pointer-events-none">
 
-        <!-- Grid Overlay on image -->
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdHRlcm4gaWQ9ImIiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9InVybCgjYikiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkiLz48L3N2Zz4=')] opacity-20"></div>
-
-        <div class="absolute bottom-0 left-0 w-full p-6 lg:p-14 flex flex-col md:flex-row items-end justify-between gap-8">
-            <div class="max-w-2xl transform translate-y-6 group-hover:translate-y-0 transition-transform duration-700 ease-out">
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="bg-brand-accent text-brand-dark text-[10px] font-bold uppercase px-3 py-1.5 tracking-wide">VFX Supervision</span>
-                    <span class="border border-white/30 text-white text-[10px] font-bold uppercase px-3 py-1.5 tracking-wide transition-colors duration-300 hover:border-white/50">AI/ML</span>
-                    <span class="border border-white/30 text-white text-[10px] font-bold uppercase px-3 py-1.5 tracking-wide transition-colors duration-300 hover:border-white/50">Houdini</span>
-                </div>
-                <p class="text-lg md:text-xl lg:text-2xl text-white font-normal mb-8 leading-relaxed">
-                    Managed full CG environment builds, procedural city generation, and integrated AI-generated
-                    normal maps for relighting in Nuke.
-                </p>
-                <div class="flex flex-wrap items-center gap-6">
-                    <a href="/blog/gstar-raw-olympics/"
-                        class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-all duration-300 group/link">
-                        Read Case Study
-                        <i data-lucide="arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1"></i>
-                    </a>
-                    <a href="https://f.io/7ijf23Wm" target="_blank" rel="noopener"
-                        class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-all duration-300 group/link">
-                        Watch Making Of
-                        <i data-lucide="play-circle" class="w-4 h-4 transition-transform duration-300 group-hover/link:scale-110"></i>
-                    </a>
-                </div>
+        <!-- TOP HUD: Telemetry Data -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/20 pt-6 animate-on-scroll slide-up">
+            <div>
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Role</span>
+                <span class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">VFX Sup</span>
             </div>
-
-            <div class="hidden md:block text-right opacity-80 group-hover:opacity-100 transition-opacity duration-500">
-                <span class="block text-[10px] uppercase text-slate-500 tracking-widest mb-2">Year</span>
-                <span class="block text-2xl font-bold text-white mb-6 tracking-tight">2024</span>
-                <span class="block text-[10px] uppercase text-slate-500 tracking-widest mb-2">Client</span>
-                <span class="block text-xl font-bold text-white tracking-tight">Stinkfilms</span>
+            <div>
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Client</span>
+                <span class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">Stink</span>
+            </div>
+            <div>
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Year</span>
+                <span class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">2024</span>
+            </div>
+            <div class="text-right md:text-left">
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Region</span>
+                <span class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">Global</span>
             </div>
         </div>
+
+        <!-- CENTER AREA: Clear for Video -->
+        <div class="flex-1 relative">
+            <!-- Side Vertical Title (Optional, unobtrusive) -->
+            <div class="hidden lg:block absolute -left-8 top-1/2 -translate-y-1/2 origin-left -rotate-90">
+                 <h2 class="text-6xl font-bold text-transparent text-stroke uppercase tracking-tighter opacity-20 select-none">
+                    G-Star Raw
+                </h2>
+            </div>
+        </div>
+
+        <!-- BOTTOM HUD: Project Details & Stats -->
+        <div class="border-b border-white/20 pb-6 animate-on-scroll slide-up stagger-1">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+
+                <!-- Title & Description -->
+                <div class="lg:col-span-7">
+                    <h2 class="text-5xl md:text-7xl font-bold uppercase text-white mb-4 tracking-tighter leading-none">
+                        G-Star <span class="text-transparent text-stroke">Olympics</span>
+                    </h2>
+                    <p class="text-slate-300 font-light max-w-lg text-sm md:text-base leading-relaxed">
+                        Full CG environment production for the 2024 Olympic Campaign.
+                        Orchestrated procedural city generation and AI-enhanced lighting workflows.
+                    </p>
+                </div>
+
+                <!-- Technical Stats (Mini-Table) -->
+                <div class="lg:col-span-5">
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 font-mono text-xs">
+                        <div class="border-l border-brand-accent/30 pl-3">
+                            <span class="block text-slate-500 text-[10px] uppercase mb-1">Shot Count</span>
+                            <span class="block text-white font-bold">12 Sequences</span>
+                        </div>
+                        <div class="border-l border-brand-accent/30 pl-3">
+                            <span class="block text-slate-500 text-[10px] uppercase mb-1">Resolution</span>
+                            <span class="block text-white font-bold">4K DCI</span>
+                        </div>
+                        <div class="border-l border-brand-accent/30 pl-3">
+                            <span class="block text-slate-500 text-[10px] uppercase mb-1">Pipeline</span>
+                            <span class="block text-white font-bold">Houdini / Solaris</span>
+                        </div>
+                        <div class="border-l border-brand-accent/30 pl-3">
+                            <span class="block text-slate-500 text-[10px] uppercase mb-1">Render</span>
+                            <span class="block text-white font-bold">Karma XPU</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </section>

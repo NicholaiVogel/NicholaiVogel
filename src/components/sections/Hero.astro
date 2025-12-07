@@ -1,77 +1,100 @@
 ---
 ---
-<section id="about" class="container mx-auto px-6 lg:px-12 min-h-[80vh] flex flex-col justify-center relative pb-24">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
-        <div class="col-span-12">
-            <p class="font-mono text-brand-accent text-sm mb-6 tracking-wide animate-on-scroll fade-in">
-                /// TECHNICAL GENERALIST & VFX SUPERVISOR
-            </p>
-            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-extrabold text-massive uppercase leading-none tracking-tighter mb-10 text-white">
-                <span class="animate-on-scroll slide-up block stagger-1">Visual</span>
-                <span class="animate-on-scroll slide-up block stagger-2 text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-orange-400 to-white">Alchemist</span>
-            </h1>
-        </div>
-        <div class="col-span-12 md:col-span-7 lg:col-span-5 lg:col-start-8 mt-8 lg:mt-4 border-l-2 border-brand-accent/40 pl-8 animate-on-scroll slide-left stagger-3">
-            <p class="text-slate-400 text-base lg:text-lg leading-relaxed mb-10 font-light">
-                I am a problem solver who loves visual effects. With 10 years of experience creating end-to-end
-                visual content for clients like <span class="text-white font-medium">Post Malone</span>, <span class="text-white font-medium">Stinkfilms</span>, and <span class="text-white font-medium">Adidas</span>. Comfortable managing teams while staying
-                knee-deep in hands-on shot work.
-            </p>
-            <div class="flex gap-6">
-                <a href="#work"
-                    class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-all duration-300">
-                    <span class="w-10 h-[2px] bg-brand-accent group-hover:w-16 transition-all duration-500 ease-out"></span>
-                    View Selected Works
-                </a>
-            </div>
+<section id="hero" class="relative w-full h-screen overflow-hidden bg-brand-dark">
+    <!-- Background Image (Portrait) -->
+    <div class="absolute top-0 right-0 w-full md:w-1/2 h-full z-0">
+        <div class="relative w-full h-full">
+            <img
+                src="/media/nicholai-closeup-portrait.JPEG"
+                alt="Nicholai Portrait"
+                class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity md:opacity-0 transition-opacity duration-[2000ms] ease-out delay-500 intro-element"
+                id="hero-portrait"
+            />
+            <div class="absolute inset-0 bg-gradient-to-l from-transparent via-brand-dark/50 to-brand-dark"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
         </div>
     </div>
 
-    <!-- Hero Footer -->
-    <div class="absolute bottom-8 w-full left-0 px-6 lg:px-12 hidden md:flex justify-between items-end animate-on-scroll fade-in stagger-5">
-        <div class="font-mono text-xs text-slate-500 tracking-wide opacity-60">
-            <span class="block text-slate-600 mb-1">LOCATION</span>
-            COLORADO SPRINGS, CO<br>
-            <span id="clock" class="text-slate-400">00:00:00</span>
+    <!-- The 100 Squares Grid Overlay -->
+    <div id="grid-container" class="absolute inset-0 z-10 w-full h-full grid grid-cols-10 grid-rows-10 pointer-events-none">
+        {Array.from({ length: 100 }).map((_, i) => (
+            <div class="grid-cell w-full h-full border border-white/5 opacity-0 transition-all duration-500 ease-out" data-index={i}></div>
+        ))}
+    </div>
+
+    <!-- The Content -->
+    <!-- Adjusted pt to clear fixed nav since BaseLayout padding is removed -->
+    <div class="absolute inset-0 z-20 flex flex-col justify-between p-6 md:p-12 lg:p-16 pt-32 lg:pt-40 pointer-events-auto">
+
+        <!-- Top Metadata -->
+        <div class="flex justify-between items-start w-full intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
+            <div class="font-mono text-xs uppercase tracking-widest text-slate-500">
+                Portfolio 2026
+            </div>
+            <div class="font-mono text-xs text-slate-500 text-right tracking-wide">
+                <span class="block text-slate-600 mb-1 uppercase tracking-widest">Location</span>
+                Colorado Springs, CO<br>
+                <span id="clock" class="text-brand-accent">00:00:00 MST</span>
+            </div>
         </div>
 
-        <!-- Scroll Indicator with animation -->
-        <div id="scroll-indicator" class="font-mono text-xs text-slate-500 text-right tracking-wide transition-all duration-500">
-            <span class="block text-slate-600 mb-1">EXPLORE</span>
-            <span class="inline-flex flex-col items-center">
-                SCROLL
-                <span class="scroll-arrow block mt-2 w-[1px] h-8 bg-gradient-to-b from-brand-accent to-transparent"></span>
-            </span>
+        <!-- Main Heading & Description -->
+        <div class="max-w-5xl">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.9] font-bold text-white mix-blend-overlay opacity-90 mb-8 perspective-text">
+                <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">VISUAL</span>
+                <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">ALCHEMIST</span>
+            </h1>
+
+            <p class="font-mono text-sm md:text-base max-w-lg text-slate-400 font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
+                I am a problem solver who loves visual effects. Creating end-to-end visual content for clients like Post Malone, Stinkfilms, and Adidas. Bridging creative vision with technical execution.
+            </p>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="flex justify-between items-end w-full intro-element opacity-0 transition-all duration-1000 ease-out delay-700">
+            <a href="#experience" class="flex items-center justify-center w-12 h-12 border border-white/10 rounded-full text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-bounce">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </a>
+
+            <div class="text-right font-mono text-xs text-slate-500 tracking-widest">
+                SCROLL TO EXPLORE
+            </div>
         </div>
     </div>
 </section>
 
 <style>
-    /* Scroll arrow bounce animation */
-    .scroll-arrow {
-        animation: scrollBounce 2s ease-in-out infinite;
+    .grid-cell.active {
+        background-color: var(--color-brand-accent);
+        opacity: 0.15;
+        transition: opacity 0s, background-color 0s; /* Instant on */
+    }
+    /* Fade out */
+    .grid-cell {
+        transition: opacity 0.8s ease-out, background-color 0.8s ease-out;
     }
 
-    @keyframes scrollBounce {
-        0%, 100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        50% {
-            transform: translateY(8px);
-            opacity: 0.6;
-        }
+    /* Initial Loaded State Classes */
+    .intro-visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
     }
 
-    /* Fade out on scroll */
-    #scroll-indicator.scrolled {
-        opacity: 0;
-        transform: translateY(10px);
-        pointer-events: none;
+    /* Portrait Loaded State */
+    .portrait-visible {
+        opacity: 0.4 !important; /* Mobile default */
+    }
+    @media (min-width: 768px) {
+        .portrait-visible {
+            opacity: 0.6 !important; /* Desktop default */
+        }
     }
 </style>
 
 <script>
+    // Clock
     function updateClock() {
         const clock = document.getElementById('clock');
         if (clock) {
@@ -83,27 +106,104 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Scroll-driven fade for scroll indicator
-    const scrollIndicator = document.getElementById('scroll-indicator');
+    // Intro Animation Sequence
+    window.addEventListener('load', () => {
+        // Trigger Intro Elements
+        const introElements = document.querySelectorAll('.intro-element');
+        introElements.forEach(el => {
+            el.classList.add('intro-visible');
+        });
 
-    function handleScroll() {
-        if (scrollIndicator) {
-            const scrollY = window.scrollY;
-            // Start fading at 50px, fully hidden at 200px
-            const opacity = Math.max(0, 1 - (scrollY / 150));
-            const translateY = Math.min(20, scrollY / 10);
-
-            scrollIndicator.style.opacity = opacity.toString();
-            scrollIndicator.style.transform = `translateY(${translateY}px)`;
-
-            if (scrollY > 50) {
-                scrollIndicator.classList.add('scrolled');
-            } else {
-                scrollIndicator.classList.remove('scrolled');
-            }
+        // Trigger Portrait
+        const portrait = document.getElementById('hero-portrait');
+        if (portrait) {
+            portrait.classList.add('portrait-visible');
         }
+
+        // Trigger Grid Ripple
+        const cells = document.querySelectorAll('.grid-cell');
+        // Diagonal sweep effect
+        cells.forEach((cell, i) => {
+            const row = Math.floor(i / 10);
+            const col = i % 10;
+            const delay = (row + col) * 50; // Diagonal delay
+
+            setTimeout(() => {
+                cell.classList.add('active');
+                setTimeout(() => {
+                    cell.classList.remove('active');
+                }, 200);
+            }, delay);
+        });
+    });
+
+
+    // Robust Grid Interaction
+    const section = document.getElementById('hero');
+    const cells = document.querySelectorAll('.grid-cell');
+
+    if (section) {
+        section.addEventListener('mousemove', (e) => {
+            const rect = section.getBoundingClientRect();
+            // Calculate relative coordinates
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Calculate grid dimensions
+            const width = rect.width;
+            const height = rect.height;
+
+            // 10x10 grid
+            const col = Math.floor((x / width) * 10);
+            const row = Math.floor((y / height) * 10);
+
+            // Bounds check
+            if (col >= 0 && col < 10 && row >= 0 && row < 10) {
+                const index = row * 10 + col;
+                const cell = cells[index];
+
+                if (cell) {
+                    // Remove active class from all others (optional, or let them fade)
+                    // cell.classList.add('active');
+
+                    // To prevent "sticking", we can use a timestamp or just let CSS transition handle fade out
+                    // But we need to trigger the "hit"
+
+                    // Logic: Add active, then remove it shortly after to trigger fade
+                    cell.classList.add('active');
+
+                    // Clear previous timeout if this cell was just hit?
+                    // Simpler: Just add active. Use requestAnimationFrame to clear "old" active cells?
+                    // Or just let the CSS transition handle the fade out when class is removed.
+
+                    // Better approach for "trail":
+                    // Add active class. Set a timeout to remove it.
+
+                    if (cell.dataset.timeout) {
+                        clearTimeout(Number(cell.dataset.timeout));
+                    }
+
+                    const timeoutId = setTimeout(() => {
+                        cell.classList.remove('active');
+                    }, 50); // Short "hold" time, then fade out via CSS
+
+                    cell.dataset.timeout = String(timeoutId);
+                }
+            }
+        });
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    // Random pulse for liveliness
+    function pulseRandomSquare() {
+        // Only pulse if not currently interacting (optional, but keeps it cleaner)
+        const randomIndex = Math.floor(Math.random() * cells.length);
+        const cell = cells[randomIndex];
+        if(cell) {
+            cell.classList.add('active');
+            setTimeout(() => {
+                cell.classList.remove('active');
+            }, 200);
+        }
+    }
+    setInterval(pulseRandomSquare, 1500);
 </script>

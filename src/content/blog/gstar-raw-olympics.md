@@ -7,6 +7,14 @@ heroImage: '../../assets/blog-placeholder-1.jpg'
 
 In summer 2024, Biohazard VFX partnered with Stinkfilms and director Felix Brady to create a visually striking brand film for G-Star Raw's Olympics campaign. This project pushed our team of 60+ artists to deliver high-end CG environments while pioneering new AI/ML integration workflows.
 
+<div class="video-container my-10">
+  <video controls class="w-full border border-white/10">
+    <source src="/media/FF_PUFF_GStar_DC_v08_4608x3164.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <p class="text-slate-500 text-sm mt-3 font-mono">/// FINAL FILM</p>
+</div>
+
 ## The Challenge
 
 The creative brief called for expansive cityscapes and environments that would feel both futuristic and grounded in reality. The timeline was aggressive, and the scope was ambitious—exactly the kind of project we thrive on.
@@ -42,6 +50,37 @@ Managing 60+ artists across multiple time zones required robust communication an
 ## Results
 
 The final film delivered on time and exceeded client expectations. The combination of traditional VFX craft with cutting-edge AI tools allowed us to achieve a level of visual complexity that would have been prohibitively expensive using traditional methods alone.
+
+## Shot Breakdowns
+
+A closer look at some of the key shots and the techniques used to bring them to life.
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+  <div class="video-container">
+    <video controls class="w-full border border-white/10">
+      <source src="/media/GSTR_01_260_breakdown.mp4" type="video/mp4" />
+    </video>
+    <p class="text-slate-500 text-sm mt-3 font-mono">/// SHOT BREAKDOWN 01</p>
+  </div>
+  <div class="video-container">
+    <video controls class="w-full border border-white/10">
+      <source src="/media/GSTR_03_070_v10_breakdown_v01.mp4" type="video/mp4" />
+    </video>
+    <p class="text-slate-500 text-sm mt-3 font-mono">/// SHOT BREAKDOWN 02</p>
+  </div>
+</div>
+
+## Making Of
+
+Go behind the scenes to see how the team brought this project together.
+
+<div class="video-container my-10">
+  <video controls class="w-full border border-white/10">
+    <source src="/media/FF_PUFF_GStar_DC_Making-of_v06_H264.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <p class="text-slate-500 text-sm mt-3 font-mono">/// MAKING OF</p>
+</div>
 
 ---
 
