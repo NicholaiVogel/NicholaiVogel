@@ -78,7 +78,7 @@ const readTime = '5 min read';
 					<header class="mb-16 lg:mb-20">
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 							<!-- Text Content -->
-							<div class="order-2 lg:order-1 animate-on-scroll slide-up">
+							<div class="order-2 lg:order-1">
 								<!-- Metadata -->
 								<div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-5">
 									<div class="flex items-center gap-2">
@@ -121,13 +121,14 @@ const readTime = '5 min read';
 							
 							<!-- Hero Image -->
 							{heroImage && (
-								<div class="order-1 lg:order-2 animate-on-scroll fade-in">
+								<div class="order-1 lg:order-2">
 									<div class="relative aspect-[4/3] overflow-hidden border border-white/10 bg-white/[0.02]">
 										<Image
 											src={heroImage}
 											alt=""
 											width={600}
 											height={450}
+											loading="eager"
 											class="w-full h-full object-cover"
 										/>
 										<!-- Subtle overlay -->
@@ -140,12 +141,12 @@ const readTime = '5 min read';
 					</header>
 					
 					<!-- Main Content -->
-					<div class="prose-custom animate-on-scroll slide-up stagger-1">
+					<div class="prose-custom">
 						<slot />
 					</div>
 					
 					<!-- Author Footer -->
-					<footer class="mt-24 pt-10 border-t border-white/10 animate-on-scroll fade-in">
+					<footer class="mt-24 pt-10 border-t border-white/10">
 						<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 							<div>
 								<p class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
