@@ -1,0 +1,202 @@
+---
+interface Props {
+	categories: string[];
+	class?: string;
+}
+
+const { categories, class: className = '' } = Astro.props;
+---
+
+<div class:list={['blog-filters', className]} data-blog-filters>
+	<!-- Filters row -->
+	<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
+		<!-- Category chips -->
+		<div class="flex flex-wrap items-center gap-3">
+			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mr-2">
+				/// FILTER BY
+			</span>
+			<button
+				type="button"
+				data-category="all"
+				class="filter-chip active px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border border-white/20 text-white bg-white/5 hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300"
+			>
+				All
+			</button>
+			{categories.map((category) => (
+				<button
+					type="button"
+					data-category={category}
+					class="filter-chip px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border border-white/10 text-slate-400 hover:border-brand-accent hover:text-white hover:bg-brand-accent/5 transition-all duration-300"
+				>
+					{category}
+				</button>
+			))}
+		</div>
+		
+		<!-- Search input -->
+		<div class="relative lg:w-80">
+			<div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="14"
+					height="14"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-slate-500"
+				>
+					<circle cx="11" cy="11" r="8" />
+					<path d="m21 21-4.3-4.3" />
+				</svg>
+			</div>
+			<input
+				type="text"
+				id="blog-search"
+				placeholder="Search articles..."
+				class="w-full pl-11 pr-4 py-3 text-sm font-mono bg-transparent border border-white/10 text-white placeholder:text-slate-500 focus:border-brand-accent focus:outline-none transition-colors duration-300"
+			/>
+			<button
+				type="button"
+				id="clear-search"
+				class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors hidden"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="14"
+					height="14"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M18 6 6 18" />
+					<path d="m6 6 12 12" />
+				</svg>
+			</button>
+		</div>
+	</div>
+	
+	<!-- Results count -->
+	<div class="flex items-center gap-4 pb-6 border-b border-white/10 mb-8">
+		<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+			<span id="results-count">0</span> ARTICLES
+		</span>
+		<span class="h-px flex-grow bg-white/5"></span>
+	</div>
+</div>
+
+<script>
+	function initBlogFilters() {
+		const filterContainer = document.querySelector('[data-blog-filters]');
+		if (!filterContainer) return;
+		
+		const filterChips = filterContainer.querySelectorAll('.filter-chip');
+		const searchInput = document.getElementById('blog-search') as HTMLInputElement;
+		const clearSearchBtn = document.getElementById('clear-search');
+		const resultsCount = document.getElementById('results-count');
+		const postsGrid = document.querySelector('[data-posts-grid]');
+		const noResults = document.getElementById('no-results');
+		
+		if (!postsGrid) return;
+		
+		const allPosts = postsGrid.querySelectorAll('[data-post]');
+		let activeCategory = 'all';
+		let searchQuery = '';
+		
+		function filterPosts() {
+			let visibleCount = 0;
+			
+			allPosts.forEach((post) => {
+				const postEl = post as HTMLElement;
+				const postCategory = postEl.dataset.category || '';
+				const postTitle = postEl.dataset.title?.toLowerCase() || '';
+				const postDescription = postEl.dataset.description?.toLowerCase() || '';
+				
+				const matchesCategory = activeCategory === 'all' || postCategory === activeCategory;
+				const matchesSearch = !searchQuery || 
+					postTitle.includes(searchQuery.toLowerCase()) || 
+					postDescription.includes(searchQuery.toLowerCase());
+				
+				if (matchesCategory && matchesSearch) {
+					postEl.style.display = '';
+					visibleCount++;
+				} else {
+					postEl.style.display = 'none';
+				}
+			});
+			
+			if (resultsCount) {
+				resultsCount.textContent = String(visibleCount);
+			}
+			
+			// Show/hide no results message
+			if (noResults) {
+				noResults.classList.toggle('hidden', visibleCount > 0);
+			}
+		}
+		
+		// Category filter click handlers
+		filterChips.forEach((chip) => {
+			chip.addEventListener('click', () => {
+				const chipEl = chip as HTMLElement;
+				activeCategory = chipEl.dataset.category || 'all';
+				
+				// Update active state
+				filterChips.forEach((c) => c.classList.remove('active', 'border-brand-accent', 'text-white', 'bg-white/5'));
+				filterChips.forEach((c) => c.classList.add('border-white/10', 'text-slate-400'));
+				chipEl.classList.add('active', 'border-brand-accent', 'text-white', 'bg-white/5');
+				chipEl.classList.remove('border-white/10', 'text-slate-400');
+				
+				filterPosts();
+			});
+		});
+		
+		// Search input handler
+		if (searchInput) {
+			searchInput.addEventListener('input', () => {
+				searchQuery = searchInput.value;
+				filterPosts();
+				
+				// Show/hide clear button
+				if (clearSearchBtn) {
+					clearSearchBtn.classList.toggle('hidden', !searchQuery);
+				}
+			});
+		}
+		
+		// Clear search button
+		if (clearSearchBtn) {
+			clearSearchBtn.addEventListener('click', () => {
+				if (searchInput) {
+					searchInput.value = '';
+					searchQuery = '';
+					filterPosts();
+					clearSearchBtn.classList.add('hidden');
+				}
+			});
+		}
+		
+		// Initial count
+		filterPosts();
+	}
+	
+	// Run on page load
+	initBlogFilters();
+	
+	// Also run on Astro page transitions (View Transitions)
+	document.addEventListener('astro:page-load', initBlogFilters);
+</script>
+
+<style>
+	.filter-chip.active {
+		border-color: var(--color-brand-accent);
+		color: white;
+		background-color: rgba(255, 77, 0, 0.05);
+	}
+</style>
+

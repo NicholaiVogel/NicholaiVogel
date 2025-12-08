@@ -3,14 +3,31 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import BlogFilters from '../../components/BlogFilters.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
+// Fetch all posts sorted by date (newest first)
+const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Derive featured post (first post with featured: true, or fallback to latest)
+const featuredPost = allPosts.find((post) => post.data.featured) || allPosts[0];
+
+// Editor's picks: next 3 posts after featured (excluding the featured one)
+const editorPicks = allPosts
+	.filter((post) => post.id !== featuredPost?.id)
+	.slice(0, 3);
+
+// Latest posts: all posts for the filterable grid
+const latestPosts = allPosts;
+
+// Extract unique categories for filters
+const categories = [...new Set(allPosts.map((post) => post.data.category).filter(Boolean))] as string[];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
 	<section class="container mx-auto px-6 lg:px-12">
 		<!-- Back Navigation -->
 		<a href="/" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 mb-12 group">
@@ -18,49 +35,210 @@ const posts = (await getCollection('blog')).sort(
 			Back to Home
 		</a>
 
-		<div class="mb-20 animate-on-scroll slide-up">
-			<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase text-white mb-5 tracking-tighter">Blog</h1>
-			<p class="text-slate-500 font-mono text-sm tracking-wide">/// THOUGHTS & PROCESS</p>
+		<!-- Page Header -->
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 lg:mb-24">
+			<div class="lg:col-span-8">
+				<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85]">
+					<span class="block text-white animate-on-scroll slide-up">BLOG</span>
+					<span class="block text-transparent text-stroke animate-on-scroll slide-up stagger-1">ARCHIVE</span>
+				</h1>
+			</div>
+			<div class="lg:col-span-4 flex flex-col justify-end pb-4">
+				<div class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">/// THOUGHTS & PROCESS</div>
+				<p class="text-slate-400 text-base leading-relaxed border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+					Deep dives into VFX production, technical pipelines, and creative process. Sharing lessons from the front lines of visual effects.
+				</p>
+			</div>
 		</div>
-		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-10 gap-y-16 lg:gap-y-20 stagger-children">
-			{
-				posts.map((post, index) => (
-					<li class={`group animate-on-scroll slide-up stagger-${Math.min(index + 1, 6)}`}>
-						<a href={`/blog/${post.id}/`} class="block">
-							<div class="relative aspect-[16/9] mb-6 overflow-hidden border border-white/10 group-hover:border-brand-accent/40 transition-all duration-500">
-								{post.data.heroImage && (
-									<Image
-										width={720}
-										height={360}
-										src={post.data.heroImage}
-										alt=""
-										class="w-full h-full object-cover transition-transform duration-[1s] ease-out group-hover:scale-105"
-									/>
-								)}
-								<div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-brand-dark/10 transition-colors duration-500"></div>
-								<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/50 to-transparent opacity-60"></div>
-							</div>
-							<div class="flex flex-col">
-								<div class="flex items-center gap-2 mb-4">
-									<span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest">
-										<FormattedDate date={post.data.pubDate} />
+
+		<!-- Featured Hero Section -->
+		{featuredPost && (
+			<div class="mb-16 lg:mb-24 animate-on-scroll slide-up stagger-2">
+				<div class="flex items-center gap-4 mb-8">
+					<div class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></div>
+					<span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest font-bold">
+						SYS.BLOG /// FEATURED
+					</span>
+					<span class="h-px flex-grow bg-white/10"></span>
+				</div>
+				
+				<article class="group relative border border-white/10 bg-white/[0.02] hover:border-brand-accent/40 transition-all duration-500 overflow-hidden">
+					<!-- Accent indicator strip -->
+					<div class="absolute top-0 left-0 w-1 h-full bg-brand-accent"></div>
+					<div class="absolute top-0 left-0 w-full h-1 bg-brand-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+					
+					<div class="grid grid-cols-1 lg:grid-cols-2">
+						<!-- Image section -->
+						<a href={`/blog/${featuredPost.id}/`} class="block relative aspect-[16/10] lg:aspect-auto overflow-hidden">
+							{featuredPost.data.heroImage && (
+								<Image
+									src={featuredPost.data.heroImage}
+									alt=""
+									width={900}
+									height={600}
+									class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+								/>
+							)}
+							<div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-brand-dark/10 transition-colors duration-500"></div>
+							<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-brand-dark/80 hidden lg:block"></div>
+							<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent lg:hidden"></div>
+							
+							<!-- Category badge -->
+							{featuredPost.data.category && (
+								<div class="absolute top-6 left-6">
+									<span class="px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest bg-brand-dark/80 border border-brand-accent/50 text-brand-accent backdrop-blur-sm">
+										{featuredPost.data.category}
 									</span>
 								</div>
-								<h4 class="text-xl lg:text-2xl font-bold text-white uppercase mb-3 group-hover:text-brand-accent transition-colors duration-300 leading-tight tracking-tight">
-									{post.data.title}
-								</h4>
-								<p class="text-slate-400 text-sm line-clamp-2 font-light leading-relaxed">
-									{post.data.description || ''}
-								</p>
-								<span class="mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-white transition-all duration-300 flex items-center gap-3">
-									Read Article
-									<span class="block w-6 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-10 transition-all duration-300"></span>
+							)}
+							
+							<!-- Grid overlay effect -->
+							<div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
+						</a>
+						
+						<!-- Content section -->
+						<div class="p-8 lg:p-12 flex flex-col justify-center">
+							<!-- Technical header -->
+							<div class="flex items-center gap-3 mb-6">
+								<span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest">
+									<FormattedDate date={featuredPost.data.pubDate} />
+								</span>
+								<span class="h-px w-8 bg-white/20"></span>
+								<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+									5 min read
 								</span>
 							</div>
-						</a>
-					</li>
-				))
-			}
-		</ul>
+							
+							<!-- Title -->
+							<a href={`/blog/${featuredPost.id}/`}>
+								<h2 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-white uppercase tracking-tight mb-6 group-hover:text-brand-accent transition-colors duration-300 leading-tight">
+									{featuredPost.data.title}
+								</h2>
+							</a>
+							
+							<!-- Description -->
+							<p class="text-slate-400 text-base lg:text-lg font-light leading-relaxed mb-8 line-clamp-3">
+								{featuredPost.data.description}
+							</p>
+							
+							<!-- Tags -->
+							{featuredPost.data.tags && featuredPost.data.tags.length > 0 && (
+								<div class="flex flex-wrap gap-2 mb-8">
+									{featuredPost.data.tags.slice(0, 5).map((tag: string) => (
+										<span class="px-3 py-1.5 text-[10px] font-mono uppercase border border-white/10 text-slate-500 group-hover:border-white/20 transition-colors">
+											{tag}
+										</span>
+									))}
+								</div>
+							)}
+							
+							<!-- Read link -->
+							<div class="pt-6 border-t border-white/10">
+								<a
+									href={`/blog/${featuredPost.id}/`}
+									class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-all duration-300 group/link"
+								>
+									Read Full Article
+									<span class="block w-8 h-[1px] bg-white/30 group-hover/link:bg-brand-accent group-hover/link:w-12 transition-all duration-300"></span>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="group-hover/link:translate-x-1 transition-transform duration-300"
+									>
+										<path d="M5 12h14" />
+										<path d="m12 5 7 7-7 7" />
+									</svg>
+								</a>
+							</div>
+						</div>
+					</div>
+				</article>
+			</div>
+		)}
+
+		<!-- Editor's Picks Section -->
+		{editorPicks.length > 0 && (
+			<div class="mb-16 lg:mb-24">
+				<div class="flex items-center gap-4 mb-8">
+					<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+						/// EDITOR'S PICKS
+					</span>
+					<span class="h-px flex-grow bg-white/10"></span>
+				</div>
+				
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+					{editorPicks.map((post, index) => (
+						<div class={`animate-on-scroll slide-up stagger-${index + 1}`}>
+							<BlogCard
+								title={post.data.title}
+								description={post.data.description}
+								pubDate={post.data.pubDate}
+								heroImage={post.data.heroImage}
+								category={post.data.category}
+								tags={post.data.tags}
+								href={`/blog/${post.id}/`}
+								variant="compact"
+							/>
+						</div>
+					))}
+				</div>
+			</div>
+		)}
+
+		<!-- Divider -->
+		<div class="h-px divider-gradient mb-16 lg:mb-24"></div>
+
+		<!-- Latest Section with Filters -->
+		<div class="mb-16 lg:mb-24">
+			<div class="flex items-center gap-4 mb-8">
+				<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+					/// LATEST TRANSMISSIONS
+				</span>
+				<span class="h-px flex-grow bg-white/10"></span>
+			</div>
+			
+			<!-- Filters Component -->
+			<BlogFilters categories={categories} />
+			
+			<!-- Posts Grid -->
+			<div data-posts-grid class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+				{latestPosts.map((post, index) => (
+					<div
+						data-post
+						data-category={post.data.category || ''}
+						data-title={post.data.title}
+						data-description={post.data.description}
+						class={`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`}
+					>
+						<BlogCard
+							title={post.data.title}
+							description={post.data.description}
+							pubDate={post.data.pubDate}
+							heroImage={post.data.heroImage}
+							category={post.data.category}
+							tags={post.data.tags}
+							href={`/blog/${post.id}/`}
+						/>
+					</div>
+				))}
+			</div>
+			
+			<!-- Empty state (hidden by default, shown via JS when no results) -->
+			<div id="no-results" class="hidden text-center py-20">
+				<div class="text-slate-500 font-mono text-sm uppercase tracking-widest mb-4">
+					/// NO MATCHING ARTICLES FOUND
+				</div>
+				<p class="text-slate-400 text-sm">
+					Try adjusting your search or filter criteria.
+				</p>
+			</div>
+		</div>
 	</section>
 </BaseLayout>
