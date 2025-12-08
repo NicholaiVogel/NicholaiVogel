@@ -1,51 +1,230 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import PostNavigation from '../components/PostNavigation.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 import { Image } from 'astro:assets';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface NavPost {
+	title: string;
+	href: string;
+	heroImage?: ImageMetadata;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+interface RelatedPost {
+	title: string;
+	description: string;
+	pubDate: Date;
+	heroImage?: ImageMetadata;
+	category?: string;
+	tags?: string[];
+	href: string;
+}
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	heroImage?: ImageMetadata;
+	category?: string;
+	tags?: string[];
+	headings?: Array<{ depth: number; slug: string; text: string }>;
+	prevPost?: NavPost;
+	nextPost?: NavPost;
+	relatedPosts?: RelatedPost[];
+}
+
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	category,
+	tags,
+	headings = [],
+	prevPost,
+	nextPost,
+	relatedPosts = [],
+} = Astro.props;
+
+// Estimated read time (rough calculation)
+const readTime = '5 min read';
 ---
 
-<BaseLayout title={title} description={description}>
-	<article class="container mx-auto px-6 lg:px-12 max-w-4xl">
-		<!-- Back Navigation -->
-		<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 mb-12 group">
-			<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
-			Back to Blog
-		</a>
+<BaseLayout title={title} description={description} image={heroImage}>
+	<ReadingProgress />
+	
+	<article class="relative pb-24">
+		<!-- All content in same grid structure for consistent width -->
+		<div class="container mx-auto px-6 lg:px-12">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+				<!-- Main Column -->
+				<div class="lg:col-span-8 lg:col-start-3">
+					<!-- Back Navigation -->
+					<div class="mb-8">
+						<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
+							<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
+							Back to Blog
+						</a>
+					</div>
 
-		<div class="mb-12 animate-on-scroll slide-up">
-			<div class="mb-8">
-				{heroImage && <Image width={1020} height={510} src={heroImage} alt="" class="w-full h-auto border border-white/10" />}
-			</div>
-			<div class="border-b border-white/10 pb-10 mb-10">
-				<div class="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest mb-6">
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<span class="text-slate-600">
-								(Updated: <FormattedDate date={updatedDate} />)
-							</span>
-						)
-					}
+					<!-- Hero Section: Side-by-Side Layout -->
+					<header class="mb-16 lg:mb-20">
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+							<!-- Text Content -->
+							<div class="order-2 lg:order-1 animate-on-scroll slide-up">
+								<!-- Metadata -->
+								<div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-5">
+									<div class="flex items-center gap-2">
+										<div class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></div>
+										<span class="text-brand-accent font-bold">SYS.ARTICLE</span>
+									</div>
+									<span class="h-px w-4 bg-white/20"></span>
+									<FormattedDate date={pubDate} />
+									<span class="h-px w-4 bg-white/20"></span>
+									<span>{readTime}</span>
+								</div>
+								
+								{category && (
+									<div class="mb-4">
+										<span class="px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-widest bg-brand-accent/10 border border-brand-accent/30 text-brand-accent">
+											{category}
+										</span>
+									</div>
+								)}
+								
+								<h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white uppercase leading-[0.95] tracking-tighter mb-4">
+									{title}
+								</h1>
+								
+								<p class="text-sm lg:text-base text-slate-400 leading-relaxed font-light mb-5 border-l border-white/10 pl-4">
+									{description}
+								</p>
+								
+								<!-- Tags -->
+								{tags && tags.length > 0 && (
+									<div class="flex flex-wrap gap-2">
+										{tags.map((tag) => (
+											<span class="px-2 py-1 text-[9px] font-mono uppercase border border-white/10 text-slate-500 hover:border-white/20 transition-colors">
+												{tag}
+											</span>
+										))}
+									</div>
+								)}
+							</div>
+							
+							<!-- Hero Image -->
+							{heroImage && (
+								<div class="order-1 lg:order-2 animate-on-scroll fade-in">
+									<div class="relative aspect-[4/3] overflow-hidden border border-white/10 bg-white/[0.02]">
+										<Image
+											src={heroImage}
+											alt=""
+											width={600}
+											height={450}
+											class="w-full h-full object-cover"
+										/>
+										<!-- Subtle overlay -->
+										<div class="absolute inset-0 bg-brand-dark/10"></div>
+										<div class="absolute inset-0 grid-overlay opacity-20 pointer-events-none"></div>
+									</div>
+								</div>
+							)}
+						</div>
+					</header>
+					
+					<!-- Main Content -->
+					<div class="prose-custom animate-on-scroll slide-up stagger-1">
+						<slot />
+					</div>
+					
+					<!-- Author Footer -->
+					<footer class="mt-24 pt-10 border-t border-white/10 animate-on-scroll fade-in">
+						<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+							<div>
+								<p class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
+									/// END TRANSMISSION
+								</p>
+								<p class="text-slate-400 text-sm">
+									Published <FormattedDate date={pubDate} />
+									{updatedDate && (
+										<span class="text-slate-500"> · Last updated <FormattedDate date={updatedDate} /></span>
+									)}
+								</p>
+							</div>
+							
+							<!-- Share Links -->
+							<div class="flex items-center gap-4">
+								<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Share</span>
+								<div class="flex items-center gap-2">
+									<a
+										href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="w-10 h-10 flex items-center justify-center border border-white/10 text-slate-400 hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										aria-label="Share on Twitter"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+										</svg>
+									</a>
+									<a
+										href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="w-10 h-10 flex items-center justify-center border border-white/10 text-slate-400 hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										aria-label="Share on LinkedIn"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+											<rect width="4" height="12" x="2" y="9"/>
+											<circle cx="4" cy="4" r="2"/>
+										</svg>
+									</a>
+									<button
+										type="button"
+										onclick="navigator.clipboard.writeText(window.location.href)"
+										class="w-10 h-10 flex items-center justify-center border border-white/10 text-slate-400 hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										aria-label="Copy link"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+											<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+										</svg>
+									</button>
+								</div>
+							</div>
+						</div>
+					</footer>
+					
+					<!-- Post Navigation -->
+					<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+					
+					<!-- Related Posts -->
+					<RelatedPosts posts={relatedPosts} />
+					
+					<!-- Back to Blog -->
+					<div class="mt-20 pt-10 border-t border-white/10">
+						<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
+							<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
+							Back to All Posts
+						</a>
+					</div>
 				</div>
-				<h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase leading-tight tracking-tight mb-6">{title}</h1>
-				<p class="text-lg lg:text-xl text-slate-400 leading-relaxed font-light">{description}</p>
+				
+				<!-- Table of Contents Sidebar (Desktop) -->
+				<aside class="hidden lg:block lg:col-span-2 lg:col-start-11">
+					<div class="sticky top-24 mt-32">
+						<TableOfContents headings={headings} />
+					</div>
+				</aside>
 			</div>
-		</div>
-		<div class="prose-custom animate-on-scroll slide-up stagger-1">
-			<slot />
-		</div>
-
-		<!-- Bottom Navigation -->
-		<div class="mt-20 pt-10 border-t border-white/10">
-			<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
-				<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
-				Back to All Posts
-			</a>
 		</div>
 	</article>
 </BaseLayout>

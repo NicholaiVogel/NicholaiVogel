@@ -4,17 +4,99 @@ import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+	
+	// Sort posts by date (newest first)
+	const sortedPosts = posts.sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+	);
+	
+	return sortedPosts.map((post, index) => {
+		// Get previous and next posts
+		const prevPost = index < sortedPosts.length - 1 ? sortedPosts[index + 1] : undefined;
+		const nextPost = index > 0 ? sortedPosts[index - 1] : undefined;
+		
+		// Find related posts (same category or shared tags)
+		const relatedPosts = sortedPosts
+			.filter((p) => p.id !== post.id)
+			.filter((p) => {
+				// Match by category
+				if (post.data.category && p.data.category === post.data.category) {
+					return true;
+				}
+				// Match by shared tags
+				if (post.data.tags && p.data.tags) {
+					const sharedTags = post.data.tags.filter((tag) => p.data.tags?.includes(tag));
+					return sharedTags.length > 0;
+				}
+				return false;
+			})
+			.slice(0, 3);
+		
+		return {
+			params: { slug: post.id },
+			props: {
+				post,
+				prevPost: prevPost
+					? {
+							title: prevPost.data.title,
+							href: `/blog/${prevPost.id}/`,
+							heroImage: prevPost.data.heroImage,
+						}
+					: undefined,
+				nextPost: nextPost
+					? {
+							title: nextPost.data.title,
+							href: `/blog/${nextPost.id}/`,
+							heroImage: nextPost.data.heroImage,
+						}
+					: undefined,
+				relatedPosts: relatedPosts.map((p) => ({
+					title: p.data.title,
+					description: p.data.description,
+					pubDate: p.data.pubDate,
+					heroImage: p.data.heroImage,
+					category: p.data.category,
+					tags: p.data.tags,
+					href: `/blog/${p.id}/`,
+				})),
+			},
+		};
+	});
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await render(post);
+interface Props {
+	post: CollectionEntry<'blog'>;
+	prevPost?: {
+		title: string;
+		href: string;
+		heroImage?: any;
+	};
+	nextPost?: {
+		title: string;
+		href: string;
+		heroImage?: any;
+	};
+	relatedPosts: Array<{
+		title: string;
+		description: string;
+		pubDate: Date;
+		heroImage?: any;
+		category?: string;
+		tags?: string[];
+		href: string;
+	}>;
+}
+
+const { post, prevPost, nextPost, relatedPosts } = Astro.props;
+const { Content, headings } = await render(post);
 ---
 
-<BlogPost {...post.data}>
+<BlogPost
+	{...post.data}
+	headings={headings}
+	prevPost={prevPost}
+	nextPost={nextPost}
+	relatedPosts={relatedPosts}
+>
 	<Content />
 </BlogPost>

@@ -1,0 +1,121 @@
+---
+interface Props {
+	headings: Array<{
+		depth: number;
+		slug: string;
+		text: string;
+	}>;
+	class?: string;
+}
+
+const { headings, class: className = '' } = Astro.props;
+
+// Filter to only H2 and H3 headings
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{tocHeadings.length > 0 && (
+	<nav class:list={['toc', className]} data-toc aria-label="Table of contents">
+		<div class="flex items-center gap-3 mb-6">
+			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+				/// CONTENTS
+			</span>
+			<span class="h-px flex-grow bg-white/10"></span>
+		</div>
+		<ul class="space-y-3">
+			{tocHeadings.map((heading) => (
+				<li>
+					<a
+						href={`#${heading.slug}`}
+						data-toc-link={heading.slug}
+						class:list={[
+							'toc-link block text-sm transition-all duration-300 hover:text-white',
+							heading.depth === 2
+								? 'text-slate-400 font-medium'
+								: 'text-slate-500 pl-4 text-xs',
+						]}
+					>
+						<span class="flex items-center gap-2">
+							{heading.depth === 2 && (
+								<span class="w-1.5 h-1.5 bg-slate-600 rounded-full toc-indicator transition-colors duration-300"></span>
+							)}
+							{heading.text}
+						</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}
+
+<script>
+	function initTableOfContents() {
+		const tocLinks = document.querySelectorAll('[data-toc-link]');
+		if (tocLinks.length === 0) return;
+
+		const headings = Array.from(tocLinks).map((link) => {
+			const slug = (link as HTMLElement).dataset.tocLink;
+			return document.getElementById(slug || '');
+		}).filter(Boolean) as HTMLElement[];
+
+		let currentActive: Element | null = null;
+
+		function updateActiveLink() {
+			const scrollY = window.scrollY;
+			const offset = 150; // Offset for when to activate
+
+			let activeHeading: HTMLElement | null = null;
+
+			for (const heading of headings) {
+				const rect = heading.getBoundingClientRect();
+				const top = rect.top + scrollY;
+
+				if (scrollY >= top - offset) {
+					activeHeading = heading;
+				}
+			}
+
+			if (activeHeading && currentActive !== activeHeading) {
+				// Remove active state from all links
+				tocLinks.forEach((link) => {
+					link.classList.remove('text-brand-accent', 'text-white');
+					link.classList.add('text-slate-400');
+					const indicator = link.querySelector('.toc-indicator');
+					if (indicator) {
+						indicator.classList.remove('bg-brand-accent');
+						indicator.classList.add('bg-slate-600');
+					}
+				});
+
+				// Add active state to current link
+				const activeLink = document.querySelector(`[data-toc-link="${activeHeading.id}"]`);
+				if (activeLink) {
+					activeLink.classList.remove('text-slate-400');
+					activeLink.classList.add('text-brand-accent');
+					const indicator = activeLink.querySelector('.toc-indicator');
+					if (indicator) {
+						indicator.classList.remove('bg-slate-600');
+						indicator.classList.add('bg-brand-accent');
+					}
+				}
+
+				currentActive = activeHeading;
+			}
+		}
+
+		window.addEventListener('scroll', updateActiveLink, { passive: true });
+		updateActiveLink();
+	}
+
+	// Initialize on page load
+	initTableOfContents();
+
+	// Re-initialize on Astro page transitions
+	document.addEventListener('astro:page-load', initTableOfContents);
+</script>
+
+<style>
+	.toc-link:hover .toc-indicator {
+		background-color: var(--color-brand-accent);
+	}
+</style>
