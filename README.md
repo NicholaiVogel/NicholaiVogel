@@ -1,62 +1,213 @@
-# Astro Starter Kit: Blog
+# nicholai-work-2026
 
-```sh
-pnpm create astro@latest -- --template blog
+Personal portfolio and blog site built with Astro.
+
+🌐 [Live Site](https://nicholai.work)
+
+## Tech Stack
+
+- **Astro** - Static site framework
+- **React** - Interactive components
+- **Tailwind CSS** - Styling
+- **MDX** - Markdown with JSX support
+- **Cloudflare Pages** - Hosting & deployment
+- **TypeScript** - Type safety
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
+
+# Deploy to Cloudflare Pages
+pnpm deploy
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Creating Blog Posts
 
-Features:
+Blog posts are created as MDX files in the `src/content/blog/` directory. The file name becomes the URL slug (e.g., `my-post.mdx` → `/blog/my-post/`).
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+### Step 1: Create the MDX File
 
-## 🚀 Project Structure
+Create a new `.mdx` file in `src/content/blog/`:
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+src/content/blog/my-new-post.mdx
+```
+
+### Step 2: Add Frontmatter
+
+Every blog post requires frontmatter at the top of the file. Here's the complete schema:
+
+```mdx
+---
+title: 'Your Post Title'
+description: 'A brief description that appears in listings and meta tags'
+pubDate: 'Jan 15 2025'
+heroImage: '../../assets/your-image.jpg'
+featured: true
+category: 'Case Study'
+tags: ['VFX', 'Houdini', 'Nuke']
+---
+```
+
+#### Required Fields
+
+- **`title`** (string) - The post title
+- **`description`** (string) - Brief description for listings and SEO
+- **`pubDate`** (string) - Publication date in any format (e.g., `'Jan 15 2025'`, `'2025-01-15'`)
+
+#### Optional Fields
+
+- **`heroImage`** (image path) - Hero image for the post. Use relative path from the MDX file:
+  - Images in `src/assets/`: `'../../assets/image.jpg'`
+  - Images in `public/media/`: Use absolute path in content: `/media/image.jpg`
+- **`featured`** (boolean, default: `false`) - Set to `true` to feature on blog index page
+- **`category`** (string) - Category for filtering (e.g., `'Case Study'`, `'Tutorial'`, `'Thoughts'`)
+- **`tags`** (array of strings) - Tags for categorization and related posts
+- **`updatedDate`** (string) - Optional update date
+
+### Step 3: Write Your Content
+
+Write your content using Markdown or MDX syntax. You can use:
+
+- Standard Markdown (headings, lists, links, etc.)
+- JSX components and HTML
+- Custom styling with Tailwind classes
+
+#### Example: Adding Videos
+
+```mdx
+<div class="video-container my-10">
+  <video controls class="w-full border border-white/10">
+    <source src="/media/my-video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <p class="text-slate-500 text-sm mt-3 font-mono">/// VIDEO CAPTION</p>
+</div>
+```
+
+#### Example: Image Grids
+
+```mdx
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+  <div class="video-container">
+    <video controls class="w-full border border-white/10">
+      <source src="/media/video-1.mp4" type="video/mp4" />
+    </video>
+    <p class="text-slate-500 text-sm mt-3 font-mono">/// CAPTION 1</p>
+  </div>
+  <div class="video-container">
+    <video controls class="w-full border border-white/10">
+      <source src="/media/video-2.mp4" type="video/mp4" />
+    </video>
+    <p class="text-slate-500 text-sm mt-3 font-mono">/// CAPTION 2</p>
+  </div>
+</div>
+```
+
+### Step 4: Adding Images
+
+#### Option 1: Images in `src/assets/`
+
+For images processed by Astro (optimization, etc.):
+
+1. Place image in `src/assets/`
+2. Reference in frontmatter: `heroImage: '../../assets/my-image.jpg'`
+3. Use in content with Astro's Image component (import required)
+
+#### Option 2: Images in `public/media/`
+
+For static assets (videos, large images):
+
+1. Place file in `public/media/`
+2. Reference with absolute path: `/media/my-video.mp4`
+3. No import needed, works directly in HTML/MDX
+
+### Step 5: File Naming
+
+- Use kebab-case: `my-awesome-post.mdx`
+- The filename (without extension) becomes the URL slug
+- Example: `gstar-raw-olympics.mdx` → `/blog/gstar-raw-olympics/`
+
+### Complete Example
+
+Here's a complete example blog post:
+
+```mdx
+---
+title: 'My Awesome Project'
+description: 'A deep dive into the technical pipeline behind this amazing project.'
+pubDate: 'Jan 15 2025'
+heroImage: '../../assets/project-hero.jpg'
+featured: true
+category: 'Case Study'
+tags: ['VFX', 'Houdini', 'Pipeline']
+---
+
+## Introduction
+
+This is the introduction to my project.
+
+## The Challenge
+
+Here's what we were trying to solve.
+
+<div class="video-container my-10">
+  <video controls class="w-full border border-white/10">
+    <source src="/media/project-video.mp4" type="video/mp4" />
+  </video>
+  <p class="text-slate-500 text-sm mt-3 font-mono">/// PROJECT VIDEO</p>
+</div>
+
+## Technical Approach
+
+### Key Features
+
+- Feature one
+- Feature two
+- Feature three
+
+## Results
+
+The project was a success!
+```
+
+### Blog Features
+
+- **Automatic sorting** - Posts are sorted by `pubDate` (newest first)
+- **Featured posts** - First post with `featured: true` appears in hero section
+- **Related posts** - Automatically finds related posts by category or shared tags
+- **Category filtering** - Users can filter posts by category on the blog index
+- **Previous/Next navigation** - Automatic navigation between posts
+- **RSS feed** - Available at `/rss.xml`
+
+## Project Structure
 
 ```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+├── assets/          # Images processed by Astro
+├── components/      # Reusable components
+├── content/
+│   ├── blog/       # Blog posts (MDX files)
+│   ├── pages/      # Page content
+│   └── sections/   # Homepage sections
+├── layouts/         # Page layouts
+├── pages/          # Routes
+└── styles/         # Global styles
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Deployment
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+The site is deployed to Cloudflare Pages. The `pnpm deploy` command builds the site and deploys it using Wrangler.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Deployment happens automatically on push to the main branch (if configured in Cloudflare Pages dashboard).
