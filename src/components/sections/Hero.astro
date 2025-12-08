@@ -1,4 +1,14 @@
 ---
+interface Props {
+	headlineLine1: string;
+	headlineLine2: string;
+	portfolioYear: string;
+	location: string;
+	locationLabel: string;
+	bio: string;
+}
+
+const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bio } = Astro.props;
 ---
 <section id="hero" class="relative w-full h-[100dvh] overflow-hidden bg-brand-dark">
     <!-- Background Image (Portrait) -->
@@ -29,11 +39,11 @@
         <!-- Top Metadata -->
         <div class="flex justify-between items-start w-full intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
             <div class="font-mono text-xs uppercase tracking-widest text-slate-500">
-                Portfolio 2026
+                {portfolioYear}
             </div>
             <div class="font-mono text-xs text-slate-500 text-right tracking-wide">
-                <span class="block text-slate-600 mb-1 uppercase tracking-widest">Location</span>
-                Colorado Springs, CO<br>
+                <span class="block text-slate-600 mb-1 uppercase tracking-widest">{locationLabel}</span>
+                {location}<br>
                 <span id="clock" class="text-brand-accent">00:00:00 MST</span>
             </div>
         </div>
@@ -41,12 +51,12 @@
         <!-- Main Heading & Description -->
         <div class="max-w-5xl">
             <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.9] font-bold text-white mix-blend-overlay opacity-90 mb-8 perspective-text">
-                <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">VISUAL</span>
-                <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">ALCHEMIST</span>
+                <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">{headlineLine1}</span>
+                <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">{headlineLine2}</span>
             </h1>
 
             <p class="font-mono text-sm md:text-base max-w-lg text-slate-400 font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
-                I am a problem solver who loves visual effects. Creating end-to-end visual content for clients like Post Malone, Stinkfilms, and Adidas. Bridging creative vision with technical execution.
+                {bio}
             </p>
         </div>
 

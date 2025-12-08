@@ -4,23 +4,68 @@ import Hero from '../components/sections/Hero.astro';
 import Experience from '../components/sections/Experience.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
 import Skills from '../components/sections/Skills.astro';
+import { getEntry } from 'astro:content';
+
+// Fetch all section content
+const heroEntry = await getEntry('sections', 'hero');
+const experienceEntry = await getEntry('sections', 'experience');
+const skillsEntry = await getEntry('sections', 'skills');
+const featuredProjectEntry = await getEntry('sections', 'featured-project');
+
+// Extract content from entries
+const heroContent = {
+	headlineLine1: heroEntry.data.headlineLine1 || '',
+	headlineLine2: heroEntry.data.headlineLine2 || '',
+	portfolioYear: heroEntry.data.portfolioYear || '',
+	location: heroEntry.data.location || '',
+	locationLabel: heroEntry.data.locationLabel || '',
+	bio: heroEntry.data.bio || '',
+};
+
+const experienceContent = {
+	sectionTitle: experienceEntry.data.sectionTitle || '',
+	sectionSubtitle: experienceEntry.data.sectionSubtitle || '',
+	sectionLabel: experienceEntry.data.sectionLabel || '',
+	description: experienceEntry.data.description || '',
+	entries: experienceEntry.data.entries || [],
+};
+
+const skillsContent = {
+	sectionTitle: skillsEntry.data.sectionTitle || '',
+	sectionSubtitle: skillsEntry.data.sectionSubtitle || '',
+	description: skillsEntry.data.description || '',
+	skills: skillsEntry.data.skills || [],
+};
+
+const featuredProjectContent = {
+	role: featuredProjectEntry.data.role || '',
+	client: featuredProjectEntry.data.client || '',
+	year: featuredProjectEntry.data.year || '',
+	region: featuredProjectEntry.data.region || '',
+	projectTitle: featuredProjectEntry.data.projectTitle || '',
+	projectSubtitle: featuredProjectEntry.data.projectSubtitle || '',
+	projectDescription: featuredProjectEntry.data.projectDescription || '',
+	stats: featuredProjectEntry.data.stats || [],
+	videoUrl: featuredProjectEntry.data.videoUrl || '',
+	linkUrl: featuredProjectEntry.data.linkUrl || '',
+};
 ---
 
 <BaseLayout usePadding={false}>
-	<Hero />
+	<Hero {...heroContent} />
 
 	<!-- Gradient Divider -->
 	<div class="w-full my-16 lg:my-24">
 		<div class="h-[1px] divider-gradient"></div>
 	</div>
 
-	<Experience />
+	<Experience {...experienceContent} />
 
 	<!-- Container Divider with accent hint -->
 	<div class="container mx-auto px-6 lg:px-12 my-8">
 		<div class="h-[1px] divider-gradient"></div>
 	</div>
 
-	<FeaturedProject />
-	<Skills />
+	<FeaturedProject {...featuredProjectContent} />
+	<Skills {...skillsContent} />
 </BaseLayout>

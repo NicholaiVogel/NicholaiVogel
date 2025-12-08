@@ -1,5 +1,27 @@
 ---
 import { Image } from 'astro:assets';
+
+interface Props {
+	sectionTitle: string;
+	sectionSubtitle: string;
+	description: string;
+	skills: Array<{
+		id: string;
+		domain: string;
+		tools: string;
+		proficiency: string;
+	}>;
+}
+
+const { sectionTitle, sectionSubtitle, description, skills } = Astro.props;
+
+// Image map for skill data attributes
+const imageMap: Record<string, string> = {
+	"01": "compositing",
+	"02": "3d",
+	"03": "ai",
+	"04": "dev"
+};
 ---
 
 <section id="skills" class="bg-brand-dark py-32 lg:py-48 overflow-hidden relative cursor-default">
@@ -10,16 +32,16 @@ import { Image } from 'astro:assets';
             <div class="lg:col-span-8">
                 <h2 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white">
                     <span class="block relative overflow-hidden">
-                        <span class="animate-on-scroll slide-up block">Technical</span>
+                        <span class="animate-on-scroll slide-up block">{sectionTitle}</span>
                     </span>
                     <span class="block relative overflow-hidden">
-                        <span class="animate-on-scroll slide-up stagger-1 block text-stroke text-transparent">Arsenal</span>
+                        <span class="animate-on-scroll slide-up stagger-1 block text-stroke text-transparent">{sectionSubtitle}</span>
                     </span>
                 </h2>
             </div>
             <div class="lg:col-span-4 flex items-end">
                 <p class="text-slate-400 text-lg leading-relaxed animate-on-scroll slide-up stagger-2 border-l-2 border-brand-accent pl-6">
-                    A comprehensive suite of tools and workflows designed for high-fidelity visual production and pipeline automation.
+                    {description}
                 </p>
             </div>
         </div>
@@ -35,75 +57,32 @@ import { Image } from 'astro:assets';
                 <div class="col-span-6 md:col-span-2 hidden md:block text-right">Proficiency</div>
             </div>
 
-            <!-- Row 1: Compositing -->
-            <div class="skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30" data-image="compositing">
-                 <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
-                    <span class="block group-hover:-translate-y-full transition-transform duration-500">01</span>
-                    <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">01</span>
-                 </div>
-                 <div class="col-span-10 md:col-span-4 relative overflow-hidden">
-                    <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">Compositing</h3>
-                    <!-- Reveal Swipe Effect -->
-                    <div class="absolute inset-0 bg-brand-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left mix-blend-difference pointer-events-none opacity-0 group-hover:opacity-100"></div>
-                 </div>
-                 <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
-                    Nuke/NukeX • ComfyUI • After Effects • Photoshop
-                 </div>
-                 <div class="col-span-6 md:col-span-2 text-right hidden md:block">
-                     <span class="inline-block px-3 py-1 border border-brand-accent/50 text-brand-accent text-[10px] font-bold uppercase tracking-widest bg-brand-accent/5">Expert</span>
-                 </div>
-            </div>
-
-            <!-- Row 2: 3D Generalist -->
-             <div class="skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30" data-image="3d">
-                 <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
-                    <span class="block group-hover:-translate-y-full transition-transform duration-500">02</span>
-                    <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">02</span>
-                 </div>
-                 <div class="col-span-10 md:col-span-4 relative overflow-hidden">
-                    <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">3D Generalist</h3>
-                 </div>
-                 <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
-                    Houdini • Blender • Maya • USD • Solaris
-                 </div>
-                 <div class="col-span-6 md:col-span-2 text-right hidden md:block">
-                     <span class="inline-block px-3 py-1 border border-white/20 text-slate-300 text-[10px] font-bold uppercase tracking-widest">Advanced</span>
-                 </div>
-            </div>
-
-            <!-- Row 3: AI / ML -->
-             <div class="skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30" data-image="ai">
-                 <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
-                    <span class="block group-hover:-translate-y-full transition-transform duration-500">03</span>
-                    <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">03</span>
-                 </div>
-                 <div class="col-span-10 md:col-span-4 relative overflow-hidden">
-                    <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">AI Integration</h3>
-                 </div>
-                 <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
-                    Stable Diffusion • LoRA • Datasets • Python
-                 </div>
-                 <div class="col-span-6 md:col-span-2 text-right hidden md:block">
-                     <span class="inline-block px-3 py-1 border border-brand-accent/50 text-brand-accent text-[10px] font-bold uppercase tracking-widest bg-brand-accent/5">Specialist</span>
-                 </div>
-            </div>
-
-             <!-- Row 4: Development -->
-             <div class="skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30" data-image="dev">
-                 <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
-                    <span class="block group-hover:-translate-y-full transition-transform duration-500">04</span>
-                    <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">04</span>
-                 </div>
-                 <div class="col-span-10 md:col-span-4 relative overflow-hidden">
-                    <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">Development</h3>
-                 </div>
-                 <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
-                    Python • React • Docker • Linux • Pipeline
-                 </div>
-                 <div class="col-span-6 md:col-span-2 text-right hidden md:block">
-                     <span class="inline-block px-3 py-1 border border-white/20 text-slate-300 text-[10px] font-bold uppercase tracking-widest">Full Stack</span>
-                 </div>
-            </div>
+            {skills.map((skill, index) => {
+                const proficiencyClass = skill.proficiency === "Expert" || skill.proficiency === "Specialist" 
+                    ? "border-brand-accent/50 text-brand-accent bg-brand-accent/5"
+                    : "border-white/20 text-slate-300";
+                
+                return (
+                    <div class={`skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30 ${index < skills.length - 1 ? '' : ''}`} data-image={imageMap[skill.id] || "default"}>
+                        <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
+                            <span class="block group-hover:-translate-y-full transition-transform duration-500">{skill.id}</span>
+                            <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">{skill.id}</span>
+                        </div>
+                        <div class="col-span-10 md:col-span-4 relative overflow-hidden">
+                            <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">{skill.domain}</h3>
+                            {index === 0 && (
+                                <div class="absolute inset-0 bg-brand-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left mix-blend-difference pointer-events-none opacity-0 group-hover:opacity-100"></div>
+                            )}
+                        </div>
+                        <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
+                            {skill.tools}
+                        </div>
+                        <div class="col-span-6 md:col-span-2 text-right hidden md:block">
+                            <span class={`inline-block px-3 py-1 border text-[10px] font-bold uppercase tracking-widest ${proficiencyClass}`}>{skill.proficiency}</span>
+                        </div>
+                    </div>
+                );
+            })}
 
         </div>
     </div>

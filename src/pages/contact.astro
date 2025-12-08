@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../consts';
+import { getEntry } from 'astro:content';
 
 const pageTitle = `Contact | ${SITE_TITLE}`;
+
+// Fetch contact page content
+const contactEntry = await getEntry('pages', 'contact');
+const contactContent = contactEntry.data;
 ---
 
 <BaseLayout title={pageTitle} description="Get in touch for collaboration or inquiries." usePadding={false}>
@@ -22,14 +27,13 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-white/10 pb-12">
             <div class="lg:col-span-8">
                 <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white mb-8">
-                    <span class="block animate-on-scroll slide-up">Project</span>
-                    <span class="block text-brand-accent animate-on-scroll slide-up stagger-1">Inquiry</span>
+                    <span class="block animate-on-scroll slide-up">{contactContent.pageTitleLine1}</span>
+                    <span class="block text-brand-accent animate-on-scroll slide-up stagger-1">{contactContent.pageTitleLine2}</span>
                 </h1>
             </div>
             <div class="lg:col-span-4 flex flex-col justify-end">
                 <p class="font-mono text-sm text-slate-400 leading-relaxed mb-8 border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
-                    Available for freelance commissions and studio collaborations.
-                    Currently booking Q3 2026.
+                    {contactContent.availabilityText}
                 </p>
             </div>
         </div>
@@ -40,7 +44,7 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
             <div class="lg:col-span-7 animate-on-scroll slide-up stagger-3">
                 <div class="mb-8 flex items-center gap-3">
                     <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
-                    <span class="font-mono text-xs text-brand-accent uppercase tracking-widest">Transmission Uplink</span>
+                    <span class="font-mono text-xs text-brand-accent uppercase tracking-widest">{contactContent.formLabels?.transmissionUplink}</span>
                 </div>
 
                 <form id="contact-form" class="space-y-12">
@@ -54,7 +58,7 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                             required
                         />
                         <label for="name" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
-                            /// Identification Name
+                            {contactContent.formLabels?.name}
                         </label>
                     </div>
 
@@ -68,7 +72,7 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                             required
                         />
                         <label for="email" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
-                            /// Return Address
+                            {contactContent.formLabels?.email}
                         </label>
                     </div>
 
@@ -84,28 +88,18 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                         </button>
 
                         <label id="select-label" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 pointer-events-none">
-                            /// Subject Protocol
+                            {contactContent.formLabels?.subject}
                         </label>
 
                         <!-- Dropdown Menu -->
                         <div id="select-options" class="absolute left-0 top-full w-full bg-brand-dark border border-white/20 shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2">
                             <div class="p-1">
-                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="project">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
-                                    New Project Commission
-                                </div>
-                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="collab">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
-                                    Studio Collaboration
-                                </div>
-                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="press">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
-                                    Press / Media
-                                </div>
-                                <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value="other">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
-                                    Other Inquiry
-                                </div>
+                                {contactContent.subjectOptions?.map((option) => (
+                                    <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value={option.value}>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
+                                        {option.label}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -120,13 +114,13 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                             required
                         ></textarea>
                         <label for="message" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
-                            /// Message Data
+                            {contactContent.formLabels?.message}
                         </label>
                     </div>
 
                     <div class="pt-8">
                         <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-4 px-8 py-4 bg-transparent border border-white/20 hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span id="submit-text" class="font-mono text-xs font-bold uppercase tracking-widest text-white group-hover:text-brand-accent transition-colors">Transmit Message</span>
+                            <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="font-mono text-xs font-bold uppercase tracking-widest text-white group-hover:text-brand-accent transition-colors">{contactContent.formLabels?.submit}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-brand-accent group-hover:translate-x-1 transition-all"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>
                     </div>
@@ -139,8 +133,8 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                 <!-- Data Block 1 -->
                 <div class="relative pl-6 border-l border-white/10">
                     <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Direct Link</h3>
-                    <a href="mailto:nicholai@nicholai.work" class="text-2xl md:text-3xl font-bold text-white hover:text-brand-accent transition-colors break-all">
-                        nicholai@nicholai.work
+                    <a href={`mailto:${contactContent.email}`} class="text-2xl md:text-3xl font-bold text-white hover:text-brand-accent transition-colors break-all">
+                        {contactContent.email}
                     </a>
                 </div>
 
@@ -148,11 +142,11 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                 <div class="relative pl-6 border-l border-white/10">
                     <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Coordinates</h3>
                     <p class="text-xl text-white font-light">
-                        Colorado Springs, CO<br>
-                        <span class="text-slate-500 text-base">United States</span>
+                        {contactContent.location}<br>
+                        <span class="text-slate-500 text-base">{contactContent.locationCountry}</span>
                     </p>
                     <div class="mt-4 font-mono text-xs text-brand-accent">
-                        38.8339° N, 104.8214° W
+                        {contactContent.coordinates}
                     </div>
                 </div>
 
@@ -160,24 +154,14 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                 <div class="relative pl-6 border-l border-white/10">
                     <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Social Feed</h3>
                     <ul class="space-y-4">
-                        <li>
-                            <a href="#" class="flex items-center gap-4 group">
-                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">Instagram</span>
-                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center gap-4 group">
-                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">LinkedIn</span>
-                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center gap-4 group">
-                                <span class="text-slate-400 group-hover:text-white transition-colors text-lg">Vimeo</span>
-                                <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                            </a>
-                        </li>
+                        {contactContent.socialLinks?.map((link) => (
+                            <li>
+                                <a href={link.url} class="flex items-center gap-4 group">
+                                    <span class="text-slate-400 group-hover:text-white transition-colors text-lg">{link.name}</span>
+                                    <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                                </a>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
@@ -680,7 +664,7 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
                         showResponse();
 
                         // Reset button state
-                        submitText.textContent = 'Transmit Message';
+                        submitText.textContent = submitText.getAttribute('data-default-text') || 'Transmit Message';
                         submitBtn.disabled = false;
 
                     } catch (markdownError) {
@@ -713,8 +697,9 @@ const pageTitle = `Contact | ${SITE_TITLE}`;
 
                 // Update button to failure state
                 submitText.textContent = 'Transmission Failed';
+                const defaultText = submitText.getAttribute('data-default-text') || 'Transmit Message';
                 setTimeout(() => {
-                    submitText.textContent = 'Transmit Message';
+                    submitText.textContent = defaultText;
                     submitBtn.disabled = false;
                 }, 2000);
 
