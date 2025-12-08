@@ -1,4 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
+import heroPortrait from '../../assets/nicholai-closeup-portrait.JPEG';
+
 interface Props {
 	headlineLine1: string;
 	headlineLine2: string;
@@ -11,14 +14,19 @@ interface Props {
 const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bio } = Astro.props;
 ---
 <section id="hero" class="relative w-full h-[100dvh] overflow-hidden bg-brand-dark">
-    <!-- Background Image (Portrait) -->
+    <!-- Background Image (Portrait) - Optimized with AVIF/WebP -->
     <div class="absolute top-0 right-0 w-full md:w-1/2 h-full z-0">
         <div class="relative w-full h-full">
-            <img
-                src="/media/nicholai-closeup-portrait.JPEG"
-                alt="Nicholai Portrait"
+            <Picture
+                src={heroPortrait}
+                formats={['avif', 'webp']}
+                widths={[640, 1024, 1600]}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                alt="Nicholai Vogel portrait"
                 class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity md:opacity-0 transition-opacity duration-[2000ms] ease-out delay-500 intro-element"
                 id="hero-portrait"
+                loading="eager"
+                decoding="sync"
             />
             <div class="absolute inset-0 bg-gradient-to-l from-transparent via-brand-dark/50 to-brand-dark"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>

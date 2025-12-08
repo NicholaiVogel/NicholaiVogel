@@ -37,6 +37,7 @@ interface Props {
 	prevPost?: NavPost;
 	nextPost?: NavPost;
 	relatedPosts?: RelatedPost[];
+	readTime?: string;
 }
 
 const {
@@ -51,13 +52,47 @@ const {
 	prevPost,
 	nextPost,
 	relatedPosts = [],
+	readTime = '5 min read',
 } = Astro.props;
 
-// Estimated read time (rough calculation)
-const readTime = '5 min read';
+// Article structured data (JSON-LD)
+const articleSchema = {
+	"@context": "https://schema.org",
+	"@type": "Article",
+	"headline": title,
+	"description": description,
+	"datePublished": pubDate.toISOString(),
+	"dateModified": (updatedDate || pubDate).toISOString(),
+	"author": {
+		"@type": "Person",
+		"name": "Nicholai Vogel",
+		"url": "https://nicholai.work"
+	},
+	"publisher": {
+		"@type": "Person",
+		"name": "Nicholai Vogel",
+		"url": "https://nicholai.work"
+	},
+	"mainEntityOfPage": {
+		"@type": "WebPage",
+		"@id": Astro.url.href
+	},
+	...(heroImage && { "image": new URL(heroImage.src, Astro.url).toString() }),
+	...(category && { "articleSection": category }),
+	...(tags && tags.length > 0 && { "keywords": tags.join(", ") })
+};
 ---
 
-<BaseLayout title={title} description={description} image={heroImage}>
+<BaseLayout 
+	title={title} 
+	description={description} 
+	image={heroImage}
+	type="article"
+	publishedTime={pubDate}
+	modifiedTime={updatedDate}
+>
+	<!-- Article Structured Data -->
+	<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} slot="head" />
 	<ReadingProgress />
 	
 	<article class="relative pb-24">
