@@ -10,5 +10,6 @@ export const SITE_DESCRIPTION = 'VFX Supervisor specializing in both 2D and 3D V
 export const SOCIAL_LINKS = {
   email: 'nicholai@nicholai.work',
   website: 'https://nicholai.work',
-  linkedin: 'https://www.linkedin.com/in/nicholai-vogel-7a6b85112/'
+  linkedin: 'https://www.linkedin.com/in/nicholai-vogel-7a6b85112/',
+  gitea: 'https://git.biohazardvfx.com/Nicholai'
 };
