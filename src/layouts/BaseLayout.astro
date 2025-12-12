@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import Navigation from '../components/Navigation.astro';
 import CustomCursor from '../components/CustomCursor';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 interface Props {
   title?: string;
@@ -31,6 +31,7 @@ const {
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
+    <meta name="x-nicholai-marker" content={HTML_MARKER} />
     <BaseHead 
       title={title} 
       description={description} 
@@ -41,6 +42,7 @@ const {
     />
     <slot name="head" />
   </head>
+  
   <body class="antialiased selection:bg-brand-accent selection:text-brand-dark bg-brand-dark text-white">
     <!-- Only hydrate custom cursor on devices that can actually benefit from it -->
     <CustomCursor client:media="(pointer: fine) and (hover: hover)" />
