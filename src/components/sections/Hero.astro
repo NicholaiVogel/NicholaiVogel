@@ -91,7 +91,8 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
     }
     /* Fade out */
     .grid-cell {
-        transition: opacity 0.8s ease-out, background-color 0.8s ease-out;
+        /* Slightly faster fade-out for a snappier feel */
+        transition: opacity 0.6s ease-out, background-color 0.6s ease-out;
     }
 
     /* Initial Loaded State Classes */
@@ -112,17 +113,40 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
 </style>
 
 <script>
-    // Clock
-    function updateClock() {
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+    const finePointer = window.matchMedia?.('(pointer: fine) and (hover: hover)')?.matches ?? false;
+
+    // ===== CLOCK (pause on hidden tab, align to second boundaries) =====
+    let clockTimer = 0;
+
+    function updateClockOnce() {
         const clock = document.getElementById('clock');
-        if (clock) {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', {hour12: false, timeZone: 'America/Denver'});
-            clock.textContent = timeString + " MST";
-        }
+        if (!clock) return;
+
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Denver' });
+        clock.textContent = `${timeString} MST`;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+
+    function startClock() {
+        if (clockTimer) window.clearTimeout(clockTimer);
+
+        const tick = () => {
+            if (document.hidden) {
+                clockTimer = window.setTimeout(tick, 1000);
+                return;
+            }
+
+            updateClockOnce();
+            // Align to the next second boundary to reduce drift.
+            const msToNextSecond = 1000 - (Date.now() % 1000);
+            clockTimer = window.setTimeout(tick, msToNextSecond);
+        };
+
+        tick();
+    }
+
+    startClock();
 
     // Intro Animation Sequence
     window.addEventListener('load', () => {
@@ -138,21 +162,23 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
             portrait.classList.add('portrait-visible');
         }
 
-        // Trigger Grid Ripple
-        const cells = document.querySelectorAll('.grid-cell');
-        // Diagonal sweep effect
-        cells.forEach((cell, i) => {
-            const row = Math.floor(i / 10);
-            const col = i % 10;
-            const delay = (row + col) * 50; // Diagonal delay
+        // Trigger Grid Ripple (skip if reduced motion)
+        if (!reduceMotion) {
+            const cells = document.querySelectorAll('.grid-cell');
+            // Diagonal sweep effect
+            cells.forEach((cell, i) => {
+                const row = Math.floor(i / 10);
+                const col = i % 10;
+                const delay = (row + col) * 45; // slightly faster diagonal delay
 
-            setTimeout(() => {
-                cell.classList.add('active');
-                setTimeout(() => {
-                    cell.classList.remove('active');
-                }, 200);
-            }, delay);
-        });
+                window.setTimeout(() => {
+                    cell.classList.add('active');
+                    window.setTimeout(() => {
+                        cell.classList.remove('active');
+                    }, 180);
+                }, delay);
+            });
+        }
     });
 
 
@@ -161,67 +187,85 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
     const cells = document.querySelectorAll('.grid-cell');
 
     if (section) {
-        section.addEventListener('mousemove', (e) => {
-            const rect = section.getBoundingClientRect();
-            // Calculate relative coordinates
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        // Throttle mousemove work to one update per frame.
+        let latestX = 0;
+        let latestY = 0;
+        let pending = false;
+        let lastIndex = -1;
+        const timeouts: number[] = new Array(cells.length).fill(0);
 
-            // Calculate grid dimensions
+        const process = () => {
+            pending = false;
+            if (!finePointer || reduceMotion) return;
+
+            const rect = section.getBoundingClientRect();
             const width = rect.width;
             const height = rect.height;
+            if (width <= 0 || height <= 0) return;
 
-            // 10x10 grid
+            const x = latestX - rect.left;
+            const y = latestY - rect.top;
+
             const col = Math.floor((x / width) * 10);
             const row = Math.floor((y / height) * 10);
 
-            // Bounds check
-            if (col >= 0 && col < 10 && row >= 0 && row < 10) {
-                const index = row * 10 + col;
-                const cell = cells[index];
+            if (col < 0 || col >= 10 || row < 0 || row >= 10) return;
 
-                if (cell) {
-                    // Remove active class from all others (optional, or let them fade)
-                    // cell.classList.add('active');
+            const index = row * 10 + col;
+            if (index === lastIndex) return;
+            lastIndex = index;
 
-                    // To prevent "sticking", we can use a timestamp or just let CSS transition handle fade out
-                    // But we need to trigger the "hit"
+            const cell = cells[index] as HTMLElement | undefined;
+            if (!cell) return;
 
-                    // Logic: Add active, then remove it shortly after to trigger fade
-                    cell.classList.add('active');
+            cell.classList.add('active');
 
-                    // Clear previous timeout if this cell was just hit?
-                    // Simpler: Just add active. Use requestAnimationFrame to clear "old" active cells?
-                    // Or just let the CSS transition handle the fade out when class is removed.
+            const prev = timeouts[index];
+            if (prev) window.clearTimeout(prev);
 
-                    // Better approach for "trail":
-                    // Add active class. Set a timeout to remove it.
+            // Shorter hold time for a quicker trail.
+            timeouts[index] = window.setTimeout(() => {
+                cell.classList.remove('active');
+                timeouts[index] = 0;
+            }, 35);
+        };
 
-                    if (cell.dataset.timeout) {
-                        clearTimeout(Number(cell.dataset.timeout));
-                    }
-
-                    const timeoutId = setTimeout(() => {
-                        cell.classList.remove('active');
-                    }, 50); // Short "hold" time, then fade out via CSS
-
-                    cell.dataset.timeout = String(timeoutId);
-                }
-            }
-        });
+        section.addEventListener('mousemove', (e) => {
+            latestX = e.clientX;
+            latestY = e.clientY;
+            if (pending) return;
+            pending = true;
+            window.requestAnimationFrame(process);
+        }, { passive: true });
     }
 
     // Random pulse for liveliness
-    function pulseRandomSquare() {
-        // Only pulse if not currently interacting (optional, but keeps it cleaner)
-        const randomIndex = Math.floor(Math.random() * cells.length);
-        const cell = cells[randomIndex];
-        if(cell) {
+    let pulseInterval = 0;
+
+    function startPulse() {
+        if (pulseInterval) window.clearInterval(pulseInterval);
+        if (!finePointer || reduceMotion) return;
+
+        pulseInterval = window.setInterval(() => {
+            if (document.hidden) return;
+
+            const randomIndex = Math.floor(Math.random() * cells.length);
+            const cell = cells[randomIndex] as HTMLElement | undefined;
+            if (!cell) return;
+
             cell.classList.add('active');
-            setTimeout(() => {
+            window.setTimeout(() => {
                 cell.classList.remove('active');
-            }, 200);
-        }
+            }, 160);
+        }, 1200);
     }
-    setInterval(pulseRandomSquare, 1500);
+
+    startPulse();
+
+    document.addEventListener('visibilitychange', () => {
+        // Keep timers light in background.
+        if (!document.hidden) {
+            updateClockOnce();
+        }
+    });
 </script>

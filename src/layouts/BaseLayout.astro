@@ -42,7 +42,8 @@ const {
     <slot name="head" />
   </head>
   <body class="antialiased selection:bg-brand-accent selection:text-brand-dark bg-brand-dark text-white">
-    <CustomCursor client:load />
+    <!-- Only hydrate custom cursor on devices that can actually benefit from it -->
+    <CustomCursor client:media="(pointer: fine) and (hover: hover)" />
     <GridOverlay />
     <Navigation />
 
@@ -53,14 +54,9 @@ const {
     <Footer />
 
     <script>
-      // Initialize Lucide icons
-      // @ts-ignore
-      if (window.lucide) {
-        // @ts-ignore
-        window.lucide.createIcons();
-      }
-
       // ===== SCROLL ANIMATION SYSTEM =====
+      // If you're using Astro view transitions, elements can change between navigations.
+      // We'll (re)bind observers on initial load and on `astro:page-load`.
 
       // Observer for scroll-triggered animations
       const scrollObserverOptions = {
@@ -78,11 +74,6 @@ const {
         });
       }, scrollObserverOptions);
 
-      // Observe all animate-on-scroll elements
-      document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        scrollObserver.observe(el);
-      });
-
       // Observer for legacy reveal-text animations
       const revealObserverOptions = {
         threshold: 0.1,
@@ -97,17 +88,93 @@ const {
         });
       }, revealObserverOptions);
 
-      document.querySelectorAll('.reveal-text').forEach(el => {
-        revealObserver.observe(el);
-      });
-
-      // Auto-stagger children in containers with .stagger-children class
-      document.querySelectorAll('.stagger-children').forEach(container => {
-        const children = container.querySelectorAll('.animate-on-scroll');
-        children.forEach((child, index) => {
-          child.classList.add(`stagger-${Math.min(index + 1, 8)}`);
+      function bindScrollAnimations() {
+        // Observe animate-on-scroll elements (avoid re-observing elements already visible)
+        document.querySelectorAll('.animate-on-scroll:not(.is-visible)').forEach(el => {
+          scrollObserver.observe(el);
         });
-      });
+
+        // Observe reveal-text elements
+        document.querySelectorAll('.reveal-text:not(.active)').forEach(el => {
+          revealObserver.observe(el);
+        });
+
+        // Auto-stagger children in containers with .stagger-children class
+        document.querySelectorAll('.stagger-children').forEach(container => {
+          const children = container.querySelectorAll('.animate-on-scroll');
+          children.forEach((child, index) => {
+            child.classList.add(`stagger-${Math.min(index + 1, 8)}`);
+          });
+        });
+      }
+
+      // Initial bind
+      bindScrollAnimations();
+
+      // Re-bind on Astro page transitions (if enabled)
+      document.addEventListener('astro:page-load', bindScrollAnimations);
+    </script>
+
+    <script>
+      // ===== INTENT-BASED PREFETCH (hover/focus) =====
+      // Lightweight prefetch to make navigation feel instant without a full SPA router.
+      const prefetched = new Set();
+
+      function isPrefetchableUrl(url) {
+        try {
+          const u = new URL(url, window.location.href);
+          if (u.origin !== window.location.origin) return false;
+          if (u.hash) return false;
+          if (u.pathname === window.location.pathname && u.search === window.location.search) return false;
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function prefetchDocument(url) {
+        if (!isPrefetchableUrl(url)) return;
+        const u = new URL(url, window.location.href);
+        const key = u.href;
+        if (prefetched.has(key)) return;
+        prefetched.add(key);
+
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'document';
+        link.href = key;
+        document.head.appendChild(link);
+      }
+
+      function getAnchorFromEventTarget(target) {
+        if (!(target instanceof Element)) return null;
+        return target.closest('a[href]');
+      }
+
+      const schedule = (href) => {
+        // Don't block input; prefetch when the browser is idle if possible.
+        // @ts-ignore - requestIdleCallback isn't in all TS lib targets
+        if (window.requestIdleCallback) {
+          // @ts-ignore
+          window.requestIdleCallback(() => prefetchDocument(href), { timeout: 1000 });
+        } else {
+          setTimeout(() => prefetchDocument(href), 0);
+        }
+      };
+
+      document.addEventListener('mouseover', (e) => {
+        const a = getAnchorFromEventTarget(e.target);
+        const href = a?.getAttribute('href');
+        if (!href) return;
+        schedule(href);
+      }, { passive: true });
+
+      document.addEventListener('focusin', (e) => {
+        const a = getAnchorFromEventTarget(e.target);
+        const href = a?.getAttribute('href');
+        if (!href) return;
+        schedule(href);
+      }, { passive: true });
     </script>
   </body>
 </html>

@@ -234,6 +234,7 @@ html {
   border-radius: 50%;
   z-index: 9999;
   pointer-events: none;
+  will-change: transform;
 }
 
 .cursor-dot {
