@@ -30,10 +30,12 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 <BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
 	<section class="container mx-auto px-6 lg:px-12">
 		<!-- Back Navigation -->
-		<a href="/" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 mb-12 group">
-			<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
-			Back to Home
-		</a>
+			<div class="mb-12">
+				<a href="/" class="inline-flex items-center gap-3 px-5 py-3 border border-slate-700 bg-brand-dark/50 text-xs font-mono font-bold uppercase tracking-widest text-slate-400 hover:border-brand-accent hover:text-white hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
+					<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
+					<span>RETURN_TO_HOME</span>
+				</a>
+			</div>
 
 		<!-- Page Header -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 lg:mb-24">

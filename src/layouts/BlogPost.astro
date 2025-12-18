@@ -102,43 +102,43 @@ const articleSchema = {
 				<!-- Main Column -->
 				<div class="lg:col-span-8 lg:col-start-3">
 					<!-- Back Navigation -->
-					<div class="mb-8">
-						<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
-							<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
-							Back to Blog
+					<div class="mb-12">
+						<a href="/blog" class="inline-flex items-center gap-3 px-5 py-3 border border-slate-700 bg-brand-dark/50 text-xs font-mono font-bold uppercase tracking-widest text-slate-400 hover:border-brand-accent hover:text-white hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
+							<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
+							<span>RETURN_TO_ARCHIVE</span>
 						</a>
 					</div>
 
 					<!-- Hero Section: Side-by-Side Layout -->
-					<header class="mb-16 lg:mb-20">
-						<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+					<header class="mb-20 lg:mb-24 relative">
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 							<!-- Text Content -->
-							<div class="order-2 lg:order-1">
+							<div class="order-2 lg:order-1 relative z-10">
 								<!-- Metadata -->
-								<div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-5">
+								<div class="flex flex-wrap items-center gap-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-8 border-b border-white/10 pb-4">
 									<div class="flex items-center gap-2">
-										<div class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></div>
-										<span class="text-brand-accent font-bold">SYS.ARTICLE</span>
+										<div class="w-1.5 h-1.5 bg-brand-accent shadow-[0_0_10px_rgba(221,65,50,0.5)] rounded-full animate-pulse"></div>
+										<span class="text-brand-accent font-bold">SYS.LOG</span>
 									</div>
-									<span class="h-px w-4 bg-white/20"></span>
+									<span class="text-slate-700">/</span>
 									<FormattedDate date={pubDate} />
-									<span class="h-px w-4 bg-white/20"></span>
+									<span class="text-slate-700">/</span>
 									<span>{readTime}</span>
 								</div>
 								
 								{category && (
-									<div class="mb-4">
-										<span class="px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-widest bg-brand-accent/10 border border-brand-accent/30 text-brand-accent">
-											{category}
+									<div class="mb-6">
+										<span class="inline-block px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-white/5 border border-white/10 text-brand-accent hover:bg-brand-accent/10 transition-colors cursor-default">
+											/// {category}
 										</span>
 									</div>
 								)}
 								
-								<h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white uppercase leading-[0.95] tracking-tighter mb-4">
+								<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white uppercase leading-[0.9] tracking-tighter mb-8 break-words text-balance">
 									{title}
 								</h1>
 								
-								<p class="text-sm lg:text-base text-slate-400 leading-relaxed font-light mb-5 border-l border-white/10 pl-4">
+								<p class="text-base md:text-lg text-slate-400 leading-relaxed font-light mb-8 border-l-2 border-brand-accent pl-6">
 									{description}
 								</p>
 								
@@ -146,8 +146,8 @@ const articleSchema = {
 								{tags && tags.length > 0 && (
 									<div class="flex flex-wrap gap-2">
 										{tags.map((tag) => (
-											<span class="px-2 py-1 text-[9px] font-mono uppercase border border-white/10 text-slate-500 hover:border-white/20 transition-colors">
-												{tag}
+											<span class="px-2 py-1 text-[9px] font-mono uppercase bg-brand-dark border border-slate-800 text-slate-500 hover:border-brand-accent/50 hover:text-white transition-colors cursor-default">
+												#{tag}
 											</span>
 										))}
 									</div>
@@ -157,18 +157,25 @@ const articleSchema = {
 							<!-- Hero Image -->
 							{heroImage && (
 								<div class="order-1 lg:order-2">
-									<div class="relative aspect-[4/3] overflow-hidden border border-white/10 bg-white/[0.02]">
+									<div class="relative aspect-[4/3] lg:aspect-square overflow-hidden border border-white/10 bg-white/[0.02] group">
+										<!-- Tech corners -->
+										<div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-accent z-20"></div>
+										<div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-accent z-20"></div>
+										<div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-accent z-20"></div>
+										<div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-accent z-20"></div>
+
 										<Image
 											src={heroImage}
 											alt=""
-											width={600}
-											height={450}
+											width={800}
+											height={800}
 											loading="eager"
-											class="w-full h-full object-cover"
+											class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out grayscale hover:grayscale-0"
 										/>
-										<!-- Subtle overlay -->
-										<div class="absolute inset-0 bg-brand-dark/10"></div>
-										<div class="absolute inset-0 grid-overlay opacity-20 pointer-events-none"></div>
+										
+										<!-- Scanline overlay (subtle) -->
+										<div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20"></div>
+										<div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
 									</div>
 								</div>
 							)}
@@ -184,20 +191,21 @@ const articleSchema = {
 					<footer class="mt-24 pt-10 border-t border-white/10">
 						<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 							<div>
-								<p class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
+								<p class="text-[10px] font-mono text-brand-accent uppercase tracking-widest mb-2 flex items-center gap-2">
+									<span class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></span>
 									/// END TRANSMISSION
 								</p>
-								<p class="text-slate-400 text-sm">
-									Published <FormattedDate date={pubDate} />
+								<p class="text-slate-400 text-sm font-mono">
+									LOG_DATE: <FormattedDate date={pubDate} />
 									{updatedDate && (
-										<span class="text-slate-500"> · Last updated <FormattedDate date={updatedDate} /></span>
+										<span class="text-slate-500"> // UPDATED: <FormattedDate date={updatedDate} /></span>
 									)}
 								</p>
 							</div>
 							
 							<!-- Share Links -->
-							<div class="flex items-center gap-4">
-								<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Share</span>
+							<div class="flex items-center gap-6">
+								<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">DATA_UPLINK:</span>
 								<div class="flex items-center gap-2">
 									<a
 										href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
@@ -246,10 +254,10 @@ const articleSchema = {
 					<RelatedPosts posts={relatedPosts} />
 					
 					<!-- Back to Blog -->
-					<div class="mt-20 pt-10 border-t border-white/10">
-						<a href="/blog" class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-white transition-colors duration-300 group">
-							<span class="w-8 h-[1px] bg-slate-600 group-hover:bg-brand-accent group-hover:w-12 transition-all duration-300"></span>
-							Back to All Posts
+					<div class="mt-20 pt-10 border-t border-white/10 flex justify-center lg:justify-start">
+						<a href="/blog" class="inline-flex items-center gap-4 px-8 py-4 border border-slate-600 text-xs font-bold uppercase tracking-widest text-white hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group">
+							<span class="font-mono transition-transform duration-300 group-hover:-translate-x-1">&lt;</span>
+							ACCESS_FULL_ARCHIVE
 						</a>
 					</div>
 				</div>
