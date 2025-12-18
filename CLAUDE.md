@@ -88,10 +88,13 @@ MDX file → src/content.config.ts schema → getCollection() → Component prop
 - Static files in `public/media/` are served as-is (use absolute paths like `/media/file.mp4`)
 - AVIF conversion utility available for optimization
 
-### Styling
-- Tailwind CSS v4 via Vite plugin
-- Custom animation classes: `.animate-on-scroll`, `.slide-up`, `.stagger-*`, `.fade-in`
-- Monospace font used for technical labels and metadata
+## Design Specification
+
+`dev/design.json` contains V7 Industrial Dark Mode system specification (not yet implemented):
+- Dark mode native with `#0B0D11` primary background
+- Orange/yellow accent `#FFB84C` for CTAs
+- Brutalist/industrial aesthetic with visible grid structure
+- Heavy typography emphasis
 
 ### Deployment
 - Cloudflare Pages adapter configured in `astro.config.mjs`
