@@ -33,3 +33,6 @@ src/utils/.env
 .specstory/**
 .specstory/
 .cursorindexingignore
+
+# AGENTS.md symlink
+AGENTS.md
