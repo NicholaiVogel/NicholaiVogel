@@ -16,9 +16,9 @@ const allPosts = (await getCollection('blog')).sort(
 const featuredPost = allPosts.find((post) => post.data.featured) || allPosts[0];
 
 // Editor's picks: next 3 posts after featured (excluding the featured one)
-const editorPicks = allPosts
-	.filter((post) => post.id !== featuredPost?.id)
-	.slice(0, 3);
+//const editorPicks = allPosts
+//	.filter((post) => post.id !== featuredPost?.id)
+//	.slice(0, 3);
 
 // Latest posts: all posts for the filterable grid
 const latestPosts = allPosts;
@@ -162,38 +162,6 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 				</article>
 			</div>
 		)}
-
-		<!-- Editor's Picks Section -->
-		{editorPicks.length > 0 && (
-			<div class="mb-16 lg:mb-24">
-				<div class="flex items-center gap-4 mb-8">
-					<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
-						/// EDITOR'S PICKS
-					</span>
-					<span class="h-px flex-grow bg-white/10"></span>
-				</div>
-				
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
-					{editorPicks.map((post, index) => (
-						<div class={`animate-on-scroll slide-up stagger-${index + 1}`}>
-							<BlogCard
-								title={post.data.title}
-								description={post.data.description}
-								pubDate={post.data.pubDate}
-								heroImage={post.data.heroImage}
-								category={post.data.category}
-								tags={post.data.tags}
-								href={`/blog/${post.id}/`}
-								variant="compact"
-							/>
-						</div>
-					))}
-				</div>
-			</div>
-		)}
-
-		<!-- Divider -->
-		<div class="h-px divider-gradient mb-16 lg:mb-24"></div>
 
 		<!-- Latest Section with Filters -->
 		<div class="mb-16 lg:mb-24">
