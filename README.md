@@ -32,6 +32,41 @@ pnpm preview
 pnpm deploy
 ```
 
+## Image Optimization
+
+The project includes a utility script to convert images to AVIF format for optimal web performance.
+
+### Converting Images to AVIF
+
+AVIF images are typically 80-98% smaller than JPEGs/PNGs while maintaining excellent quality, making them ideal for web use.
+
+```bash
+# Convert all images in src/assets/
+pnpm run convert:avif:all
+
+# Convert only JPEG images
+pnpm run convert:avif:jpeg
+
+# Convert only PNG images
+pnpm run convert:avif:png
+
+# Custom quality (0-100, default: 65)
+node src/utils/convert-to-avif.js --jpeg --quality 80
+```
+
+**Features:**
+- Preserves original images
+- Skips already-converted files
+- Shows file size savings
+- Supports JPEG, PNG, WebP, GIF, BMP, and TIFF
+
+**Requirements:**
+- ffmpeg must be installed:
+  - Linux: `sudo apt install ffmpeg`
+  - macOS: `brew install ffmpeg`
+
+See `src/utils/README.md` for detailed documentation.
+
 ## Creating Blog Posts
 
 Blog posts are created as MDX files in the `src/content/blog/` directory. The file name becomes the URL slug (e.g., `my-post.mdx` → `/blog/my-post/`).
@@ -203,7 +238,8 @@ src/
 │   └── sections/   # Homepage sections
 ├── layouts/         # Page layouts
 ├── pages/          # Routes
-└── styles/         # Global styles
+├── styles/         # Global styles
+└── utils/          # Utility scripts (AVIF converter, etc.)
 ```
 
 ## Deployment
