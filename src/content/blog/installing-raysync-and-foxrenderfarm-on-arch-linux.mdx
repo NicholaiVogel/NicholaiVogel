@@ -1,0 +1,342 @@
+---
+title: 'How to use Fox Renderfarm on Arch Linux'
+description: 'A practical guide to getting Raysync and FoxRenderfarm working on Arch Linux.'
+pubDate: 'Dec 14 2025'
+heroImage: '../../assets/foxrenderfarm-arch-linux.png'
+featured: true 
+category: 'Pipeline'
+tags: ['Linux', 'Pipeline', 'Rendering', 'DevOps', 'Tutorial']
+---
+
+## Introduction
+
+If you're a VFX or 3D artist who's made the leap to Arch (or any rolling release distro), you've probably hit this wall before. Proprietary software packaged as `.deb` files, legacy library dependencies, and that sinking feeling when you find that you are the first person on the internet to have ever tried to install a specific software on Arch.
+
+This guide walks through my process of installing **Raysync** (file transfer acceleration) and the desktop client for **[FoxRenderfarm](https://www.foxrenderfarm.com/download.html)** on Arch Linux. Both only ship `.deb` packages and `.run` installers designed for Rocky Linux and CentOS7.
+
+I don't suspect this guide will work forever, but my hope in posting this is that others can reference this and have somewhere to start from.
+
+## System Information
+
+This guide was tested on:
+- **OS:** Arch Linux (kernel 6.17.4-arch2-1)
+- **Desktop Environment:** Hyprland (should work on Gnome and KDE also)
+- **Display Server:** Wayland/X11
+- **Graphics:** NVIDIA (proprietary drivers 560.35.03) / AMD (mesa)
+- **Architecture:** x86_64
+
+**Software versions:**
+- Raysync: 6.2.8.24 (.deb package)
+- FoxRenderfarm Desktop: 5.0 (CentOS7 installer - `QFoxRenderfarmDesktop5.0.run`)
+- libjpeg6-turbo: 2.0.6-1 (AUR)
+- System libstdc++: 14.2.1 (gcc-libs package)
+
+Your mileage may vary depending on your system state and library versions, but the general approach should work on any rolling release distro.
+
+## Part 1: Raysync - The Simple One
+
+The installation of Raysync turned out to be surprisingly straightforward and took minimal troubleshooting. Raysync is a high-speed file transfer tool used by FoxRenderfarm, and to get the Desktop client working, you'll need to install this first. 
+
+### Succumbing to hubris
+
+My first instinct was to use `debtap`, a tool specifically designed to convert Debian packages to Arch packages:
+
+```bash
+debtap Raysync_6.2.8.24.deb
+```
+
+This created a shiny new `raysync-3.3.8.1-1-x86_64.pkg.tar.zst` file that (in my hubris and overwhelmed by my own sense of unique genius) led me to believe I was done. Silly me for assuming the tool *designed specifically for converting Debian packages to Arch packages* would convert my debian package to an Arch package. Rookie mistake.
+
+```
+error: package raysync-3.3.8.1-1-x86_64 does not have a valid architecture
+```
+
+It turns out `debtap` didn't properly set the architecture metadata when I skipped the prompts (because why the fuck would it). Could I have fixed it? Sure. But no, I was annoyed and wanted the path of least resistance.
+
+### The Manual Extraction Method
+
+Here's what actually works:
+
+```bash
+# Extract the .deb archive (it's just an AR archive)
+ar x Raysync_6.2.8.24.deb
+
+# Extract the actual files
+tar -xzf data.tar.gz
+
+# Copy to system directories
+sudo cp -r usr /
+sudo cp -r opt / 2>/dev/null  # If opt/ exists in the package
+```
+
+**What's happening here:** A `.deb` file is just an archive containing `control.tar.gz` (metadata) and `data.tar.gz` (the actual files). We're skipping all the package manager validation and just putting the files where they belong.
+
+**The tradeoff:** This works perfectly, but you lose package manager tracking. That means:
+- No `pacman -R raysync` to uninstall
+- No automatic dependency resolution
+- You'll need to track updates manually
+
+For a proprietary tool that rarely updates? (Since I'm writing this down) I'm cool with it.
+
+Once installed, Raysync lives at:
+- Binary: `/usr/local/bin/raysync`
+- Resources: `/usr/local/share/raysync/`
+- Desktop entries: `/usr/share/applications/raysync-*.desktop`
+
+Just run `raysync` from the terminal or launch it from your application menu. You'll see some Qt platform warnings in the console, but they're harmless - probably.
+
+## Part 2: FoxRenderfarm - The Dependency Nightmare
+
+FoxRenderfarm is where things get more complex. Duh.
+
+### The Installation
+
+Fox provides two self-extracting installers:
+- `foxrenderfarm5.0.run` (140MB) Rocky Linux 
+- `QFoxRenderfarmDesktop5.0.run` (188MB) CentOS7
+
+I went with the CentOS7 installer:
+
+```bash
+./QFoxRenderfarmDesktop5.0.run
+```
+
+The installer extracts everything to:
+```
+/home/myhomedirectory/Rayvision/FoxRenderfarm5.0/
+```
+
+Launch it with:
+```bash
+cd ~/Rayvision/FoxRenderfarm5.0
+./foxrenderfarm.sh
+```
+
+And... it crashes immediately. Welcome to dependency hell.
+
+### Debugging Strategy: Know Your Tools
+
+Before we start fixing things randomly, let's understand what we're dealing with. The most important tool in your arsenal is `ldd`:
+
+```bash
+ldd foxrenderfarm | grep "not found"
+```
+
+This shows every shared library the binary expects but can't find. Think of it as a checklist of problems to solve.
+
+### The Library Dependency Journey
+
+#### Issue #1: Image Format Libraries
+
+```bash
+ldd foxrenderfarm | grep "not found"
+# Output:
+# libjpeg.so.62 => not found
+# libmng.so.1 => not found
+# libtiff.so.5 => not found
+```
+
+First attempt - install the system versions:
+```bash
+sudo pacman -S libjpeg-turbo libmng libtiff
+```
+
+But here's the problem:
+- Arch ships `libjpeg.so.8`, app needs `libjpeg.so.62`
+- Arch ships `libmng.so.2`, app needs `libmng.so.1`
+- Arch ships `libtiff.so.6`, app needs `libtiff.so.5`
+
+**Why symlinks don't work:** You might think "just symlink the new version to the old name," but that fails because of symbol versioning. The application was compiled with specific function signatures that exist in version 6.2 but not in 8.x. The library knows this and refuses to load.
+
+#### Issue #2: Finding Legacy JPEG Support
+
+This is where the AUR (Arch User Repository) saves your life:
+
+```bash
+cd /tmp
+git clone https://aur.archlinux.org/libjpeg6-turbo.git
+cd libjpeg6-turbo
+makepkg -si --skippgpcheck
+```
+
+**Why AUR?** The community maintains packages for legacy software. `libjpeg6-turbo` provides the exact `LIBJPEG_6.2` symbols our application needs, compiled specifically for compatibility with old binaries.
+
+**About `--skippgpcheck`:** Normally you want to verify PGP signatures, but the key wasn't in my keyring. For a well-known AUR package, this is acceptable. If you want to be thorough: `gpg --recv-keys 85C7044E033FDE16`.
+
+#### Issue #3: The JBIG Dependency
+
+```
+error while loading shared libraries: libjbig.so.2.0: cannot open shared object file
+```
+
+Install the system package:
+```bash
+sudo pacman -S jbigkit
+```
+
+But Arch ships version 2.1, and the app wants 2.0. Fortunately, libjbig is backward compatible, so a symlink works:
+
+```bash
+cd ~/Rayvision/FoxRenderfarm5.0
+sudo ln -sf /usr/lib/libjbig.so libjbig.so.2.0
+```
+
+**Key decision:** I put this symlink in the application directory rather than `/usr/lib` to avoid breaking other softwares that expects the newer version.
+
+#### Issue #4: The Bundled Library Problem
+
+```
+version `GLIBCXX_3.4.22' not found (required by foxrenderfarm)
+```
+
+Here's where it gets counterintuitive. FoxRenderfarm bundles its own `libstdc++.so.6` in two locations:
+- Main directory: `libstdc++.so.6`
+- Transmit engine: `transmit_engine/libstdc++.so.6`
+
+The startup script sets `LD_LIBRARY_PATH` to prioritize these bundled libraries. The problem? They're *older* than what the application actually needs. Someone compiled this against a newer GCC but shipped it with old libraries.
+
+**The fix:** Get rid of them and let it use the system library:
+
+```bash
+cd ~/Rayvision/FoxRenderfarm5.0
+mv libstdc++.so libstdc++.so.old
+mv libstdc++.so.6 libstdc++.so.6.old
+mv transmit_engine/libstdc++.so.6 transmit_engine/libstdc++.so.6.old
+```
+
+Now the linker falls through to Arch's current libstdc++, which has all the symbols we need.
+
+### Understanding LD_LIBRARY_PATH
+
+The `foxrenderfarm.sh` startup script sets:
+```bash
+LD_LIBRARY_PATH=$dirname:$dirname/libs:$dirname/transmit_engine
+```
+
+This creates a search order:
+1. Application directory (for bundled OpenSSL, our libjbig symlink)
+2. `libs/` subdirectory (Qt libraries)
+3. `transmit_engine/` subdirectory
+4. System libraries in `/usr/lib`
+
+We're using a hybrid approach:
+- **Keep bundled** OpenSSL 1.1 (system has 3.x)
+- **Keep bundled** Qt libraries (version-specific)
+- **Use system** libstdc++ (newer and better)
+- **Use system** libjpeg62 (from AUR)
+- **Symlink locally** libjbig (backward compatible)
+
+This gives us the best of both worlds.
+
+## Final Configuration
+
+### What We Installed
+
+**System packages:**
+```bash
+sudo pacman -S libmng libtiff jbigkit
+```
+
+**AUR packages:**
+```bash
+# libjpeg6-turbo (for legacy JPEG support)
+```
+
+**Custom symlinks created:**
+```bash
+# In ~/Rayvision/FoxRenderfarm5.0/
+libjbig.so.2.0 → /usr/lib/libjbig.so
+```
+
+**Bundled libraries removed:**
+```bash
+# Renamed to .old (not deleted, just in case)
+libstdc++.so
+libstdc++.so.6
+transmit_engine/libstdc++.so.6
+```
+
+## Lessons from the Trenches
+
+### 1. Package Conversion Isn't Always the Answer
+
+Tools like `debtap` are great for simple packages, but when metadata gets mangled or you just want to get something working quickly, manual extraction is often faster and more reliable.
+
+The tradeoff is you lose package manager integration. Ride like lightning I say. 
+
+### 2. Library Compatibility Is Nuanced
+
+- **Backward compatible:** Newer versions work fine (libstdc++, libjbig)
+- **Symbol versioned:** Strict version requirements (libjpeg)
+- **ABI breaks:** Major version bumps often won't work
+
+The debugging process:
+1. Try system library (newest version)
+2. Try symlink if backward compatible
+3. Search AUR for older version if symbols required
+4. Use bundled library as last resort
+
+### 3. Bundled Libraries Can Lie
+
+Just because software bundles a library doesn't mean you should use it. Sometimes the bundled version is *older* than what the binary actually needs, and you're better off removing it and using the system version.
+
+Always check `ldd` and read the actual error messages. Don't assume bundled = correct.
+
+### 4. LD_LIBRARY_PATH Is Your Friend
+
+Understanding the dynamic linker's search order is crucial for debugging these issues:
+1. `LD_LIBRARY_PATH` directories
+2. `/lib` and `/usr/lib`
+3. Paths in `/etc/ld.so.conf`
+
+By controlling `LD_LIBRARY_PATH` in the startup script, you can create a hybrid environment that uses bundled libraries where needed and system libraries where better.
+
+## Uninstallation
+
+If you need to remove these later:
+
+### Raysync
+```bash
+sudo rm /usr/local/bin/raysync
+sudo rm -rf /usr/local/share/raysync/
+sudo rm /usr/share/applications/raysync-*.desktop
+```
+
+### FoxRenderfarm
+```bash
+# Use the built-in uninstaller
+~/Rayvision/FoxRenderfarm5.0/uninst
+
+# Or manual removal
+rm -rf ~/Rayvision/FoxRenderfarm5.0/
+rm ~/.local/share/applications/foxrenderfarm.desktop
+rm -rf ~/.config/FoxRenderfarm/
+```
+
+### Cleanup Dependencies
+```bash
+# Only remove if nothing else needs them
+sudo pacman -R libjpeg6-turbo
+
+# System packages (libmng, libtiff, jbigkit) can usually stay
+# Other software might depend on them
+```
+
+## Final Thoughts
+
+Running proprietary VFX software on Arch isn't always smooth, but it's rarely impossible. The key is methodical debugging:
+
+1. Use `ldd` to identify missing dependencies
+2. Understand *why* each dependency is needed
+3. Choose the right solution: system package, AUR, symlink, or bundled library
+4. Test thoroughly before moving on to the next issue
+
+Is it more work than running CentOS or Rocky Linux? Absolutely. But if you're reading this, ~~you've already decided that having full control over your system is worth the occasional dependency hunt.~~ You're a sadist.
+
+And honestly? After doing this a few times, you start to get pretty fast at it. These days, getting proprietary software working on Arch is less "will this work?" and more "how long will it take?"
+
+Usually not that long.
+
+---
+
+*Have questions or run into issues following this guide? Feel free to reach out. And if you're working on similar pipeline challenges, I'd love to hear about your solutions.*

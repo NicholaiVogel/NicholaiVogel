@@ -2,628 +2,667 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-brand-dark: #0B0D11;
-  --color-brand-panel: #151921;
-  --color-brand-accent: #ff4d00;
-  --color-brand-cyan: #22D3EE;
-  --color-brand-red: #E11D48;
+    --color-brand-dark: #0B0D11;
+    --color-brand-panel: #151921;
+    --color-brand-accent: #dd4132;
+    --color-brand-cyan: #22D3EE;
+    --color-brand-red: #E11D48;
 
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "Space Mono", monospace;
+    --font-sans: "Inter", sans-serif;
+    --font-mono: "Space Mono", monospace;
 
-  /* Animation keyframes */
-  --animate-reveal: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-slide-up: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-slide-left: slide-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-slide-right: slide-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-scale-in: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Animation keyframes */
+    --animate-reveal: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-slide-up: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-slide-left: slide-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-slide-right: slide-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-scale-in: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-  @keyframes reveal {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+    @keyframes reveal {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    to {
-      opacity: 1;
-    }
-  }
 
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
 
-  @keyframes slide-left {
-    from {
-      opacity: 0;
-      transform: translateX(40px);
+        to {
+            opacity: 1;
+        }
     }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
 
-  @keyframes slide-right {
-    from {
-      opacity: 0;
-      transform: translateX(-40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+    @keyframes slide-up {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
 
-  @keyframes scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    to {
-      opacity: 1;
-      transform: scale(1);
+
+    @keyframes slide-left {
+        from {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
-  }
+
+    @keyframes slide-right {
+        from {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes scale-in {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
 }
 
 @utility text-massive {
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
 }
 
 @utility text-stroke {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
-  color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+    color: transparent;
 }
 
 @utility skill-tag {
-  @apply text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 border border-slate-700 text-slate-400 hover:border-brand-accent hover:text-white transition-all duration-300 cursor-default select-none;
+    @apply text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 border border-slate-700 text-slate-400 hover:border-brand-accent hover:text-white transition-all duration-300 cursor-default select-none;
 }
 
 @utility btn-primary {
-  @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 inline-block;
+    @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 inline-block;
 }
 
 @utility btn-ghost {
-  @apply border border-slate-600 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
+    @apply border border-slate-600 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
 }
 
 @utility grid-overlay {
-  background-size: 100px 100px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  pointer-events: none;
-  z-index: 0;
+    background-size: 100px 100px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* Base Styles */
 body {
-  background-color: var(--color-brand-dark);
-  color: #ffffff;
-  overflow-x: hidden;
+    background-color: var(--color-brand-dark);
+    color: #ffffff;
+    overflow-x: hidden;
 }
 
 /* Smooth scroll behavior - disabled on mobile for better performance */
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 @media (max-width: 768px) {
-  html {
-    scroll-behavior: auto;
-  }
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 /* Mobile viewport height fix - uses dvh with vh fallback */
 :root {
-  --vh-full: 100vh;
-  --vh-full: 100dvh;
+    --vh-full: 100vh;
+    --vh-full: 100dvh;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-brand-dark);
+    background: var(--color-brand-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  transition: background 0.3s ease;
+    background: #334155;
+    transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-accent);
+    background: var(--color-brand-accent);
 }
 
 /* ===== SCROLL ANIMATION SYSTEM ===== */
 
 /* Base animation classes - elements start hidden */
 .animate-on-scroll {
-  opacity: 0;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Slide up variant */
 .animate-on-scroll.slide-up {
-  transform: translateY(40px);
+    transform: translateY(40px);
 }
 
 /* Slide left variant (comes from right) */
 .animate-on-scroll.slide-left {
-  transform: translateX(40px);
+    transform: translateX(40px);
 }
 
 /* Slide right variant (comes from left) */
 .animate-on-scroll.slide-right {
-  transform: translateX(-40px);
+    transform: translateX(-40px);
 }
 
 /* Scale in variant */
 .animate-on-scroll.scale-in {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 /* Fade only */
 .animate-on-scroll.fade-in {
-  transform: none;
+    transform: none;
 }
 
 /* Active state - when element is in view */
 .animate-on-scroll.is-visible {
-  opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
 }
 
 /* Stagger delay classes for sequential animations */
-.stagger-1 { transition-delay: 0.1s; }
-.stagger-2 { transition-delay: 0.2s; }
-.stagger-3 { transition-delay: 0.3s; }
-.stagger-4 { transition-delay: 0.4s; }
-.stagger-5 { transition-delay: 0.5s; }
-.stagger-6 { transition-delay: 0.6s; }
-.stagger-7 { transition-delay: 0.7s; }
-.stagger-8 { transition-delay: 0.8s; }
+.stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.stagger-3 {
+    transition-delay: 0.3s;
+}
+
+.stagger-4 {
+    transition-delay: 0.4s;
+}
+
+.stagger-5 {
+    transition-delay: 0.5s;
+}
+
+.stagger-6 {
+    transition-delay: 0.6s;
+}
+
+.stagger-7 {
+    transition-delay: 0.7s;
+}
+
+.stagger-8 {
+    transition-delay: 0.8s;
+}
 
 /* Legacy reveal-text support */
 .reveal-text {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-text.active {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Delay variants for reveal-text */
-.reveal-text.delay-100 { transition-delay: 0.1s; }
-.reveal-text.delay-200 { transition-delay: 0.2s; }
-.reveal-text.delay-300 { transition-delay: 0.3s; }
-.reveal-text.delay-400 { transition-delay: 0.4s; }
-.reveal-text.delay-500 { transition-delay: 0.5s; }
+.reveal-text.delay-100 {
+    transition-delay: 0.1s;
+}
+
+.reveal-text.delay-200 {
+    transition-delay: 0.2s;
+}
+
+.reveal-text.delay-300 {
+    transition-delay: 0.3s;
+}
+
+.reveal-text.delay-400 {
+    transition-delay: 0.4s;
+}
+
+.reveal-text.delay-500 {
+    transition-delay: 0.5s;
+}
 
 /* ===== CURSOR STYLES ===== */
 .cursor-dot,
 .cursor-outline {
-  position: fixed;
-  top: 0;
-  left: 0;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  z-index: 9999;
-  pointer-events: none;
-  will-change: transform;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    will-change: transform;
 }
 
 .cursor-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--color-brand-accent);
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-brand-accent);
 }
 
 .cursor-outline {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 77, 0, 0.5);
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 77, 0, 0.5);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease;
 }
 
 /* Interactive Elements Cursor Hover Effect */
-.hover-trigger:hover ~ .cursor-outline,
-a:hover ~ .cursor-outline,
-button:hover ~ .cursor-outline {
-  width: 60px;
-  height: 60px;
-  background-color: rgba(255, 77, 0, 0.05);
-  border-color: var(--color-brand-accent);
+.hover-trigger:hover~.cursor-outline,
+a:hover~.cursor-outline,
+button:hover~.cursor-outline {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 77, 0, 0.05);
+    border-color: var(--color-brand-accent);
 }
 
 /* ===== ENHANCED TRANSITIONS ===== */
 
 /* Smooth link transitions */
 a {
-  transition: color 0.3s ease, border-color 0.3s ease;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Image hover zoom - smoother */
 .hover-zoom {
-  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hover-zoom:hover,
 .group:hover .hover-zoom {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 /* Line expand animation */
 .line-expand {
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Border glow on hover - subtle */
 .hover-border-glow {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hover-border-glow:hover {
-  border-color: var(--color-brand-accent);
-  box-shadow: 0 0 20px rgba(255, 77, 0, 0.1);
+    border-color: var(--color-brand-accent);
+    box-shadow: 0 0 20px rgba(255, 77, 0, 0.1);
 }
 
 /* Gradient divider */
 .divider-gradient {
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.1) 20%,
-    rgba(255, 255, 255, 0.1) 80%,
-    transparent
-  );
+    background: linear-gradient(to right,
+            transparent,
+            rgba(255, 255, 255, 0.1) 20%,
+            rgba(255, 255, 255, 0.1) 80%,
+            transparent);
 }
 
 /* Divider with accent hint */
 .divider-accent {
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 77, 0, 0.2) 50%,
-    transparent
-  );
+    background: linear-gradient(to right,
+            transparent,
+            rgba(255, 77, 0, 0.2) 50%,
+            transparent);
 }
 
 /* ===== PROSE / MARKDOWN STYLES ===== */
 .prose-custom {
-  color: #94A3B8;
-  line-height: 1.8;
-  font-size: 1.0625rem;
+    color: #94A3B8;
+    line-height: 1.8;
+    font-size: 1.0625rem;
 }
 
 .prose-custom h2 {
-  color: #ffffff;
-  font-size: 1.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.025em;
-  margin-top: 3.5rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  scroll-margin-top: 6rem;
+    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    scroll-margin-top: 6rem;
 }
 
 .prose-custom h2::before {
-  content: "//";
-  color: var(--color-brand-accent);
-  margin-right: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.9em;
+    content: "//";
+    color: var(--color-brand-accent);
+    margin-right: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
 }
 
 .prose-custom h3 {
-  color: #ffffff;
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: -0.015em;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  scroll-margin-top: 6rem;
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: 6rem;
 }
 
 .prose-custom h4 {
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  scroll-margin-top: 6rem;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 6rem;
 }
 
 .prose-custom p {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .prose-custom a {
-  color: var(--color-brand-accent);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  border-bottom: 1px solid transparent;
+    color: var(--color-brand-accent);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    border-bottom: 1px solid transparent;
 }
 
 .prose-custom a:hover {
-  color: #ffffff;
-  border-bottom-color: var(--color-brand-accent);
+    color: #ffffff;
+    border-bottom-color: var(--color-brand-accent);
 }
 
 .prose-custom strong {
-  color: #ffffff;
-  font-weight: 600;
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .prose-custom em {
-  color: #CBD5E1;
-  font-style: italic;
+    color: #CBD5E1;
+    font-style: italic;
 }
 
 .prose-custom ul {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 1.5rem;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
 }
 
 .prose-custom ul li {
-  position: relative;
-  padding-left: 1.75rem;
-  margin-bottom: 0.75rem;
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .prose-custom ul li::before {
-  content: "▹";
-  position: absolute;
-  left: 0;
-  color: var(--color-brand-accent);
-  font-size: 0.85em;
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--color-brand-accent);
+    font-size: 0.85em;
 }
 
 .prose-custom ol {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 1.5rem;
-  counter-reset: ol-counter;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+    counter-reset: ol-counter;
 }
 
 .prose-custom ol li {
-  margin-bottom: 0.75rem;
-  padding-left: 2.5rem;
-  position: relative;
-  counter-increment: ol-counter;
+    margin-bottom: 0.75rem;
+    padding-left: 2.5rem;
+    position: relative;
+    counter-increment: ol-counter;
 }
 
 .prose-custom ol li::before {
-  content: counter(ol-counter, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  color: var(--color-brand-accent);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  width: 1.75rem;
+    content: counter(ol-counter, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    color: var(--color-brand-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 1.75rem;
 }
 
 /* Enhanced Blockquotes - Terminal/Industrial Style */
 .prose-custom blockquote {
-  position: relative;
-  border-left: 3px solid var(--color-brand-accent);
-  background: linear-gradient(135deg, rgba(255, 77, 0, 0.05), rgba(21, 25, 33, 0.8));
-  padding: 1.5rem 1.5rem 1.5rem 2rem;
-  margin: 2.5rem 0;
-  font-style: italic;
-  color: #CBD5E1;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    border-left: 3px solid var(--color-brand-accent);
+    background: linear-gradient(135deg, rgba(255, 77, 0, 0.05), rgba(21, 25, 33, 0.8));
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    margin: 2.5rem 0;
+    font-style: italic;
+    color: #CBD5E1;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .prose-custom blockquote::before {
-  content: "///";
-  position: absolute;
-  top: -0.75rem;
-  left: 1rem;
-  background: var(--color-brand-dark);
-  padding: 0 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--color-brand-accent);
-  font-style: normal;
+    content: "///";
+    position: absolute;
+    top: -0.75rem;
+    left: 1rem;
+    background: var(--color-brand-dark);
+    padding: 0 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-brand-accent);
+    font-style: normal;
 }
 
 .prose-custom blockquote p {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .prose-custom blockquote p:last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Enhanced Code - Inline */
 .prose-custom code {
-  color: var(--color-brand-accent);
-  background-color: rgba(255, 77, 0, 0.1);
-  padding: 0.2rem 0.5rem;
-  border-radius: 0;
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  border: 1px solid rgba(255, 77, 0, 0.2);
+    color: var(--color-brand-accent);
+    background-color: rgba(255, 77, 0, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    border: 1px solid rgba(255, 77, 0, 0.2);
 }
 
 /* Enhanced Code Blocks - Terminal Style */
 .prose-custom pre {
-  position: relative;
-  background-color: var(--color-brand-panel);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0;
-  margin: 2.5rem 0;
-  overflow: hidden;
+    position: relative;
+    background-color: var(--color-brand-panel);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    margin: 2.5rem 0;
+    overflow: hidden;
 }
 
 .prose-custom pre::before {
-  content: "TERMINAL";
-  display: block;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: #64748B;
-  text-transform: uppercase;
+    content: "TERMINAL";
+    display: block;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #64748B;
+    text-transform: uppercase;
 }
 
 .prose-custom pre code {
-  display: block;
-  background: none;
-  padding: 1.5rem;
-  color: #CBD5E1;
-  border: none;
-  overflow-x: auto;
+    display: block;
+    background: none;
+    padding: 1.5rem;
+    color: #CBD5E1;
+    border: none;
+    overflow-x: auto;
 }
 
 /* Enhanced Horizontal Rules - Section Dividers */
 .prose-custom hr {
-  border: none;
-  height: auto;
-  margin: 4rem 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
+    border: none;
+    height: auto;
+    margin: 4rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .prose-custom hr::before {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 77, 0, 0.3));
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 77, 0, 0.3));
 }
 
 .prose-custom hr::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to left, transparent, rgba(255, 77, 0, 0.3));
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to left, transparent, rgba(255, 77, 0, 0.3));
 }
 
 /* Enhanced Images */
 .prose-custom img {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 2.5rem 0;
-  transition: border-color 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2.5rem 0;
+    transition: border-color 0.3s ease;
 }
 
 .prose-custom img:hover {
-  border-color: rgba(255, 77, 0, 0.3);
+    border-color: rgba(255, 77, 0, 0.3);
 }
 
 /* Image Captions (for figures) */
 .prose-custom figure {
-  margin: 2.5rem 0;
+    margin: 2.5rem 0;
 }
 
 .prose-custom figure img {
-  margin: 0;
+    margin: 0;
 }
 
 .prose-custom figcaption {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #64748B;
-  margin-top: 0.75rem;
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--color-brand-accent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    margin-top: 0.75rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--color-brand-accent);
 }
 
 /* Video containers */
 .prose-custom .video-container {
-  margin: 2.5rem 0;
-  position: relative;
+    margin: 2.5rem 0;
+    position: relative;
 }
 
 .prose-custom .video-container video {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .prose-custom .video-container p {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #64748B;
-  margin-top: 0.75rem;
-  margin-bottom: 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
 }
 
 /* Tables */
 .prose-custom table {
-  width: 100%;
-  margin: 2.5rem 0;
-  border-collapse: collapse;
-  font-size: 0.9375rem;
+    width: 100%;
+    margin: 2.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
 }
 
 .prose-custom thead {
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .prose-custom th {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #64748B;
-  padding: 1rem;
-  text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    padding: 1rem;
+    text-align: left;
 }
 
 .prose-custom td {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #94A3B8;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #94A3B8;
 }
 
 .prose-custom tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.02);
 }
