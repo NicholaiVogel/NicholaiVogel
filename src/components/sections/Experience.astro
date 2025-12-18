@@ -28,125 +28,84 @@ const { sectionTitle, sectionSubtitle, sectionLabel, description, entries } = As
 <section id="experience" class="container mx-auto px-6 lg:px-12 py-32 border-t border-white/10">
 
     <!-- Section Header -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24 lg:mb-32 group cursor-pointer">
         <div class="lg:col-span-8">
             <h2 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white">
                 <span class="block animate-on-scroll slide-up">{sectionTitle}</span>
-                <span class="block text-transparent text-stroke animate-on-scroll slide-up stagger-1">{sectionSubtitle}</span>
+                <span class="block animate-on-scroll slide-up stagger-1 text-stroke group-hover:text-brand-accent transition-all duration-500 ease-out">{sectionSubtitle}</span>
             </h2>
         </div>
-        <div class="lg:col-span-4 flex flex-col justify-end pb-4">
-            <div class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">{sectionLabel}</div>
-            <p class="text-slate-400 text-base leading-relaxed border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+        <div class="lg:col-span-4 flex items-end">
+            <p class="text-slate-400 text-lg leading-relaxed animate-on-scroll slide-up stagger-2 border-l-2 border-brand-accent pl-6">
                 {description}
             </p>
         </div>
     </div>
 
-    <!-- "Rack Mount" Layout -->
-    <div class="flex flex-col gap-6">
-        <!-- First Entry (Full Width) -->
-        {entries[0] && (() => {
-            const entry = entries[0];
-            return (
-                <div class="group relative border border-white/10 bg-white/[0.02] hover:border-brand-accent/50 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden animate-on-scroll slide-up stagger-1">
-                    <!-- Active Indicator Strip -->
-                    <div class="absolute top-0 left-0 w-1 h-full bg-brand-accent opacity-100"></div>
-                    <div class="absolute top-0 left-0 w-full h-1 bg-brand-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    <!-- Technical Header -->
-                    <div class="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-white/[0.02]">
-                        <div class="flex items-center gap-4">
-                            <span class="font-mono text-[10px] text-brand-accent uppercase tracking-widest">{entry.systemId} /// {entry.status}</span>
-                            <div class="h-px w-12 bg-white/10"></div>
-                        </div>
-                        <span class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">{entry.dates}</span>
+    <!-- Experience List -->
+    <div class="w-full border-t border-white/10">
+        {entries.map((entry, index) => (
+            <a
+                href={entry.link?.url || '#'}
+                class="group block border-b border-white/10 py-10 hover:border-brand-accent/30 transition-colors duration-300"
+            >
+                <!-- Entry Header -->
+                <div class="flex items-baseline justify-between mb-6">
+                    <div class="flex-grow">
+                        <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">
+                            {entry.company}
+                        </h3>
+                        <p class="text-sm font-mono text-slate-400 mt-2">
+                            {entry.role}
+                        </p>
                     </div>
-
-                    <div class="p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <div class="lg:col-span-4">
-                            <h3 class="text-4xl font-bold text-white uppercase tracking-tight mb-2">{entry.company}</h3>
-                            <span class="text-sm font-mono text-slate-400">{entry.role}</span>
-
-                            {entry.tags && entry.tags.length > 0 && (
-                                <div class="mt-8 flex flex-wrap gap-2">
-                                    {entry.tags.map((tag) => (
-                                        <span class="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 text-slate-400">{tag}</span>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        <div class="lg:col-span-8 flex flex-col justify-between">
-                            <p class="text-slate-300 leading-relaxed font-light text-lg mb-8">
-                                {entry.description}
-                            </p>
-
-                            {entry.achievements && entry.achievements.length > 0 && (
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-white/5 pt-8">
-                                    {entry.achievements.map((achievement) => (
-                                        <div>
-                                            <h4 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">{achievement.label}</h4>
-                                            <p class="text-sm text-slate-400">{achievement.text}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {entry.link && (
-                                <div class="mt-8 flex justify-end">
-                                    <a href={entry.link.url} target={entry.link.url.startsWith('http') ? '_blank' : undefined} class="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-colors">
-                                        {entry.link.text} <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                    </a>
-                                </div>
-                            )}
-                        </div>
+                    <div class="hidden md:block text-right ml-12 flex-shrink-0">
+                        <div class="text-sm font-mono text-brand-accent">{String(index + 1).padStart(2, '0')}</div>
                     </div>
                 </div>
-            );
-        })()}
 
-        <!-- Split Row for Remaining Entries -->
-        {entries.length > 1 && (
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {entries.slice(1).map((entry, index) => (
-                    <div class={`group relative border border-white/10 bg-white/[0.02] hover:border-white/30 transition-all duration-500 overflow-hidden animate-on-scroll slide-up stagger-${index + 2}`}>
-                        <!-- Inactive Indicator Strip -->
-                        <div class="absolute top-0 left-0 w-1 h-full bg-slate-700 opacity-50 group-hover:bg-white transition-colors"></div>
-
-                        <!-- Technical Header -->
-                        <div class="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-white/[0.02]">
-                            <div class="flex items-center gap-4">
-                                <span class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">{entry.systemId} /// {entry.status}</span>
-                            </div>
-                            <span class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">{entry.dates}</span>
+                <!-- Entry Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                    <!-- Left Column: Metadata -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Period</div>
+                            <div class="font-bold text-white">{entry.dates}</div>
                         </div>
 
-                        <div class="p-8 lg:p-10 flex flex-col h-full">
-                            <div class="mb-6">
-                                <h3 class="text-2xl font-bold text-white uppercase tracking-tight mb-1">{entry.company}</h3>
-                                <span class="text-xs font-mono text-slate-400">{entry.role}</span>
+                        {entry.tags && entry.tags.length > 0 && (
+                            <div>
+                                <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Stack</div>
+                                <div class="text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
+                                    {entry.tags.join(', ')}
+                                </div>
                             </div>
-                            <p class="text-slate-400 leading-relaxed font-light text-sm mb-8 flex-grow">
-                                {entry.description}
-                            </p>
-                            {entry.link && (
-                                <div class="pt-6 border-t border-white/5">
-                                    <a href={entry.link.url} class="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
-                                        {entry.link.text} <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                    </a>
-                                </div>
-                            )}
-                            {entry.tags && entry.tags.length > 0 && (
-                                <div class="pt-6 border-t border-white/5 flex flex-wrap gap-2">
-                                    {entry.tags.map((tag) => (
-                                        <span class="px-2 py-1 text-[10px] font-mono uppercase border border-white/10 text-slate-500">{tag}</span>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </div>
-                ))}
-            </div>
-        )}
+
+                    <!-- Right Column: Description -->
+                    <div class="lg:col-span-8">
+                        <p class="text-slate-400 leading-relaxed mb-6 group-hover:text-white transition-colors duration-300">
+                            {entry.description}
+                        </p>
+
+                        {entry.achievements && entry.achievements.length > 0 && (
+                            <div class="space-y-4">
+                                {entry.achievements.map((achievement) => (
+                                    <div class="border-l-2 border-white/10 pl-4">
+                                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
+                                            {achievement.label}
+                                        </div>
+                                        <div class="text-sm text-slate-400 group-hover:text-white transition-colors duration-300">
+                                            {achievement.text}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </a>
+        ))}
     </div>
 </section>
