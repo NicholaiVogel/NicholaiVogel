@@ -14,7 +14,12 @@ pnpm deploy           # Build and deploy to Cloudflare Pages
 
 ### Utilities
 ```bash
-pnpm commit                        # Auto-generate commit message for staged files
+# Git commit message automation
+pnpm commit                        # Interactive: review, accept/edit, optionally push
+pnpm commit --accept               # Auto-accept message, prompt for push
+pnpm commit --accept --no-push     # Auto-accept and commit without pushing
+pnpm commit --accept --push        # Fully automated: accept and push
+
 pnpm notepad                       # Quick note-taking utility
 
 # Image conversion to AVIF format

@@ -373,7 +373,7 @@ ${colors.bright}Usage:${colors.reset}
      ${colors.cyan}git add <files>${colors.reset}
 
   2. Run this script:
-     ${colors.cyan}pnpm commit${colors.reset}
+     ${colors.cyan}pnpm commit [options]${colors.reset}
 
   3. Review the AI-generated commit message
 
@@ -388,7 +388,23 @@ ${colors.bright}Requirements:${colors.reset}
   - Get your key from: ${colors.dim}https://openrouter.ai/keys${colors.reset}
 
 ${colors.bright}Options:${colors.reset}
-  --help, -h    Show this help message
+  --help, -h       Show this help message
+  --accept, -a     Auto-accept the generated commit message without prompting
+  --push, -p       Automatically push to remote after committing
+  --no-push, -n    Skip the push prompt (commit only, don't push)
+
+${colors.bright}Examples:${colors.reset}
+  ${colors.cyan}pnpm commit${colors.reset}
+    Interactive mode - review, accept/edit, optionally push
+
+  ${colors.cyan}pnpm commit --accept${colors.reset}
+    Auto-accept commit message, still prompt for push
+
+  ${colors.cyan}pnpm commit --accept --no-push${colors.reset}
+    Auto-accept and commit without pushing
+
+  ${colors.cyan}pnpm commit --accept --push${colors.reset}
+    Fully automated - accept and push without any prompts
 `);
 }
 
@@ -402,6 +418,11 @@ async function main() {
     showHelp();
     process.exit(0);
   }
+
+  // Check for flags
+  const autoAccept = args.includes('--accept') || args.includes('-a');
+  const autoPush = args.includes('--push') || args.includes('-p');
+  const noPush = args.includes('--no-push') || args.includes('-n');
 
   // Load environment variables
   loadEnv();
@@ -428,27 +449,49 @@ async function main() {
   // Generate commit message using OpenRouter
   const generatedMessage = await generateCommitMessage(context);
 
-  // Get user approval
-  const rl = createReadlineInterface();
-  const { approved, message } = await getUserApproval(generatedMessage, rl);
+  let approved = autoAccept;
+  let message = generatedMessage;
 
-  if (!approved) {
-    console.log(`\n${colors.yellow}⏭️  Commit cancelled${colors.reset}`);
+  // Get user approval if not auto-accepting
+  if (!autoAccept) {
+    const rl = createReadlineInterface();
+    const result = await getUserApproval(generatedMessage, rl);
+    approved = result.approved;
+    message = result.message;
     rl.close();
-    process.exit(0);
+
+    if (!approved) {
+      console.log(`\n${colors.yellow}⏭️  Commit cancelled${colors.reset}`);
+      process.exit(0);
+    }
+  } else {
+    console.log(`\n${colors.bright}${colors.green}📝 Generated commit message:${colors.reset}`);
+    console.log(`${colors.dim}${'─'.repeat(60)}${colors.reset}`);
+    console.log(message);
+    console.log(`${colors.dim}${'─'.repeat(60)}${colors.reset}\n`);
+    console.log(`${colors.cyan}Auto-accepting with --accept flag${colors.reset}`);
   }
 
   // Create the commit
   const commitSuccess = createCommit(message);
 
   if (!commitSuccess) {
-    rl.close();
     process.exit(1);
   }
 
-  // Ask to push
-  const shouldPush = await askToPush(rl);
-  rl.close();
+  // Handle push logic
+  let shouldPush = false;
+
+  if (noPush) {
+    console.log(`${colors.cyan}Skipping push with --no-push flag${colors.reset}`);
+  } else if (autoPush) {
+    console.log(`${colors.cyan}Auto-pushing with --push flag${colors.reset}`);
+    shouldPush = true;
+  } else {
+    const rl = createReadlineInterface();
+    shouldPush = await askToPush(rl);
+    rl.close();
+  }
 
   if (shouldPush) {
     pushToRemote();
