@@ -99,8 +99,28 @@ function getGitContext() {
   console.log(`${colors.cyan}🔍 Gathering git context...${colors.reset}`);
 
   const status = git('status --short');
-  const diff = git('diff --staged');
   const stagedFiles = git('diff --staged --name-only');
+
+  // Get diff with increased buffer size to avoid ENOBUFS error
+  let diff = '';
+  try {
+    diff = execSync('git diff --staged', {
+      encoding: 'utf-8',
+      maxBuffer: 10 * 1024 * 1024, // 10MB buffer
+      stdio: ['pipe', 'pipe', 'pipe']
+    }).trim();
+  } catch (error) {
+    console.error(`${colors.yellow}⚠️  Warning: Could not get full diff (too large or error occurred)${colors.reset}`);
+    // Fallback to stat summary if diff is too large
+    try {
+      diff = execSync('git diff --staged --stat', {
+        encoding: 'utf-8',
+        stdio: ['pipe', 'pipe', 'pipe']
+      }).trim();
+    } catch {
+      diff = 'Unable to retrieve diff';
+    }
+  }
 
   return {
     status,
@@ -126,6 +146,11 @@ Generate commit messages following these guidelines:
 
 Generate ONLY the commit message, nothing else. Do not include any explanations or meta-commentary.`;
 
+  const diffContent = context.diff || 'Unable to retrieve diff';
+  const truncatedDiff = diffContent.length > 8000
+    ? diffContent.slice(0, 8000) + '\n... (diff truncated)'
+    : diffContent;
+
   const userPrompt = `Based on the following git changes, generate a commit message:
 
 Staged files:
@@ -135,7 +160,7 @@ Git status:
 ${context.status}
 
 Git diff:
-${context.diff.slice(0, 8000)}${context.diff.length > 8000 ? '\n... (diff truncated)' : ''}`;
+${truncatedDiff}`;
 
   try {
     const apiKey = process.env.OPENROUTER_API_KEY;
