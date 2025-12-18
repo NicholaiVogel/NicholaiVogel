@@ -11,14 +11,14 @@ const { categories, class: className = '' } = Astro.props;
 	<!-- Filters row -->
 	<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
 		<!-- Category chips -->
-		<div class="flex flex-wrap items-center gap-3">
-			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mr-2">
-				/// FILTER BY
+		<div class="flex flex-wrap items-center gap-1">
+			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mr-4">
+				/// SECTOR SELECT
 			</span>
 			<button
 				type="button"
 				data-category="all"
-				class="filter-chip active px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border border-white/20 text-white bg-white/5 hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300"
+				class="filter-chip active px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border-b-2 border-brand-accent text-white bg-white/5 transition-all duration-300 hover:bg-white/10"
 			>
 				All
 			</button>
@@ -26,7 +26,7 @@ const { categories, class: className = '' } = Astro.props;
 				<button
 					type="button"
 					data-category={category}
-					class="filter-chip px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border border-white/10 text-slate-400 hover:border-brand-accent hover:text-white hover:bg-brand-accent/5 transition-all duration-300"
+					class="filter-chip px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border-b-2 border-transparent text-slate-500 hover:text-white hover:border-brand-accent/50 hover:bg-white/5 transition-all duration-300"
 				>
 					{category}
 				</button>
@@ -34,49 +34,22 @@ const { categories, class: className = '' } = Astro.props;
 		</div>
 		
 		<!-- Search input -->
-		<div class="relative lg:w-80">
-			<div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="14"
-					height="14"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="text-slate-500"
-				>
-					<circle cx="11" cy="11" r="8" />
-					<path d="m21 21-4.3-4.3" />
-				</svg>
+		<div class="relative lg:w-80 group">
+			<div class="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none text-brand-accent">
+                <span class="font-mono text-xs">></span>
 			</div>
 			<input
 				type="text"
 				id="blog-search"
-				placeholder="Search articles..."
-				class="w-full pl-11 pr-4 py-3 text-sm font-mono bg-transparent border border-white/10 text-white placeholder:text-slate-500 focus:border-brand-accent focus:outline-none transition-colors duration-300"
+				placeholder="SEARCH_DATABASE..."
+				class="w-full pl-6 pr-4 py-2 text-sm font-mono bg-transparent border-b border-slate-700 text-white placeholder:text-slate-600 focus:border-brand-accent focus:outline-none transition-colors duration-300 uppercase"
 			/>
 			<button
 				type="button"
 				id="clear-search"
-				class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors hidden"
+				class="absolute right-0 top-1/2 -translate-y-1/2 text-slate-500 hover:text-brand-accent transition-colors hidden"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="14"
-					height="14"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M18 6 6 18" />
-					<path d="m6 6 12 12" />
-				</svg>
+				<span class="font-mono text-xs">[CLR]</span>
 			</button>
 		</div>
 	</div>
@@ -147,10 +120,15 @@ const { categories, class: className = '' } = Astro.props;
 				activeCategory = chipEl.dataset.category || 'all';
 				
 				// Update active state
-				filterChips.forEach((c) => c.classList.remove('active', 'border-brand-accent', 'text-white', 'bg-white/5'));
-				filterChips.forEach((c) => c.classList.add('border-white/10', 'text-slate-400'));
+				// Reset all to inactive state
+				filterChips.forEach((c) => {
+					c.classList.remove('active', 'border-brand-accent', 'text-white', 'bg-white/5');
+					c.classList.add('border-transparent', 'text-slate-500');
+				});
+				
+				// Set clicked to active state
 				chipEl.classList.add('active', 'border-brand-accent', 'text-white', 'bg-white/5');
-				chipEl.classList.remove('border-white/10', 'text-slate-400');
+				chipEl.classList.remove('border-transparent', 'text-slate-500');
 				
 				filterPosts();
 			});

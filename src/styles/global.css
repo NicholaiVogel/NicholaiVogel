@@ -88,6 +88,19 @@
             transform: scale(1);
         }
     }
+
+    @keyframes scan-sweep {
+        0% {
+            transform: translateX(-100%) skewX(-15deg);
+        }
+        100% {
+            transform: translateX(200%) skewX(-15deg);
+        }
+    }
+}
+
+@utility animate-scan-sweep {
+    animation: scan-sweep 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 @utility text-massive {

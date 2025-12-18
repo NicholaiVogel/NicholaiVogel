@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<BaseLayout title={`404 | ${SITE_TITLE}`} description="System signal lost. Page not found.">
+    <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center min-h-[70vh] relative z-20">
+        
+        <!-- Error Header -->
+        <div class="mb-8">
+            <h1 class="text-[12rem] md:text-[18rem] lg:text-[22rem] font-bold leading-[0.8] tracking-tighter text-white select-none">
+                404
+            </h1>
+            <div class="h-2 w-full bg-brand-accent/50 mb-8 max-w-xl"></div>
+        </div>
+
+        <!-- Status Message -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-bold uppercase tracking-tight text-white mb-6">
+                    Signal Lost
+                </h2>
+                <p class="text-slate-400 font-mono text-sm md:text-base leading-relaxed mb-8 border-l-2 border-brand-accent pl-6">
+                    /// SYSTEM ERROR: PATHWAY_NOT_FOUND<br>
+                    The requested coordinates do not resolve to a valid sector. The page you are looking for may have been decommissioned or relocated.
+                </p>
+
+                <a href="/" class="group inline-flex items-center gap-4 px-8 py-4 border border-brand-accent text-brand-accent font-mono font-bold uppercase tracking-widest hover:bg-brand-accent hover:text-brand-dark transition-all duration-300">
+                    <span class="group-hover:animate-pulse">///</span>
+                    Reboot System
+                </a>
+            </div>
+
+            <!-- Technical Diagnostics (Visual Fluff) -->
+            <div class="hidden md:block font-mono text-xs text-slate-600 space-y-2 select-none">
+                <div class="flex justify-between border-b border-white/5 pb-2">
+                    <span>ERR_CODE</span>
+                    <span>0x000404</span>
+                </div>
+                <div class="flex justify-between border-b border-white/5 pb-2">
+                    <span>STATUS</span>
+                    <span class="text-brand-red">CRITICAL</span>
+                </div>
+                <div class="flex justify-between border-b border-white/5 pb-2">
+                    <span>MODULE</span>
+                    <span>NAV_SYSTEM</span>
+                </div>
+                <div class="flex justify-between border-b border-white/5 pb-2">
+                    <span>TIMESTAMP</span>
+                    <span id="error-time">--:--:--</span>
+                </div>
+                <div class="mt-8 p-4 border border-white/5 bg-white/[0.02]">
+                    <span class="block mb-2">> DIAGNOSTIC_TOOL --RUN</span>
+                    <span class="block text-brand-accent">> TRACE COMPLETE</span>
+                    <span class="block">> END OF LINE.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const timeElement = document.getElementById('error-time');
+        if (timeElement) {
+            const now = new Date();
+            timeElement.textContent = now.toISOString().split('T')[1].split('.')[0];
+        }
+    </script>
+</BaseLayout>

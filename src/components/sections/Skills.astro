@@ -63,23 +63,35 @@ const imageMap: Record<string, string> = {
                     : "border-white/20 text-slate-300";
                 
                 return (
-                    <div class={`skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30 ${index < skills.length - 1 ? '' : ''}`} data-image={imageMap[skill.id] || "default"}>
-                        <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden">
+                    <div class={`skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30 overflow-hidden ${index < skills.length - 1 ? '' : ''}`} data-image={imageMap[skill.id] || "default"}>
+                        <!-- Hover Background Effect -->
+                        <div class="absolute inset-0 bg-brand-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                        
+                        <!-- ID Column -->
+                        <div class="col-span-2 md:col-span-1 text-brand-accent font-mono text-sm relative overflow-hidden z-10">
                             <span class="block group-hover:-translate-y-full transition-transform duration-500">{skill.id}</span>
                             <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500">{skill.id}</span>
                         </div>
-                        <div class="col-span-10 md:col-span-4 relative overflow-hidden">
+
+                        <!-- Main Content (Domain) -->
+                        <div class="col-span-10 md:col-span-4 relative z-10">
                             <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">{skill.domain}</h3>
-                            {index === 0 && (
-                                <div class="absolute inset-0 bg-brand-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left mix-blend-difference pointer-events-none opacity-0 group-hover:opacity-100"></div>
-                            )}
+                            <!-- Scan line effect for ALL items on hover -->
+                            <div class="absolute bottom-0 left-0 h-[1px] w-full bg-brand-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out origin-left opacity-0 group-hover:opacity-100"></div>
                         </div>
-                        <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
+
+                        <!-- Tools Stack -->
+                        <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300 z-10">
                             {skill.tools}
                         </div>
-                        <div class="col-span-6 md:col-span-2 text-right hidden md:block">
-                            <span class={`inline-block px-3 py-1 border text-[10px] font-bold uppercase tracking-widest ${proficiencyClass}`}>{skill.proficiency}</span>
+
+                        <!-- Proficiency Badge -->
+                        <div class="col-span-6 md:col-span-2 text-right hidden md:block z-10">
+                            <span class={`inline-block px-3 py-1 border text-[10px] font-bold uppercase tracking-widest ${proficiencyClass} group-hover:bg-brand-accent group-hover:text-brand-dark transition-all duration-300`}>{skill.proficiency}</span>
                         </div>
+
+                        <!-- Decorative "Scan" Sweep Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-brand-accent/10 to-transparent -translate-x-full group-hover:animate-scan-sweep pointer-events-none"></div>
                     </div>
                 );
             })}

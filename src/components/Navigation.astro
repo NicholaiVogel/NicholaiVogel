@@ -1,28 +1,48 @@
 ---
 ---
+---
+---
+
 <nav class="fixed top-0 left-0 w-full z-50 px-6 lg:px-12 py-6 lg:py-8 flex justify-between items-center backdrop-blur-md bg-brand-dark/80 border-b border-white/5">
     <!-- Left side - can be empty or have subtle branding -->
     <div class="hidden md:block">
-        <span class="text-[10px] font-mono text-slate-600 tracking-widest uppercase">NV / 2026</span>
+        <a href="/" class="text-[10px] font-mono text-slate-600 tracking-widest uppercase hover:text-brand-accent transition-colors duration-300">NV / 2026</a>
     </div>
 
     <!-- Right side navigation -->
     <div class="flex items-center gap-8 lg:gap-12 ml-auto">
         <div class="hidden md:flex items-center gap-10 lg:gap-12">
             <a href="/"
-                class="relative text-xs font-semibold uppercase tracking-[0.15em] text-slate-500 hover:text-white transition-all duration-300 py-2 group">
+                class:list={[
+                    "relative text-xs font-semibold uppercase tracking-[0.15em] transition-all duration-300 py-2 group",
+                     Astro.url.pathname === '/' ? "text-white" : "text-slate-500 hover:text-white"
+                ]}>
                 <span class="relative z-10">Home</span>
-                <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-brand-accent transition-all duration-300 ease-out group-hover:w-full"></span>
+                <span class:list={[
+                    "absolute bottom-0 left-0 h-[1px] bg-brand-accent transition-all duration-300 ease-out",
+                    Astro.url.pathname === '/' ? "w-full" : "w-0 group-hover:w-full"
+                ]}></span>
             </a>
             <a href="/blog"
-                class="relative text-xs font-semibold uppercase tracking-[0.15em] text-slate-500 hover:text-white transition-all duration-300 py-2 group">
+                class:list={[
+                    "relative text-xs font-semibold uppercase tracking-[0.15em] transition-all duration-300 py-2 group",
+                    Astro.url.pathname.startsWith('/blog') ? "text-white" : "text-slate-500 hover:text-white"
+                ]}>
                 <span class="relative z-10">Blog</span>
-                <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-brand-accent transition-all duration-300 ease-out group-hover:w-full"></span>
+                <span class:list={[
+                    "absolute bottom-0 left-0 h-[1px] bg-brand-accent transition-all duration-300 ease-out",
+                    Astro.url.pathname.startsWith('/blog') ? "w-full" : "w-0 group-hover:w-full"
+                ]}></span>
             </a>
         </div>
 
         <a href="/contact"
-            class="hidden md:block border border-slate-600 px-5 lg:px-6 py-2.5 lg:py-3 text-xs font-bold uppercase tracking-[0.15em] text-white hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300">
+            class:list={[
+                "hidden md:block border px-5 lg:px-6 py-2.5 lg:py-3 text-xs font-bold uppercase tracking-[0.15em] transition-all duration-300",
+                Astro.url.pathname.startsWith('/contact') 
+                    ? "border-brand-accent bg-brand-accent text-brand-dark" 
+                    : "border-slate-600 text-white hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark"
+            ]}>
             Let's Talk
         </a>
     </div>
