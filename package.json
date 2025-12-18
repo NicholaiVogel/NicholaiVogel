@@ -13,7 +13,8 @@
 		"convert:avif:all": "node src/utils/convert-to-avif.js --all",
 		"convert:avif:jpeg": "node src/utils/convert-to-avif.js --jpeg",
 		"convert:avif:png": "node src/utils/convert-to-avif.js --png",
-		"commit": "node src/utils/git-commit.js"
+		"commit": "node src/utils/git-commit.js",
+		"notepad": "node src/utils/notepad.js"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^12.6.12",
