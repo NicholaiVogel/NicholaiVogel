@@ -2,51 +2,81 @@
 const today = new Date();
 ---
 
-<footer class="container mx-auto px-6 lg:px-12 py-32 lg:py-40 relative overflow-hidden border-t border-[var(--theme-border-secondary)]">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-end relative z-10">
-        <div class="animate-on-scroll slide-right">
-            <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[0.95] tracking-tighter mb-10 text-[var(--theme-text-primary)] group cursor-pointer">
-                Let's<br>
-                <span class="text-stroke group-hover:text-brand-accent transition-all duration-500 ease-out">Build</span><br>
-                Reality.
-            </h2>
-            <div class="flex flex-wrap gap-4 lg:gap-6 mt-12">
-                <a href="mailto:nicholai@nicholai.work" class="btn-primary">nicholai@nicholai.work</a>
-                <a href="/contact" class="btn-ghost">Get in Touch</a>
+<footer class="w-full bg-[var(--theme-bg-primary)] py-32 lg:py-48 relative overflow-hidden border-t border-[var(--theme-border-primary)]">
+    <div class="container mx-auto px-6 lg:px-12 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-end">
+            
+            <!-- Left: Call to Action -->
+            <div class="lg:col-span-7">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.TERMINAL /// SESSION_END</span>
+                </div>
+                
+                <h2 class="text-6xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)] mb-12">
+                    Let's Build<br>
+                    <span class="text-brand-accent">Reality.</span>
+                </h2>
+                
+                <div class="flex flex-wrap gap-4">
+                    <a href="mailto:nicholai@nicholai.work" class="group flex items-center gap-4 px-6 py-4 border border-brand-accent/30 bg-brand-accent/5 hover:bg-brand-accent hover:text-brand-dark transition-all duration-300">
+                        <span class="font-mono text-xs font-bold uppercase tracking-widest">Connect_Uplink</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="/contact" class="group flex items-center gap-4 px-6 py-4 border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300">
+                        <span class="font-mono text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)]">Manual_Input</span>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="md:text-right animate-on-scroll slide-left stagger-2">
-            <div class="mb-14">
-                <p class="text-xs font-bold uppercase text-[var(--theme-text-muted)] mb-6 tracking-widest">Social Uplink</p>
-                <ul class="space-y-3">
-                    <li>
-                        <a href="https://nicholai.work" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
-                            nicholai.work
-                        </a>
-                    </li>
-                    <li>
-                      <a href="https://instagram.com/nicholai.exe/" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
-                            @nicholai.exe
-                        </a>
-                    </li>
-                    <li>
-                      <a href="https://www.linkedin.com/in/nicholai-vogel-7a6b85112/" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
-                            LinkedIn
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="flex md:justify-end items-end gap-3 text-[10px] text-[var(--theme-text-muted)] font-mono uppercase tracking-wide">
-                <span>&copy; {today.getFullYear()} Nicholai Vogel</span>
-                <span class="text-[var(--theme-text-subtle)]">/</span>
-                <span>V7 SYSTEM</span>
+            <!-- Right: Social & Metadata -->
+            <div class="lg:col-span-5 lg:text-right flex flex-col items-start lg:items-end">
+                <div class="w-full lg:max-w-xs">
+                    <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-8 flex items-center justify-start lg:justify-end gap-2">
+                        <span class="text-brand-accent">/</span> SOCIAL_MANIFEST
+                    </div>
+                    
+                    <ul class="space-y-4 mb-16">
+                        {[
+                            { label: 'LinkedIn', url: 'https://www.linkedin.com/in/nicholai-vogel-7a6b85112/', id: 'SIG.01' },
+                            { label: 'Instagram', url: 'https://instagram.com/nicholai.exe/', id: 'SIG.02' },
+                            { label: 'Website', url: 'https://nicholai.work', id: 'SIG.03' }
+                        ].map((link) => (
+                            <li class="group/link">
+                                <a href={link.url} class="flex items-baseline lg:justify-end gap-4 transition-colors">
+                                    <span class="font-mono text-[9px] text-brand-accent opacity-0 group-hover/link:opacity-100 transition-opacity">[{link.id}]</span>
+                                    <span class="text-xl font-bold uppercase tracking-tight text-[var(--theme-text-primary)] group-hover/link:text-brand-accent transition-colors">{link.label}</span>
+                                    <div class="w-2 h-2 rounded-full bg-brand-accent/20 group-hover/link:bg-brand-accent group-hover/link:animate-pulse transition-all mt-1"></div>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                    
+                    <div class="flex flex-col lg:items-end gap-2 font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em]">
+                        <div class="flex items-center gap-3">
+                            <span class="text-[var(--theme-text-subtle)]">STATUS:</span>
+                            <span class="text-brand-accent">OPERATIONAL</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span>&copy; {today.getFullYear()}</span>
+                            <span class="text-[var(--theme-text-subtle)]">///</span>
+                            <span>V7 SYSTEM</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Decorative huge text bg -->
-    <div class="absolute -bottom-8 lg:-bottom-12 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none">
-        <span class="text-[12rem] md:text-[18rem] lg:text-[22rem] font-extrabold text-[var(--theme-text-primary)] opacity-[var(--theme-decorative-opacity)] uppercase leading-none whitespace-nowrap tracking-tighter transition-opacity duration-300">VOGEL</span>
+    <!-- Decorative Industrial Background Text -->
+    <div class="absolute -bottom-12 lg:-bottom-20 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden h-[20rem] flex items-end justify-center">
+        <span class="text-[15rem] md:text-[25rem] lg:text-[35rem] font-bold text-[var(--theme-text-primary)] opacity-[0.02] uppercase leading-none whitespace-nowrap tracking-tighter">
+            VOGEL
+        </span>
     </div>
+    
+    <!-- Scanning Line Effect -->
+    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-brand-accent/10"></div>
 </footer>
