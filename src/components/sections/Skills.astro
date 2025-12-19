@@ -24,46 +24,50 @@ const imageMap: Record<string, string> = {
 };
 ---
 
-<section id="skills" class="bg-brand-dark py-32 lg:py-48 overflow-hidden relative cursor-default">
+<section id="skills" class="bg-[var(--theme-bg-primary)] py-32 lg:py-48 overflow-hidden relative cursor-default">
     <div class="container mx-auto px-6 lg:px-12 relative z-10">
 
         <!-- Header Section -->
         <div class="mb-24 lg:mb-32 grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div class="lg:col-span-8">
-                <h2 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white">
-                    <span class="block relative overflow-hidden">
-                        <span class="animate-on-scroll slide-up block">{sectionTitle}</span>
-                    </span>
-                    <span class="block relative overflow-hidden">
-                        <span class="animate-on-scroll slide-up stagger-1 block text-stroke text-transparent">{sectionSubtitle}</span>
-                    </span>
+            <div class="lg:col-span-8 group cursor-default">
+                <div class="flex items-center gap-3 mb-6 intro-element animate-on-scroll fade-in">
+                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.TOOLSET /// PIPELINE_CAPABILITIES</span>
+                </div>
+                <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
+                    <span class="block">{sectionTitle}</span>
+                    <span class="block text-brand-accent">{sectionSubtitle}</span>
                 </h2>
             </div>
-            <div class="lg:col-span-4 flex items-end">
-                <p class="text-slate-400 text-lg leading-relaxed animate-on-scroll slide-up stagger-2 border-l-2 border-brand-accent pl-6">
+            <div class="lg:col-span-4 flex flex-col justify-end">
+                <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-8 h-px bg-brand-accent/30"></span>
+                    TECH_STACK_MANIFEST
+                </div>
+                <p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
                     {description}
                 </p>
             </div>
         </div>
 
         <!-- Skills Data Grid -->
-        <div class="w-full border-t border-white/10" id="skills-table">
+        <div class="w-full border-t border-[var(--theme-border-primary)]" id="skills-table">
 
             <!-- Table Header -->
-            <div class="grid grid-cols-12 gap-4 py-6 border-b border-white/10 text-[10px] font-mono uppercase tracking-widest text-slate-500 select-none">
-                <div class="col-span-2 md:col-span-1">/// ID</div>
-                <div class="col-span-10 md:col-span-4">Domain</div>
-                <div class="col-span-12 md:col-span-5 hidden md:block">Stack</div>
-                <div class="col-span-6 md:col-span-2 hidden md:block text-right">Proficiency</div>
+            <div class="grid grid-cols-12 gap-4 py-8 border-b border-[var(--theme-border-primary)] text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] select-none">
+                <div class="col-span-2 md:col-span-1">/// ID.TAG</div>
+                <div class="col-span-10 md:col-span-4">DOMAIN.SPECIALIZATION</div>
+                <div class="col-span-12 md:col-span-5 hidden md:block">PIP.TOOLSET</div>
+                <div class="col-span-6 md:col-span-2 hidden md:block text-right">LVL.STATUS</div>
             </div>
 
             {skills.map((skill, index) => {
                 const proficiencyClass = skill.proficiency === "Expert" || skill.proficiency === "Specialist" 
                     ? "border-brand-accent/50 text-brand-accent bg-brand-accent/5"
-                    : "border-white/20 text-slate-300";
+                    : "border-[var(--theme-border-strong)] text-[var(--theme-text-secondary)]";
                 
                 return (
-                    <div class={`skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-white/10 items-center transition-colors duration-300 hover:border-brand-accent/30 overflow-hidden ${index < skills.length - 1 ? '' : ''}`} data-image={imageMap[skill.id] || "default"}>
+                    <div class={`skill-row group relative grid grid-cols-12 gap-4 py-10 border-b border-[var(--theme-border-primary)] items-center transition-colors duration-300 hover:border-brand-accent/30 overflow-hidden`} data-image={imageMap[skill.id] || "default"}>
                         <!-- Hover Background Effect -->
                         <div class="absolute inset-0 bg-brand-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -75,13 +79,13 @@ const imageMap: Record<string, string> = {
 
                         <!-- Main Content (Domain) -->
                         <div class="col-span-10 md:col-span-4 relative z-10">
-                            <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">{skill.domain}</h3>
+                            <h3 class="text-3xl md:text-5xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">{skill.domain}</h3>
                             <!-- Scan line effect for ALL items on hover -->
                             <div class="absolute bottom-0 left-0 h-[1px] w-full bg-brand-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out origin-left opacity-0 group-hover:opacity-100"></div>
                         </div>
 
                         <!-- Tools Stack -->
-                        <div class="col-span-12 md:col-span-5 text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300 z-10">
+                        <div class="col-span-12 md:col-span-5 text-[var(--theme-text-secondary)] font-mono text-xs md:text-sm tracking-wide group-hover:text-[var(--theme-text-primary)] transition-colors duration-300 z-10">
                             {skill.tools}
                         </div>
 

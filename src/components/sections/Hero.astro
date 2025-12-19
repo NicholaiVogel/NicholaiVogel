@@ -13,7 +13,10 @@ interface Props {
 
 const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bio } = Astro.props;
 ---
-<section id="hero" class="relative w-full h-[100dvh] overflow-hidden bg-brand-dark">
+<section id="hero" class="relative w-full h-[100dvh] overflow-hidden bg-[var(--theme-bg-primary)]">
+    <!-- Industrial Scanlines -->
+    <div class="absolute inset-0 z-1 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+    
     <!-- Background Image (Portrait) - Optimized with AVIF/WebP -->
     <div class="absolute top-0 right-0 w-full md:w-1/2 h-full z-0">
         <div class="relative w-full h-full">
@@ -23,20 +26,30 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
                 widths={[640, 1024, 1600]}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Nicholai Vogel portrait"
-                class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity md:opacity-0 transition-opacity duration-[2000ms] ease-out delay-500 intro-element"
+                class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity transition-opacity duration-[2500ms] ease-out delay-700 intro-element"
                 id="hero-portrait"
                 loading="eager"
                 decoding="sync"
             />
-            <div class="absolute inset-0 bg-gradient-to-l from-transparent via-brand-dark/50 to-brand-dark"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-l from-transparent via-[var(--theme-hero-gradient-side)] to-[var(--theme-bg-primary)] transition-colors duration-500"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg-primary)] via-transparent to-transparent transition-colors duration-500"></div>
+            
+            <!-- Technical Overlay Elements -->
+            <div class="absolute bottom-12 right-12 hidden lg:flex flex-col items-end gap-1 font-mono text-[9px] text-brand-accent/40 uppercase tracking-[0.3em] intro-element opacity-0 delay-1000">
+                <span>COORD: 38.8339° N, 104.8214° W</span>
+                <span>ELV: 1,839M</span>
+                <div class="flex gap-2 mt-2">
+                    <div class="w-8 h-px bg-brand-accent/20"></div>
+                    <div class="w-2 h-px bg-brand-accent/40"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- The 100 Squares Grid Overlay -->
     <div id="grid-container" class="absolute inset-0 z-10 w-full h-full grid grid-cols-10 grid-rows-10 pointer-events-none">
         {Array.from({ length: 100 }).map((_, i) => (
-            <div class="grid-cell w-full h-full border border-white/5 opacity-0 transition-all duration-500 ease-out" data-index={i}></div>
+            <div class="grid-cell w-full h-full border border-[var(--theme-border-secondary)] opacity-0 transition-all duration-500 ease-out" data-index={i}></div>
         ))}
     </div>
 
@@ -46,38 +59,55 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
 
         <!-- Top Metadata -->
         <div class="flex justify-between items-start w-full intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
-            <div class="font-mono text-xs uppercase tracking-widest text-slate-500">
-                {portfolioYear}
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+                <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
+                    <span class="text-brand-accent mr-1">SYS.PRTF</span> / {portfolioYear}
+                </div>
             </div>
-            <div class="font-mono text-xs text-slate-500 text-right tracking-wide">
-                <span class="block text-slate-600 mb-1 uppercase tracking-widest">{locationLabel}</span>
-                {location}<br>
-                <span id="clock" class="text-brand-accent">00:00:00 MST</span>
+            
+            <div class="font-mono text-[10px] text-[var(--theme-text-muted)] text-right tracking-[0.15em] uppercase">
+                <div class="mb-1 flex items-center justify-end gap-2">
+                    <span class="text-[var(--theme-text-subtle)]">{locationLabel}</span>
+                    <span class="text-brand-accent font-bold">///</span>
+                </div>
+                <div class="text-[var(--theme-text-secondary)]">{location}</div>
+                <div id="clock" class="text-brand-accent mt-0.5">00:00:00 MST</div>
             </div>
         </div>
 
         <!-- Main Heading & Description -->
         <div class="max-w-5xl">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.9] font-bold text-white mix-blend-overlay opacity-90 mb-8 perspective-text">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] font-bold text-[var(--theme-text-primary)] mb-8 perspective-text">
                 <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">{headlineLine1}</span>
                 <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">{headlineLine2}</span>
             </h1>
 
-            <p class="font-mono text-sm md:text-base max-w-lg text-slate-400 font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
+            <p class="font-mono text-sm md:text-base max-w-lg text-[var(--theme-text-secondary)] font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
                 {bio}
             </p>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="flex justify-between items-end w-full intro-element opacity-0 transition-all duration-1000 ease-out delay-700">
-            <a href="#experience" class="flex items-center justify-center w-12 h-12 border border-white/10 rounded-full text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-bounce">
-                    <path d="M12 5v14M19 12l-7 7-7-7"/>
-                </svg>
+            <a href="#experience" class="group flex items-center gap-6 py-2">
+                <div class="relative w-12 h-12 flex items-center justify-center border border-[var(--theme-border-primary)] text-brand-accent hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover:translate-y-1 transition-transform duration-300">
+                        <path d="M7 13l5 5 5-5M12 6v12"/>
+                    </svg>
+                    <!-- Technical Corner Accent -->
+                    <div class="absolute -top-px -left-px w-2 h-2 border-t border-l border-brand-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute -bottom-px -right-px w-2 h-2 border-b border-r border-brand-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <div class="flex flex-col font-mono text-[10px] uppercase tracking-[0.2em]">
+                    <span class="text-[var(--theme-text-muted)] group-hover:text-brand-accent transition-colors">Scroll</span>
+                    <span class="text-[var(--theme-text-subtle)] group-hover:text-[var(--theme-text-secondary)] transition-colors">To Explore</span>
+                </div>
             </a>
 
-            <div class="text-right font-mono text-xs text-slate-500 tracking-widest">
-                SCROLL TO EXPLORE
+            <div class="hidden md:block text-right font-mono text-[10px] text-[var(--theme-text-muted)] tracking-[0.2em] uppercase">
+                <span class="text-[var(--theme-text-subtle)]">STATUS:</span> <span class="text-brand-accent">READY_FOR_INPUT</span><br>
+                <span class="text-[var(--theme-text-subtle)]">INDEX:</span> 00.01 / 05.00
             </div>
         </div>
     </div>
@@ -91,7 +121,7 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
     }
     /* Fade out */
     .grid-cell {
-        /* Slightly faster fade-out for a snappier feel */
+        /* Snappier fade-out */
         transition: opacity 0.6s ease-out, background-color 0.6s ease-out;
     }
 

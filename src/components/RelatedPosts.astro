@@ -21,12 +21,12 @@ const { posts, class: className = '' } = Astro.props;
 ---
 
 {posts.length > 0 && (
-	<section class:list={['related-posts mt-20 pt-12 border-t border-white/10', className]}>
+	<section class:list={['related-posts mt-20 pt-12 border-t border-[var(--theme-border-primary)]', className]}>
 		<div class="flex items-center gap-4 mb-8">
-			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+			<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest font-bold">
 				/// RELATED_ARCHIVES
 			</span>
-			<span class="h-px flex-grow bg-white/10"></span>
+			<span class="h-px flex-grow bg-[var(--theme-border-primary)]"></span>
 		</div>
 		
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -45,4 +45,3 @@ const { posts, class: className = '' } = Astro.props;
 		</div>
 	</section>
 )}
-

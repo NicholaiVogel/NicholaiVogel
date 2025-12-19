@@ -29,9 +29,17 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="dark">
   <head>
     <meta name="x-nicholai-marker" content={HTML_MARKER} />
+    <!-- Theme initialization script - runs before page render to prevent flash -->
+    <script is:inline>
+      (function() {
+        const stored = localStorage.getItem('theme');
+        const theme = (stored === 'light' || stored === 'dark') ? stored : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <BaseHead 
       title={title} 
       description={description} 
@@ -43,7 +51,7 @@ const {
     <slot name="head" />
   </head>
   
-  <body class="antialiased selection:bg-brand-accent selection:text-brand-dark bg-brand-dark text-white">
+  <body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
     <!-- Only hydrate custom cursor on devices that can actually benefit from it -->
     <CustomCursor client:media="(pointer: fine) and (hover: hover)" />
     <GridOverlay />
@@ -180,4 +188,3 @@ const {
     </script>
   </body>
 </html>
-

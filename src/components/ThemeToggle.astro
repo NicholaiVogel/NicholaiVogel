@@ -1,0 +1,87 @@
+---
+---
+
+<div class="theme-toggle-group flex items-center gap-3 ml-2 select-none" role="group" aria-label="Theme selector">
+    <div class="flex items-center text-[var(--theme-text-subtle)] opacity-50">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 10 20 15 15 20"></polyline>
+            <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+        </svg>
+    </div>
+    
+    <div class="flex items-center gap-2.5">
+        <button
+            type="button"
+            class="theme-toggle-dark w-2.5 h-2.5 rounded-full bg-[#000] border border-white/20 hover:border-brand-accent/50 transition-all duration-300 relative group cursor-pointer"
+            aria-label="Dark theme"
+            title="Dark theme"
+        >
+            <span class="absolute -inset-1 border border-brand-accent rounded-full opacity-0 group-[.is-current-theme]:opacity-100 transition-opacity duration-300"></span>
+        </button>
+        <button
+            type="button"
+            class="theme-toggle-light w-2.5 h-2.5 rounded-full bg-[#efefef] border border-black/10 hover:border-brand-accent/50 transition-all duration-300 relative group cursor-pointer"
+            aria-label="Light theme"
+            title="Light theme"
+        >
+            <span class="absolute -inset-1 border border-brand-accent rounded-full opacity-0 group-[.is-current-theme]:opacity-100 transition-opacity duration-300"></span>
+        </button>
+    </div>
+</div>
+
+<script>
+    function initThemeToggle() {
+        const groups = document.querySelectorAll('.theme-toggle-group');
+        
+        function getTheme(): 'dark' | 'light' {
+            const stored = localStorage.getItem('theme');
+            if (stored === 'light' || stored === 'dark') {
+                return stored;
+            }
+            return 'dark';
+        }
+        
+        function updateAllToggles(theme: 'dark' | 'light') {
+            groups.forEach(group => {
+                const darkBtn = group.querySelector('.theme-toggle-dark');
+                const lightBtn = group.querySelector('.theme-toggle-light');
+                
+                darkBtn?.classList.remove('is-current-theme');
+                lightBtn?.classList.remove('is-current-theme');
+                
+                if (theme === 'dark') {
+                    darkBtn?.classList.add('is-current-theme');
+                } else {
+                    lightBtn?.classList.add('is-current-theme');
+                }
+            });
+        }
+        
+        function setTheme(theme: 'dark' | 'light') {
+            if (document.documentElement.getAttribute('data-theme') === theme) return;
+            
+            document.documentElement.classList.add('theme-transition');
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateAllToggles(theme);
+            
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-transition');
+            }, 300);
+        }
+        
+        const currentTheme = getTheme();
+        updateAllToggles(currentTheme);
+        
+        groups.forEach(group => {
+            const darkBtn = group.querySelector('.theme-toggle-dark');
+            const lightBtn = group.querySelector('.theme-toggle-light');
+            
+            darkBtn?.addEventListener('click', () => setTheme('dark'));
+            lightBtn?.addEventListener('click', () => setTheme('light'));
+        });
+    }
+    
+    initThemeToggle();
+    document.addEventListener('astro:page-load', initThemeToggle);
+</script>

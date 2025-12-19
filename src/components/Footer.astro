@@ -2,10 +2,10 @@
 const today = new Date();
 ---
 
-<footer class="container mx-auto px-6 lg:px-12 py-32 lg:py-40 relative overflow-hidden border-t border-white/5">
+<footer class="container mx-auto px-6 lg:px-12 py-32 lg:py-40 relative overflow-hidden border-t border-[var(--theme-border-secondary)]">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-end relative z-10">
         <div class="animate-on-scroll slide-right">
-            <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[0.95] tracking-tighter mb-10 text-white group cursor-pointer">
+            <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[0.95] tracking-tighter mb-10 text-[var(--theme-text-primary)] group cursor-pointer">
                 Let's<br>
                 <span class="text-stroke group-hover:text-brand-accent transition-all duration-500 ease-out">Build</span><br>
                 Reality.
@@ -18,28 +18,28 @@ const today = new Date();
 
         <div class="md:text-right animate-on-scroll slide-left stagger-2">
             <div class="mb-14">
-                <p class="text-xs font-bold uppercase text-slate-500 mb-6 tracking-widest">Social Uplink</p>
+                <p class="text-xs font-bold uppercase text-[var(--theme-text-muted)] mb-6 tracking-widest">Social Uplink</p>
                 <ul class="space-y-3">
                     <li>
-                        <a href="https://nicholai.work" class="text-white hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
+                        <a href="https://nicholai.work" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
                             nicholai.work
                         </a>
                     </li>
                     <li>
-                      <a href="https://instagram.com/nicholai.exe/" class="text-white hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
+                      <a href="https://instagram.com/nicholai.exe/" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
                             @nicholai.exe
                         </a>
                     </li>
                     <li>
-                      <a href="https://www.linkedin.com/in/nicholai-vogel-7a6b85112/" class="text-white hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
+                      <a href="https://www.linkedin.com/in/nicholai-vogel-7a6b85112/" class="text-[var(--theme-text-primary)] hover:text-brand-accent text-lg font-mono transition-colors duration-300 inline-block">
                             LinkedIn
                         </a>
                     </li>
                 </ul>
             </div>
-            <div class="flex md:justify-end items-end gap-3 text-[10px] text-slate-600 font-mono uppercase tracking-wide">
+            <div class="flex md:justify-end items-end gap-3 text-[10px] text-[var(--theme-text-muted)] font-mono uppercase tracking-wide">
                 <span>&copy; {today.getFullYear()} Nicholai Vogel</span>
-                <span class="text-slate-700">/</span>
+                <span class="text-[var(--theme-text-subtle)]">/</span>
                 <span>V7 SYSTEM</span>
             </div>
         </div>
@@ -47,6 +47,6 @@ const today = new Date();
 
     <!-- Decorative huge text bg -->
     <div class="absolute -bottom-8 lg:-bottom-12 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none">
-        <span class="text-[12rem] md:text-[18rem] lg:text-[22rem] font-extrabold text-white/[0.02] uppercase leading-none whitespace-nowrap tracking-tighter">VOGEL</span>
+        <span class="text-[12rem] md:text-[18rem] lg:text-[22rem] font-extrabold text-[var(--theme-text-primary)] opacity-[var(--theme-decorative-opacity)] uppercase leading-none whitespace-nowrap tracking-tighter transition-opacity duration-300">VOGEL</span>
     </div>
 </footer>

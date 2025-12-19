@@ -109,33 +109,117 @@
 }
 
 @utility text-stroke {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+    -webkit-text-stroke: 1px var(--theme-text-stroke);
+    color: transparent;
+}
+
+@utility text-stroke-dark {
+    -webkit-text-stroke: 1px var(--theme-text-stroke-inverted);
     color: transparent;
 }
 
 @utility skill-tag {
-    @apply text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 border border-slate-700 text-slate-400 hover:border-brand-accent hover:text-white transition-all duration-300 cursor-default select-none;
+    @apply text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 border border-[var(--theme-border-strong)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] transition-all duration-300 cursor-default select-none;
 }
 
 @utility btn-primary {
-    @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 inline-block;
+    @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[var(--theme-text-primary)] hover:text-[var(--theme-bg-primary)] transition-all duration-300 inline-block;
 }
 
 @utility btn-ghost {
-    @apply border border-slate-600 text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
+    @apply border border-[var(--theme-border-strong)] text-[var(--theme-text-primary)] px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
 }
 
 @utility grid-overlay {
     background-size: 100px 100px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-image: linear-gradient(to right, var(--theme-grid-line) 1px, transparent 1px);
     pointer-events: none;
     z-index: 0;
 }
 
+/* ===== THEME SYSTEM ===== */
+
+/* Dark mode (default) */
+:root {
+    --vh-full: 100vh;
+    --vh-full: 100dvh;
+    
+    /* Theme colors - Dark mode defaults */
+    --theme-bg-primary: #0B0D11;
+    --theme-bg-secondary: #151921;
+    --theme-bg-tertiary: #1E293B;
+    --theme-text-primary: #ffffff;
+    --theme-text-secondary: #94A3B8;
+    --theme-text-muted: #64748B;
+    --theme-text-subtle: #475569;
+    --theme-border-primary: rgba(255, 255, 255, 0.1);
+    --theme-border-secondary: rgba(255, 255, 255, 0.05);
+    --theme-border-strong: rgba(255, 255, 255, 0.2);
+    --theme-overlay: rgba(11, 13, 17, 0.8);
+    --theme-overlay-heavy: rgba(11, 13, 17, 0.98);
+    --theme-grid-line: rgba(255, 255, 255, 0.03);
+    --theme-hover-bg: rgba(255, 255, 255, 0.02);
+    --theme-hover-bg-strong: rgba(255, 255, 255, 0.05);
+    --theme-text-stroke: rgba(255, 255, 255, 0.15);
+    --theme-text-stroke-inverted: rgba(0, 0, 0, 0.15);
+    --theme-scrollbar-track: #0B0D11;
+    --theme-scrollbar-thumb: #334155;
+    --theme-code-bg: rgba(255, 77, 0, 0.1);
+    --theme-blockquote-bg: linear-gradient(135deg, rgba(255, 77, 0, 0.05), rgba(21, 25, 33, 0.8));
+    --theme-divider: rgba(255, 255, 255, 0.1);
+    --theme-decorative-opacity: 0.02;
+    --theme-card-overlay: rgba(11, 13, 17, 0.3);
+    --theme-card-gradient: rgba(11, 13, 17, 0.6);
+    --theme-hero-gradient-top: rgba(11, 13, 17, 0.8);
+    --theme-hero-gradient-side: rgba(11, 13, 17, 0.4);
+}
+
+/* Light mode */
+[data-theme="light"] {
+    --theme-bg-primary: #FAFAFA;
+    --theme-bg-secondary: #F1F3F5;
+    --theme-bg-tertiary: #E9ECEF;
+    --theme-text-primary: #0B0D11;
+    --theme-text-secondary: #475569;
+    --theme-text-muted: #64748B;
+    --theme-text-subtle: #94A3B8;
+    --theme-border-primary: rgba(0, 0, 0, 0.1);
+    --theme-border-secondary: rgba(0, 0, 0, 0.05);
+    --theme-border-strong: rgba(0, 0, 0, 0.15);
+    --theme-overlay: rgba(250, 250, 250, 0.9);
+    --theme-overlay-heavy: rgba(250, 250, 250, 0.98);
+    --theme-grid-line: rgba(0, 0, 0, 0.04);
+    --theme-hover-bg: rgba(0, 0, 0, 0.02);
+    --theme-hover-bg-strong: rgba(0, 0, 0, 0.05);
+    --theme-text-stroke: rgba(0, 0, 0, 0.2);
+    --theme-text-stroke-inverted: rgba(255, 255, 255, 0.15);
+    --theme-scrollbar-track: #FAFAFA;
+    --theme-scrollbar-thumb: #CBD5E1;
+    --theme-code-bg: rgba(221, 65, 50, 0.08);
+    --theme-blockquote-bg: linear-gradient(135deg, rgba(221, 65, 50, 0.05), rgba(241, 243, 245, 0.9));
+    --theme-divider: rgba(0, 0, 0, 0.08);
+    --theme-decorative-opacity: 0.04;
+    --theme-card-overlay: rgba(250, 250, 250, 0.15);
+    --theme-card-gradient: rgba(250, 250, 250, 0.4);
+    --theme-hero-gradient-top: rgba(250, 250, 250, 0.5);
+    --theme-hero-gradient-side: rgba(250, 250, 250, 0.2);
+}
+
+/* Theme transition for smooth switching */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+    transition: background-color 0.3s ease, 
+                border-color 0.3s ease, 
+                color 0.3s ease,
+                box-shadow 0.3s ease !important;
+}
+
 /* Base Styles */
 body {
-    background-color: var(--color-brand-dark);
-    color: #ffffff;
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
     overflow-x: hidden;
 }
 
@@ -150,23 +234,17 @@ html {
     }
 }
 
-/* Mobile viewport height fix - uses dvh with vh fallback */
-:root {
-    --vh-full: 100vh;
-    --vh-full: 100dvh;
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-brand-dark);
+    background: var(--theme-scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: var(--theme-scrollbar-thumb);
     transition: background 0.3s ease;
 }
 
@@ -295,7 +373,7 @@ html {
 .cursor-outline {
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 77, 0, 0.5);
+    border: 1px solid rgba(221, 65, 50, 0.5);
     z-index: 99999;
     transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
         height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -315,7 +393,7 @@ a:hover~.cursor-outline,
 button:hover~.cursor-outline {
     width: 60px;
     height: 60px;
-    background-color: rgba(255, 77, 0, 0.05);
+    background-color: rgba(221, 65, 50, 0.05);
     border-color: var(--color-brand-accent);
 }
 
@@ -348,15 +426,15 @@ a {
 
 .hover-border-glow:hover {
     border-color: var(--color-brand-accent);
-    box-shadow: 0 0 20px rgba(255, 77, 0, 0.1);
+    box-shadow: 0 0 20px rgba(221, 65, 50, 0.1);
 }
 
 /* Gradient divider */
 .divider-gradient {
     background: linear-gradient(to right,
             transparent,
-            rgba(255, 255, 255, 0.1) 20%,
-            rgba(255, 255, 255, 0.1) 80%,
+            var(--theme-divider) 20%,
+            var(--theme-divider) 80%,
             transparent);
 }
 
@@ -364,19 +442,19 @@ a {
 .divider-accent {
     background: linear-gradient(to right,
             transparent,
-            rgba(255, 77, 0, 0.2) 50%,
+            rgba(221, 65, 50, 0.2) 50%,
             transparent);
 }
 
 /* ===== PROSE / MARKDOWN STYLES ===== */
 .prose-custom {
-    color: #94A3B8;
+    color: var(--theme-text-secondary);
     line-height: 1.8;
     font-size: 1.0625rem;
 }
 
 .prose-custom h2 {
-    color: #ffffff;
+    color: var(--theme-text-primary);
     font-size: 1.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -384,7 +462,7 @@ a {
     margin-top: 3.5rem;
     margin-bottom: 1.25rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--theme-border-primary);
     position: relative;
     scroll-margin-top: 6rem;
 }
@@ -398,7 +476,7 @@ a {
 }
 
 .prose-custom h3 {
-    color: #ffffff;
+    color: var(--theme-text-primary);
     font-size: 1.25rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -409,7 +487,7 @@ a {
 }
 
 .prose-custom h4 {
-    color: #ffffff;
+    color: var(--theme-text-primary);
     font-size: 1.1rem;
     font-weight: 600;
     margin-top: 1.5rem;
@@ -429,17 +507,17 @@ a {
 }
 
 .prose-custom a:hover {
-    color: #ffffff;
+    color: var(--theme-text-primary);
     border-bottom-color: var(--color-brand-accent);
 }
 
 .prose-custom strong {
-    color: #ffffff;
+    color: var(--theme-text-primary);
     font-weight: 600;
 }
 
 .prose-custom em {
-    color: #CBD5E1;
+    color: var(--theme-text-secondary);
     font-style: italic;
 }
 
@@ -492,14 +570,14 @@ a {
 .prose-custom blockquote {
     position: relative;
     border-left: 3px solid var(--color-brand-accent);
-    background: linear-gradient(135deg, rgba(255, 77, 0, 0.05), rgba(21, 25, 33, 0.8));
+    background: var(--theme-blockquote-bg);
     padding: 1.5rem 1.5rem 1.5rem 2rem;
     margin: 2.5rem 0;
     font-style: italic;
-    color: #CBD5E1;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--theme-text-secondary);
+    border-right: 1px solid var(--theme-border-secondary);
+    border-top: 1px solid var(--theme-border-secondary);
+    border-bottom: 1px solid var(--theme-border-secondary);
 }
 
 .prose-custom blockquote::before {
@@ -507,7 +585,7 @@ a {
     position: absolute;
     top: -0.75rem;
     left: 1rem;
-    background: var(--color-brand-dark);
+    background: var(--theme-bg-primary);
     padding: 0 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.625rem;
@@ -528,19 +606,19 @@ a {
 /* Enhanced Code - Inline */
 .prose-custom code {
     color: var(--color-brand-accent);
-    background-color: rgba(255, 77, 0, 0.1);
+    background-color: var(--theme-code-bg);
     padding: 0.2rem 0.5rem;
     border-radius: 0;
     font-family: var(--font-mono);
     font-size: 0.85em;
-    border: 1px solid rgba(255, 77, 0, 0.2);
+    border: 1px solid rgba(221, 65, 50, 0.2);
 }
 
 /* Enhanced Code Blocks - Terminal Style */
 .prose-custom pre {
     position: relative;
-    background-color: var(--color-brand-panel);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--theme-bg-secondary);
+    border: 1px solid var(--theme-border-primary);
     padding: 0;
     margin: 2.5rem 0;
     overflow: hidden;
@@ -549,14 +627,14 @@ a {
 .prose-custom pre::before {
     content: "TERMINAL";
     display: block;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--theme-hover-bg);
+    border-bottom: 1px solid var(--theme-border-primary);
     padding: 0.75rem 1rem;
     font-family: var(--font-mono);
     font-size: 0.625rem;
     font-weight: 700;
     letter-spacing: 0.15em;
-    color: #64748B;
+    color: var(--theme-text-muted);
     text-transform: uppercase;
 }
 
@@ -564,7 +642,7 @@ a {
     display: block;
     background: none;
     padding: 1.5rem;
-    color: #CBD5E1;
+    color: var(--theme-text-secondary);
     border: none;
     overflow-x: auto;
 }
@@ -585,25 +663,25 @@ a {
     content: "";
     flex: 1;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(255, 77, 0, 0.3));
+    background: linear-gradient(to right, transparent, rgba(221, 65, 50, 0.3));
 }
 
 .prose-custom hr::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: linear-gradient(to left, transparent, rgba(255, 77, 0, 0.3));
+    background: linear-gradient(to left, transparent, rgba(221, 65, 50, 0.3));
 }
 
 /* Enhanced Images */
 .prose-custom img {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--theme-border-primary);
     margin: 2.5rem 0;
     transition: border-color 0.3s ease;
 }
 
 .prose-custom img:hover {
-    border-color: rgba(255, 77, 0, 0.3);
+    border-color: rgba(221, 65, 50, 0.3);
 }
 
 /* Image Captions (for figures) */
@@ -620,7 +698,7 @@ a {
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #64748B;
+    color: var(--theme-text-muted);
     margin-top: 0.75rem;
     padding-left: 0.5rem;
     border-left: 2px solid var(--color-brand-accent);
@@ -634,7 +712,7 @@ a {
 
 .prose-custom .video-container video {
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--theme-border-primary);
 }
 
 .prose-custom .video-container p {
@@ -642,7 +720,7 @@ a {
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #64748B;
+    color: var(--theme-text-muted);
     margin-top: 0.75rem;
     margin-bottom: 0;
 }
@@ -656,8 +734,8 @@ a {
 }
 
 .prose-custom thead {
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--theme-hover-bg);
+    border-bottom: 1px solid var(--theme-border-primary);
 }
 
 .prose-custom th {
@@ -666,17 +744,54 @@ a {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #64748B;
+    color: var(--theme-text-muted);
     padding: 1rem;
     text-align: left;
 }
 
 .prose-custom td {
     padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: #94A3B8;
+    border-bottom: 1px solid var(--theme-border-secondary);
+    color: var(--theme-text-secondary);
 }
 
 .prose-custom tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--theme-hover-bg);
+}
+
+/* ===== THEME-AWARE UTILITY CLASSES ===== */
+
+/* Background colors */
+.bg-theme-primary {
+    background-color: var(--theme-bg-primary);
+}
+
+.bg-theme-secondary {
+    background-color: var(--theme-bg-secondary);
+}
+
+.bg-theme-tertiary {
+    background-color: var(--theme-bg-tertiary);
+}
+
+/* Text colors */
+.text-theme-primary {
+    color: var(--theme-text-primary);
+}
+
+.text-theme-secondary {
+    color: var(--theme-text-secondary);
+}
+
+.text-theme-muted {
+    color: var(--theme-text-muted);
+}
+
+/* Border colors */
+.border-theme-primary {
+    border-color: var(--theme-border-primary);
+}
+
+.border-theme-secondary {
+    border-color: var(--theme-border-secondary);
 }

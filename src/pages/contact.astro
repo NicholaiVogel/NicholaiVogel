@@ -16,7 +16,7 @@ const contactContent = contactEntry.data;
     <div class="fixed inset-0 z-0 pointer-events-none">
         <div class="w-full h-full grid grid-cols-12 gap-4 opacity-[0.03]">
             {Array.from({ length: 12 }).map((_) => (
-                <div class="h-full border-r border-white"></div>
+                <div class="h-full border-r border-[var(--theme-text-primary)]"></div>
             ))}
         </div>
     </div>
@@ -24,15 +24,15 @@ const contactContent = contactEntry.data;
     <section class="relative z-10 min-h-screen flex flex-col pt-32 lg:pt-48 pb-20 px-6 lg:px-12">
 
         <!-- Page Header -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-white/10 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-[var(--theme-border-primary)] pb-12">
             <div class="lg:col-span-8">
-                <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white mb-8">
+                <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)] mb-8">
                     <span class="block animate-on-scroll slide-up">{contactContent.pageTitleLine1}</span>
                     <span class="block text-brand-accent animate-on-scroll slide-up stagger-1">{contactContent.pageTitleLine2}</span>
                 </h1>
             </div>
             <div class="lg:col-span-4 flex flex-col justify-end">
-                <p class="font-mono text-sm text-slate-400 leading-relaxed mb-8 border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+                <p class="font-mono text-sm text-[var(--theme-text-secondary)] leading-relaxed mb-8 border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
                     {contactContent.availabilityText}
                 </p>
             </div>
@@ -53,11 +53,11 @@ const contactContent = contactEntry.data;
                             type="text"
                             id="name"
                             name="name"
-                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
+                            class="block w-full bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
                             placeholder="Name"
                             required
                         />
-                        <label for="name" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                        <label for="name" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.name}
                         </label>
                     </div>
@@ -67,11 +67,11 @@ const contactContent = contactEntry.data;
                             type="email"
                             id="email"
                             name="email"
-                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
+                            class="block w-full bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer"
                             placeholder="Email"
                             required
                         />
-                        <label for="email" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                        <label for="email" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.email}
                         </label>
                     </div>
@@ -80,22 +80,22 @@ const contactContent = contactEntry.data;
                     <div class="group relative" id="custom-select">
                         <input type="hidden" name="subject" id="subject-input" required>
 
-                        <button type="button" id="select-trigger" class="block w-full text-left bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 flex justify-between items-center group-hover:border-white/40">
+                        <button type="button" id="select-trigger" class="block w-full text-left bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 flex justify-between items-center group-hover:border-[var(--theme-border-primary)]">
                             <span id="select-value" class="text-transparent">Select</span> <!-- Hidden placeholder text to keep height -->
                             <div class="text-brand-accent transform transition-transform duration-300" id="select-arrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                             </div>
                         </button>
 
-                        <label id="select-label" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 pointer-events-none">
+                        <label id="select-label" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 pointer-events-none">
                             {contactContent.formLabels?.subject}
                         </label>
 
                         <!-- Dropdown Menu -->
-                        <div id="select-options" class="absolute left-0 top-full w-full bg-brand-dark border border-white/20 shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2">
+                        <div id="select-options" class="absolute left-0 top-full w-full bg-[var(--theme-bg-primary)] border border-[var(--theme-border-strong)] shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2">
                             <div class="p-1">
                                 {contactContent.subjectOptions?.map((option) => (
-                                    <div class="option px-5 py-4 hover:bg-white/5 cursor-pointer text-white text-lg font-light transition-colors flex items-center gap-3 group/option" data-value={option.value}>
+                                    <div class="option px-5 py-4 hover:bg-[var(--theme-hover-bg-strong)] cursor-pointer text-[var(--theme-text-primary)] text-lg font-light transition-colors flex items-center gap-3 group/option" data-value={option.value}>
                                         <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
                                         {option.label}
                                     </div>
@@ -109,19 +109,19 @@ const contactContent = contactEntry.data;
                             id="message"
                             name="message"
                             rows="4"
-                            class="block w-full bg-transparent border-b border-white/20 py-4 text-xl text-white focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer resize-none"
+                            class="block w-full bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 placeholder-transparent peer resize-none"
                             placeholder="Message"
                             required
                         ></textarea>
-                        <label for="message" class="absolute left-0 top-4 text-slate-500 text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-slate-400 pointer-events-none">
+                        <label for="message" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.message}
                         </label>
                     </div>
 
                     <div class="pt-8">
-                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-4 px-8 py-4 bg-transparent border border-white/20 hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="font-mono text-xs font-bold uppercase tracking-widest text-white group-hover:text-brand-accent transition-colors">{contactContent.formLabels?.submit}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-brand-accent group-hover:translate-x-1 transition-all"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-4 px-8 py-4 bg-transparent border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="font-mono text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">{contactContent.formLabels?.submit}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--theme-text-muted)] group-hover:text-brand-accent group-hover:translate-x-1 transition-all"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>
                     </div>
                 </form>
@@ -131,19 +131,19 @@ const contactContent = contactEntry.data;
             <div class="lg:col-span-5 space-y-16 animate-on-scroll slide-left stagger-4">
 
                 <!-- Data Block 1 -->
-                <div class="relative pl-6 border-l border-white/10">
-                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Direct Link</h3>
-                    <a href={`mailto:${contactContent.email}`} class="text-2xl md:text-3xl font-bold text-white hover:text-brand-accent transition-colors break-all">
+                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
+                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Direct Link</h3>
+                    <a href={`mailto:${contactContent.email}`} class="text-2xl md:text-3xl font-bold text-[var(--theme-text-primary)] hover:text-brand-accent transition-colors break-all">
                         {contactContent.email}
                     </a>
                 </div>
 
                 <!-- Data Block 2 -->
-                <div class="relative pl-6 border-l border-white/10">
-                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Coordinates</h3>
-                    <p class="text-xl text-white font-light">
+                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
+                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Coordinates</h3>
+                    <p class="text-xl text-[var(--theme-text-primary)] font-light">
                         {contactContent.location}<br>
-                        <span class="text-slate-500 text-base">{contactContent.locationCountry}</span>
+                        <span class="text-[var(--theme-text-muted)] text-base">{contactContent.locationCountry}</span>
                     </p>
                     <div class="mt-4 font-mono text-xs text-brand-accent">
                         {contactContent.coordinates}
@@ -151,14 +151,14 @@ const contactContent = contactEntry.data;
                 </div>
 
                 <!-- Data Block 3 -->
-                <div class="relative pl-6 border-l border-white/10">
-                    <h3 class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">Social Feed</h3>
+                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
+                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Social Feed</h3>
                     <ul class="space-y-4">
                         {contactContent.socialLinks?.map((link) => (
                             <li>
                                 <a href={link.url} class="flex items-center gap-4 group">
-                                    <span class="text-slate-400 group-hover:text-white transition-colors text-lg">{link.name}</span>
-                                    <svg class="w-4 h-4 text-slate-600 group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                                    <span class="text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors text-lg">{link.name}</span>
+                                    <svg class="w-4 h-4 text-[var(--theme-text-subtle)] group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
                                 </a>
                             </li>
                         ))}
@@ -174,7 +174,7 @@ const contactContent = contactEntry.data;
     <div id="toast-container" class="fixed top-6 right-6 z-50 pointer-events-none"></div>
 
     <!-- Full-Screen Modal for Loading and Response -->
-    <div id="transmission-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-brand-dark/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="transmission-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--theme-overlay-heavy)] backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-500">
 
         <!-- Loading State -->
         <div id="loading-state" class="text-center">
@@ -200,7 +200,7 @@ const contactContent = contactEntry.data;
 
             <!-- Loading Text -->
             <div class="space-y-4">
-                <h2 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tight">
+                <h2 class="text-3xl md:text-5xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">
                     <span id="loading-text">Transmitting</span>
                 </h2>
                 <div class="flex items-center justify-center gap-2">
@@ -208,15 +208,15 @@ const contactContent = contactEntry.data;
                     <div class="w-2 h-2 bg-brand-accent rounded-full animate-bounce delay-100"></div>
                     <div class="w-2 h-2 bg-brand-accent rounded-full animate-bounce delay-200"></div>
                 </div>
-                <p class="font-mono text-sm text-slate-400 uppercase tracking-widest">Signal Processing</p>
+                <p class="font-mono text-sm text-[var(--theme-text-secondary)] uppercase tracking-widest">Signal Processing</p>
             </div>
         </div>
 
         <!-- Response State (hidden initially) -->
         <div id="response-state" class="hidden w-full h-full absolute inset-0 z-10 flex flex-col items-center justify-center p-6 opacity-0 transition-all duration-700">
             <!-- Close button -->
-            <button id="close-modal" class="absolute top-8 right-8 z-50 p-3 border border-white/20 hover:border-brand-accent hover:bg-brand-accent/10 transition-all duration-300 group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white group-hover:text-brand-accent transition-colors">
+            <button id="close-modal" class="absolute top-8 right-8 z-50 p-3 border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/10 transition-all duration-300 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -251,15 +251,15 @@ const contactContent = contactEntry.data;
 </BaseLayout>
 
 <style>
-    /* Custom autofill styles to match dark theme */
+    /* Custom autofill styles to match theme */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
     textarea:-webkit-autofill,
     textarea:-webkit-autofill:hover,
     textarea:-webkit-autofill:focus {
-        -webkit-text-fill-color: white;
-        -webkit-box-shadow: 0 0 0px 1000px #0B0D11 inset;
+        -webkit-text-fill-color: var(--theme-text-primary);
+        -webkit-box-shadow: 0 0 0px 1000px var(--theme-bg-primary) inset;
         transition: background-color 5000s ease-in-out 0s;
     }
 
@@ -267,13 +267,13 @@ const contactContent = contactEntry.data;
     .label-active {
         top: -1.5rem !important;
         font-size: 0.75rem !important;
-        color: #94A3B8 !important;
+        color: var(--theme-text-secondary) !important;
     }
 
     /* Dropdown open state */
     .dropdown-open #select-arrow {
         transform: rotate(180deg);
-        color: white;
+        color: var(--theme-text-primary);
     }
 
     /* Custom Animations */
@@ -322,28 +322,29 @@ const contactContent = contactEntry.data;
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--theme-hover-bg-strong);
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(0, 255, 255, 0.3);
+        background: var(--color-brand-accent);
         border-radius: 4px;
+        opacity: 0.3;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 255, 255, 0.5);
+        opacity: 0.5;
     }
 
     /* Response Content Prose Styles - Enhanced Readability */
     .prose-response {
-        color: white;
+        color: var(--theme-text-primary);
         text-align: left;
     }
 
     .prose-response h1,
     .prose-response h2,
     .prose-response h3 {
-        color: white;
+        color: var(--theme-text-primary);
         margin-top: 1.5em;
         margin-bottom: 0.75em;
         font-weight: 800;
@@ -354,7 +355,7 @@ const contactContent = contactEntry.data;
 
     .prose-response h1 {
         font-size: 3.5rem;
-        background: linear-gradient(to right, #fff, #94a3b8);
+        background: linear-gradient(to right, var(--theme-text-primary), var(--theme-text-secondary));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.5em;
@@ -366,53 +367,53 @@ const contactContent = contactEntry.data;
 
     .prose-response h3 {
         font-size: 1.75rem;
-        color: #ff4d00;
+        color: var(--color-brand-accent);
     }
 
     .prose-response p {
         margin-bottom: 1.5em;
         line-height: 1.8;
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 1.5rem; /* Increased size significantly */
+        color: var(--theme-text-secondary);
+        font-size: 1.5rem;
         font-weight: 300;
         max-width: 65ch;
         margin-right: auto;
     }
 
     .prose-response strong {
-        color: #ff4d00;
+        color: var(--color-brand-accent);
         font-weight: 600;
     }
 
     .prose-response em {
         font-style: italic;
-        color: #94a3b8;
+        color: var(--theme-text-muted);
     }
 
     /* Blockquote for signature or special text */
     .prose-response blockquote {
-        border-left: none; /* Removed standard border */
+        border-left: none;
         margin: 3em 0 1em;
         padding: 0;
-        color: #ff4d00;
+        color: var(--color-brand-accent);
         font-family: 'Courier New', monospace;
         font-size: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.2em;
         display: inline-block;
-        border-top: 1px solid rgba(255, 77, 0, 0.3);
+        border-top: 1px solid rgba(221, 65, 50, 0.3);
         padding-top: 2em;
     }
 
     .prose-response a {
-        color: #ff4d00;
+        color: var(--color-brand-accent);
         text-decoration: underline;
         text-underline-offset: 4px;
         transition: all 0.3s;
     }
 
     .prose-response a:hover {
-        color: white;
+        color: var(--theme-text-primary);
         text-decoration-thickness: 2px;
     }
 
@@ -461,14 +462,14 @@ const contactContent = contactEntry.data;
                 // Update UI
                 selectValue.textContent = text;
                 selectValue.classList.remove('text-transparent');
-                selectValue.classList.add('text-white');
+                selectValue.classList.add('text-[var(--theme-text-primary)]');
 
                 // Update Data
                 hiddenInput.value = value;
 
                 // Update Label Style
                 selectLabel.classList.add('label-active');
-                selectLabel.classList.add('text-brand-accent'); // Highlight when selected
+                selectLabel.classList.add('text-brand-accent');
 
                 closeDropdown();
             });

@@ -25,87 +25,126 @@ interface Props {
 
 const { sectionTitle, sectionSubtitle, sectionLabel, description, entries } = Astro.props;
 ---
-<section id="experience" class="container mx-auto px-6 lg:px-12 py-32 border-t border-white/10">
-
-    <!-- Section Header -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24 lg:mb-32 group cursor-pointer">
-        <div class="lg:col-span-8">
-            <h2 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-white">
-                <span class="block animate-on-scroll slide-up">{sectionTitle}</span>
-                <span class="block animate-on-scroll slide-up stagger-1 text-stroke group-hover:text-brand-accent transition-all duration-500 ease-out">{sectionSubtitle}</span>
-            </h2>
-        </div>
-        <div class="lg:col-span-4 flex items-end">
-            <p class="text-slate-400 text-lg leading-relaxed animate-on-scroll slide-up stagger-2 border-l-2 border-brand-accent pl-6">
-                {description}
-            </p>
-        </div>
-    </div>
-
-    <!-- Experience List -->
-    <div class="w-full border-t border-white/10">
-        {entries.map((entry, index) => (
-            <a
-                href={entry.link?.url || '#'}
-                class="group block border-b border-white/10 py-10 hover:border-brand-accent/30 transition-colors duration-300"
-            >
-                <!-- Entry Header -->
-                <div class="flex items-baseline justify-between mb-6">
-                    <div class="flex-grow">
-                        <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300">
-                            {entry.company}
-                        </h3>
-                        <p class="text-sm font-mono text-slate-400 mt-2">
-                            {entry.role}
-                        </p>
-                    </div>
-                    <div class="hidden md:block text-right ml-12 flex-shrink-0">
-                        <div class="text-sm font-mono text-brand-accent">{String(index + 1).padStart(2, '0')}</div>
-                    </div>
+<section id="experience" class="w-full py-32 border-t border-[var(--theme-border-primary)] bg-[var(--theme-bg-primary)] overflow-hidden">
+    <div class="container mx-auto px-6 lg:px-12">
+        <!-- Section Header -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24 lg:mb-32">
+            <div class="lg:col-span-8 group cursor-default">
+                <div class="flex items-center gap-3 mb-6 intro-element animate-on-scroll fade-in">
+                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.RECORDS /// WORK_HISTORY</span>
                 </div>
+                <h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
+                    <span class="block">{sectionTitle}</span>
+                    <span class="block text-brand-accent">
+                        {sectionSubtitle}
+                    </span>
+                </h2>
+            </div>
+            <div class="lg:col-span-4 flex flex-col justify-end">
+                <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 animate-on-scroll fade-in stagger-2 flex items-center gap-2">
+                    <span class="w-8 h-px bg-brand-accent/30"></span>
+                    DATA_ARCHIVE_V7
+                </div>
+                <p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed animate-on-scroll slide-up stagger-2 border-l border-brand-accent/30 pl-6">
+                    {description}
+                </p>
+            </div>
+        </div>
 
-                <!-- Entry Content Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                    <!-- Left Column: Metadata -->
-                    <div class="lg:col-span-4 space-y-6">
-                        <div>
-                            <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Period</div>
-                            <div class="font-bold text-white">{entry.dates}</div>
-                        </div>
-
-                        {entry.tags && entry.tags.length > 0 && (
-                            <div>
-                                <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-2">Stack</div>
-                                <div class="text-slate-400 font-mono text-xs md:text-sm tracking-wide group-hover:text-white transition-colors duration-300">
-                                    {entry.tags.join(', ')}
+        <!-- Experience List -->
+        <div class="w-full border-t border-[var(--theme-border-primary)]">
+            {entries.map((entry, index) => (
+                <div class="group relative border-b border-[var(--theme-border-primary)] hover:bg-white/[0.01] transition-all duration-500 overflow-hidden">
+                    <!-- Industrial Side Accent -->
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                    
+                    <a
+                        href={entry.link?.url || '#'}
+                        class="block py-12 lg:py-16 px-4 lg:px-8"
+                    >
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                            <!-- Left: Header & Role -->
+                            <div class="lg:col-span-4">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="font-mono text-xs text-brand-accent opacity-50 group-hover:opacity-100 transition-opacity">[{entry.systemId || `EXP.0${index + 1}`}]</span>
+                                    <div class="flex items-center gap-2">
+                                        <div class={`w-1.5 h-1.5 rounded-full ${index === 0 ? 'bg-brand-accent animate-pulse' : 'bg-[var(--theme-text-subtle)]'}`}></div>
+                                        <span class="font-mono text-[9px] uppercase tracking-widest text-[var(--theme-text-muted)]">{index === 0 ? 'PRODUCTION_LIVE' : 'PRODUCTION_WRAP'}</span>
+                                    </div>
                                 </div>
+                                <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tighter group-hover:text-brand-accent transition-colors duration-300 mb-4">
+                                    {entry.company}
+                                </h3>
+                                <p class="font-mono text-xs uppercase tracking-[0.2em] text-[var(--theme-text-secondary)]">
+                                    {entry.role}
+                                </p>
                             </div>
-                        )}
-                    </div>
 
-                    <!-- Right Column: Description -->
-                    <div class="lg:col-span-8">
-                        <p class="text-slate-400 leading-relaxed mb-6 group-hover:text-white transition-colors duration-300">
-                            {entry.description}
-                        </p>
+                            <!-- Middle: Metadata -->
+                            <div class="lg:col-span-3 space-y-8 pt-2">
+                                <div>
+                                    <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-3 flex items-center gap-2">
+                                        <span class="text-brand-accent">/</span> DUR.TIMELINE
+                                    </div>
+                                    <div class="font-mono text-sm text-[var(--theme-text-primary)]">{entry.dates}</div>
+                                </div>
 
-                        {entry.achievements && entry.achievements.length > 0 && (
-                            <div class="space-y-4">
-                                {entry.achievements.map((achievement) => (
-                                    <div class="border-l-2 border-white/10 pl-4">
-                                        <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
-                                            {achievement.label}
+                                {entry.tags && entry.tags.length > 0 && (
+                                    <div>
+                                        <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-3 flex items-center gap-2">
+                                            <span class="text-brand-accent">/</span> PIP.TOOLSET
                                         </div>
-                                        <div class="text-sm text-slate-400 group-hover:text-white transition-colors duration-300">
-                                            {achievement.text}
+                                        <div class="flex flex-wrap gap-2">
+                                            {entry.tags.map(tag => (
+                                                <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-1 border border-[var(--theme-border-secondary)] text-[var(--theme-text-muted)] group-hover:border-brand-accent/30 group-hover:text-[var(--theme-text-secondary)] transition-all">
+                                                    {tag}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
-                                ))}
+                                )}
                             </div>
-                        )}
-                    </div>
+
+                            <!-- Right: Content -->
+                            <div class="lg:col-span-5 pt-2">
+                                <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-4 flex items-center gap-2">
+                                    <span class="text-brand-accent">/</span> LOG.PRODUCTION_MANIFEST
+                                </div>
+                                <p class="text-[var(--theme-text-secondary)] leading-relaxed mb-8 group-hover:text-[var(--theme-text-primary)] transition-colors duration-300">
+                                    {entry.description}
+                                </p>
+
+                                {entry.achievements && entry.achievements.length > 0 && (
+                                    <div class="space-y-6">
+                                        {entry.achievements.map((achievement) => (
+                                            <div class="relative pl-6 py-1 group/item">
+                                                <!-- Minimalist bullet -->
+                                                <div class="absolute left-0 top-3 w-3 h-px bg-brand-accent/40 group-hover/item:w-5 transition-all"></div>
+                                                <div class="text-[9px] font-mono uppercase tracking-widest text-brand-accent/60 mb-1">
+                                                    {achievement.label}
+                                                </div>
+                                                <div class="text-sm text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors">
+                                                    {achievement.text}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                
+                                {entry.link && (
+                                    <div class="mt-8 flex items-center gap-2 font-mono text-[10px] text-brand-accent uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500">
+                                        <span>View Project</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+                                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        ))}
+            ))}
+        </div>
     </div>
 </section>

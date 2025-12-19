@@ -17,10 +17,10 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 {tocHeadings.length > 0 && (
 	<nav class:list={['toc', className]} data-toc aria-label="Table of contents">
 		<div class="flex items-center gap-3 mb-6">
-			<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+			<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest font-bold">
 				/// CONTENTS
 			</span>
-			<span class="h-px flex-grow bg-white/10"></span>
+			<span class="h-px flex-grow bg-[var(--theme-border-primary)]"></span>
 		</div>
 		<ul class="space-y-3">
 			{tocHeadings.map((heading) => (
@@ -29,15 +29,15 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 						href={`#${heading.slug}`}
 						data-toc-link={heading.slug}
 						class:list={[
-							'toc-link block text-sm transition-all duration-300 hover:text-white',
+							'toc-link block text-sm transition-all duration-300 hover:text-[var(--theme-text-primary)]',
 							heading.depth === 2
-								? 'text-slate-400 font-medium'
-								: 'text-slate-500 pl-4 text-xs',
+								? 'text-[var(--theme-text-secondary)] font-medium'
+								: 'text-[var(--theme-text-muted)] pl-4 text-xs',
 						]}
 					>
 						<span class="flex items-center gap-2">
 							{heading.depth === 2 && (
-								<span class="w-1.5 h-1.5 bg-slate-600 toc-indicator transition-colors duration-300"></span>
+								<span class="w-1.5 h-1.5 bg-[var(--theme-text-subtle)] toc-indicator transition-colors duration-300"></span>
 							)}
 							{heading.text}
 						</span>
@@ -78,23 +78,23 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 			if (activeHeading && currentActive !== activeHeading) {
 				// Remove active state from all links
 				tocLinks.forEach((link) => {
-					link.classList.remove('text-brand-accent', 'text-white');
-					link.classList.add('text-slate-400');
+					link.classList.remove('text-brand-accent', 'text-[var(--theme-text-primary)]');
+					link.classList.add('text-[var(--theme-text-secondary)]');
 					const indicator = link.querySelector('.toc-indicator');
 					if (indicator) {
 						indicator.classList.remove('bg-brand-accent');
-						indicator.classList.add('bg-slate-600');
+						indicator.classList.add('bg-[var(--theme-text-subtle)]');
 					}
 				});
 
 				// Add active state to current link
 				const activeLink = document.querySelector(`[data-toc-link="${activeHeading.id}"]`);
 				if (activeLink) {
-					activeLink.classList.remove('text-slate-400');
+					activeLink.classList.remove('text-[var(--theme-text-secondary)]');
 					activeLink.classList.add('text-brand-accent');
 					const indicator = activeLink.querySelector('.toc-indicator');
 					if (indicator) {
-						indicator.classList.remove('bg-slate-600');
+						indicator.classList.remove('bg-[var(--theme-text-subtle)]');
 						indicator.classList.add('bg-brand-accent');
 					}
 				}

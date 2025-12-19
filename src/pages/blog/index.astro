@@ -31,7 +31,7 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 	<section class="container mx-auto px-6 lg:px-12">
 		<!-- Back Navigation -->
 			<div class="mb-12">
-				<a href="/" class="inline-flex items-center gap-3 px-5 py-3 border border-slate-700 bg-brand-dark/50 text-xs font-mono font-bold uppercase tracking-widest text-slate-400 hover:border-brand-accent hover:text-white hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
+				<a href="/" class="inline-flex items-center gap-3 px-5 py-3 border border-[var(--theme-border-primary)] bg-[var(--theme-overlay)] text-xs font-mono font-bold uppercase tracking-widest text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
 					<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
 					<span>RETURN_TO_HOME</span>
 				</a>
@@ -40,14 +40,21 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 		<!-- Page Header -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 lg:mb-24">
 			<div class="lg:col-span-8">
-				<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85]">
-					<span class="block text-white animate-on-scroll slide-up">BLOG</span>
-					<span class="block text-transparent text-stroke animate-on-scroll slide-up stagger-1">ARCHIVE</span>
+				<div class="flex items-center gap-3 mb-6">
+					<div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+					<span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.LOG /// PRODUCTION_ARCHIVE</span>
+				</div>
+				<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85]">
+					<span class="block text-[var(--theme-text-primary)]">BLOG</span>
+					<span class="block text-brand-accent">ARCHIVE</span>
 				</h1>
 			</div>
-			<div class="lg:col-span-4 flex flex-col justify-end pb-4">
-				<div class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">/// THOUGHTS & PROCESS</div>
-				<p class="text-slate-400 text-base leading-relaxed border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+			<div class="lg:col-span-4 flex flex-col justify-end">
+				<div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 flex items-center gap-2">
+					<span class="w-8 h-px bg-brand-accent/30"></span>
+					THOUGHTS & PROCESS
+				</div>
+				<p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
 					Deep dives into VFX production, technical pipelines, and creative process. Sharing lessons from the front lines of visual effects.
 				</p>
 			</div>
@@ -61,10 +68,10 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 					<span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest font-bold">
 						SYS.BLOG /// FEATURED
 					</span>
-					<span class="h-px flex-grow bg-white/10"></span>
+					<span class="h-px flex-grow bg-[var(--theme-border-secondary)]"></span>
 				</div>
 				
-				<article class="group relative border border-white/10 bg-white/[0.02] hover:border-brand-accent/40 transition-all duration-500 overflow-hidden">
+				<article class="group relative border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent/40 transition-all duration-500 overflow-hidden">
 					<!-- Accent indicator strip -->
 					<div class="absolute top-0 left-0 w-1 h-full bg-brand-accent"></div>
 					<div class="absolute top-0 left-0 w-full h-1 bg-brand-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -81,14 +88,14 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 									class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
 								/>
 							)}
-							<div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-brand-dark/10 transition-colors duration-500"></div>
-							<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-brand-dark/80 hidden lg:block"></div>
-							<div class="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent lg:hidden"></div>
+							<div class="absolute inset-0 bg-[var(--theme-card-overlay)] group-hover:opacity-50 transition-opacity duration-500"></div>
+							<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[var(--theme-card-gradient)] hidden lg:block"></div>
+							<div class="absolute inset-0 bg-gradient-to-t from-[var(--theme-card-gradient)] to-transparent lg:hidden"></div>
 							
 							<!-- Category badge -->
 							{featuredPost.data.category && (
 								<div class="absolute top-6 left-6">
-									<span class="px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest bg-brand-dark/80 border border-brand-accent/50 text-brand-accent backdrop-blur-sm">
+									<span class="px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest bg-[var(--theme-overlay)] border border-brand-accent/50 text-brand-accent backdrop-blur-sm">
 										{featuredPost.data.category}
 									</span>
 								</div>
@@ -105,21 +112,21 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 								<span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest">
 									<FormattedDate date={featuredPost.data.pubDate} />
 								</span>
-								<span class="h-px w-8 bg-white/20"></span>
-								<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+								<span class="h-px w-8 bg-[var(--theme-border-strong)]"></span>
+								<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest">
 									5 min read
 								</span>
 							</div>
 							
 							<!-- Title -->
 							<a href={`/blog/${featuredPost.id}/`}>
-								<h2 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-white uppercase tracking-tight mb-6 group-hover:text-brand-accent transition-colors duration-300 leading-tight">
+								<h2 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight mb-6 group-hover:text-brand-accent transition-colors duration-300 leading-tight">
 									{featuredPost.data.title}
 								</h2>
 							</a>
 							
 							<!-- Description -->
-							<p class="text-slate-400 text-base lg:text-lg font-light leading-relaxed mb-8 line-clamp-3">
+							<p class="text-[var(--theme-text-secondary)] text-base lg:text-lg font-light leading-relaxed mb-8 line-clamp-3">
 								{featuredPost.data.description}
 							</p>
 							
@@ -127,7 +134,7 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 							{featuredPost.data.tags && featuredPost.data.tags.length > 0 && (
 								<div class="flex flex-wrap gap-2 mb-8">
 									{featuredPost.data.tags.slice(0, 5).map((tag: string) => (
-										<span class="px-3 py-1.5 text-[10px] font-mono uppercase border border-white/10 text-slate-500 group-hover:border-white/20 transition-colors">
+										<span class="px-3 py-1.5 text-[10px] font-mono uppercase border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] group-hover:border-[var(--theme-border-strong)] transition-colors">
 											{tag}
 										</span>
 									))}
@@ -135,13 +142,13 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 							)}
 							
 							<!-- Read link -->
-							<div class="pt-6 border-t border-white/10">
+							<div class="pt-6 border-t border-[var(--theme-border-primary)]">
 								<a
 									href={`/blog/${featuredPost.id}/`}
-									class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-white hover:text-brand-accent transition-all duration-300 group/link"
+									class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:text-brand-accent transition-all duration-300 group/link"
 								>
 									Read Full Article
-									<span class="block w-8 h-[1px] bg-white/30 group-hover/link:bg-brand-accent group-hover/link:w-12 transition-all duration-300"></span>
+									<span class="block w-8 h-[1px] bg-[var(--theme-border-strong)] group-hover/link:bg-brand-accent group-hover/link:w-12 transition-all duration-300"></span>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										width="14"
@@ -168,10 +175,10 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 		<!-- Latest Section with Filters -->
 		<div class="mb-16 lg:mb-24">
 			<div class="flex items-center gap-4 mb-8">
-				<span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">
+				<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest font-bold">
 					/// LATEST TRANSMISSIONS
 				</span>
-				<span class="h-px flex-grow bg-white/10"></span>
+				<span class="h-px flex-grow bg-[var(--theme-border-secondary)]"></span>
 			</div>
 			
 			<!-- Filters Component -->
@@ -202,10 +209,10 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 			
 			<!-- Empty state (hidden by default, shown via JS when no results) -->
 			<div id="no-results" class="hidden text-center py-20">
-				<div class="text-slate-500 font-mono text-sm uppercase tracking-widest mb-4">
+				<div class="text-[var(--theme-text-muted)] font-mono text-sm uppercase tracking-widest mb-4">
 					/// NO MATCHING ARTICLES FOUND
 				</div>
-				<p class="text-slate-400 text-sm">
+				<p class="text-[var(--theme-text-secondary)] text-sm">
 					Try adjusting your search or filter criteria.
 				</p>
 			</div>

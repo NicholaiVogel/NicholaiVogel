@@ -2,13 +2,13 @@
 // Reading progress bar that tracks scroll position
 ---
 
-<div id="reading-progress-container" class="fixed top-0 left-0 w-full h-[3px] z-[100] bg-brand-dark/50">
+<div id="reading-progress-container" class="fixed top-0 left-0 w-full h-[3px] z-[100] bg-[var(--theme-bg-primary)]/50">
 	<div id="reading-progress-bar" class="h-full bg-brand-accent w-0 transition-[width] duration-100 ease-out shadow-[0_0_10px_rgba(221,65,50,0.5)]"></div>
 </div>
 
-<div id="reading-status" class="fixed top-4 right-4 z-[90] hidden lg:flex items-center gap-3 px-3 py-1 bg-brand-dark/80 backdrop-blur-md border border-white/10 opacity-0 transition-opacity duration-300 pointer-events-none">
+<div id="reading-status" class="fixed top-4 right-4 z-[90] hidden lg:flex items-center gap-3 px-3 py-1 bg-[var(--theme-overlay)] backdrop-blur-md border border-[var(--theme-border-primary)] opacity-0 transition-opacity duration-300 pointer-events-none">
     <div class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></div>
-    <span class="text-[9px] font-mono text-slate-400 uppercase tracking-widest">READING_BUFFER: <span id="progress-text" class="text-white">0%</span></span>
+    <span class="text-[9px] font-mono text-[var(--theme-text-secondary)] uppercase tracking-widest">READING_BUFFER: <span id="progress-text" class="text-[var(--theme-text-primary)]">0%</span></span>
 </div>
 
 <script>
@@ -69,4 +69,3 @@
 	// Re-initialize on Astro page transitions
 	document.addEventListener('astro:page-load', initReadingProgress);
 </script>
-
