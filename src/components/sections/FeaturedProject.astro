@@ -24,7 +24,7 @@ const { role, client, year, region, projectTitle, projectSubtitle, projectDescri
     <!-- Video Background -->
     <div class="absolute inset-0 z-0">
         <!-- Industrial Scanlines -->
-        <div class="absolute inset-0 z-1 pointer-events-none opacity-[0.05] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+        <div class="project-scanlines absolute inset-0 z-1 pointer-events-none opacity-[0.05] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
         
         <video
             autoplay
@@ -36,11 +36,11 @@ const { role, client, year, region, projectTitle, projectSubtitle, projectDescri
             <source src={videoUrl} type="video/mp4" />
         </video>
         <!-- Cinematic Letterboxing / Gradient Vignette -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-80"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-40"></div>
+        <div class="project-video-overlay absolute inset-0 bg-gradient-to-b from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-80"></div>
+        <div class="project-video-overlay absolute inset-0 bg-gradient-to-r from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-40"></div>
 
         <!-- Subtle Grid Overlay -->
-        <div class="absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20"></div>
+        <div class="project-grid absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20"></div>
         
         <!-- Technical Telemetry Overlay (Decorative) -->
         <div class="absolute top-1/2 left-6 -translate-y-1/2 hidden lg:flex flex-col gap-12 font-mono text-[9px] text-brand-accent/30 uppercase tracking-[0.4em] [writing-mode:vertical-lr]">
@@ -136,4 +136,50 @@ const { role, client, year, region, projectTitle, projectSubtitle, projectDescri
         </div>
 
     </div>
+
 </section>
+
+<style>
+    /* Clean light mode: zero overlays, full contrast video, white high-contrast text */
+    :global([data-theme="light"]) .project-video-overlay,
+    :global([data-theme="light"]) .project-scanlines,
+    :global([data-theme="light"]) .project-grid {
+        display: none !important;
+    }
+    
+    :global([data-theme="light"]) #work video {
+        opacity: 1 !important;
+    }
+
+    :global([data-theme="light"]) #work .text-\[var\(--theme-text-primary\)\],
+    :global([data-theme="light"]) #work .text-\[var\(--theme-text-secondary\)\],
+    :global([data-theme="light"]) #work .text-\[var\(--theme-text-muted\)\],
+    :global([data-theme="light"]) #work p,
+    :global([data-theme="light"]) #work span:not(.text-brand-accent) {
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    :global([data-theme="light"]) #work .text-\[var\(--theme-text-secondary\)\] {
+        font-weight: 400;
+    }
+
+    :global([data-theme="light"]) #work .text-\[var\(--theme-text-muted\)\] {
+        font-weight: 600;
+    }
+
+    :global([data-theme="light"]) #work .opacity-60,
+    :global([data-theme="light"]) #work .opacity-40,
+    :global([data-theme="light"]) #work .text-brand-accent\/30,
+    :global([data-theme="light"]) #work .text-brand-accent\/40,
+    :global([data-theme="light"]) #work .text-brand-accent\/60 {
+        opacity: 1 !important;
+        color: var(--color-brand-accent) !important;
+    }
+
+    :global([data-theme="light"]) #work .border-brand-accent\/20,
+    :global([data-theme="light"]) #work .border-t,
+    :global([data-theme="light"]) #work .border-b {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+</style>

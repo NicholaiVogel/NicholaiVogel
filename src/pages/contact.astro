@@ -25,14 +25,22 @@ const contactContent = contactEntry.data;
 
         <!-- Page Header -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-[var(--theme-border-primary)] pb-12">
-            <div class="lg:col-span-8">
-                <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)] mb-8">
-                    <span class="block animate-on-scroll slide-up">{contactContent.pageTitleLine1}</span>
-                    <span class="block text-brand-accent animate-on-scroll slide-up stagger-1">{contactContent.pageTitleLine2}</span>
+            <div class="lg:col-span-8 group cursor-default">
+                <div class="flex items-center gap-3 mb-6 intro-element animate-on-scroll fade-in">
+                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.UPLINK /// CONTACT_INTERFACE</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
+                    <span class="block">{contactContent.pageTitleLine1}</span>
+                    <span class="block text-brand-accent">{contactContent.pageTitleLine2}</span>
                 </h1>
             </div>
             <div class="lg:col-span-4 flex flex-col justify-end">
-                <p class="font-mono text-sm text-[var(--theme-text-secondary)] leading-relaxed mb-8 border-l border-brand-accent pl-6 animate-on-scroll fade-in stagger-2">
+                <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-8 h-px bg-brand-accent/30"></span>
+                    COMM_AVAILABILITY
+                </div>
+                <p class="font-mono text-sm text-[var(--theme-text-secondary)] leading-relaxed border-l border-brand-accent/30 pl-6">
                     {contactContent.availabilityText}
                 </p>
             </div>
@@ -41,10 +49,10 @@ const contactContent = contactEntry.data;
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 flex-grow">
 
             <!-- Left Column: Contact Form -->
-            <div class="lg:col-span-7 animate-on-scroll slide-up stagger-3">
-                <div class="mb-8 flex items-center gap-3">
-                    <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
-                    <span class="font-mono text-xs text-brand-accent uppercase tracking-widest">{contactContent.formLabels?.transmissionUplink}</span>
+            <div class="lg:col-span-7">
+                <div class="mb-12 flex items-center gap-3">
+                    <span class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></span>
+                    <span class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.2em] font-bold">/// TRANSMISSION_LOG</span>
                 </div>
 
                 <form id="contact-form" class="space-y-12">
@@ -57,7 +65,7 @@ const contactContent = contactEntry.data;
                             placeholder="Name"
                             required
                         />
-                        <label for="name" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
+                        <label for="name" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300 peer-focus:-top-6 peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.name}
                         </label>
                     </div>
@@ -71,7 +79,7 @@ const contactContent = contactEntry.data;
                             placeholder="Email"
                             required
                         />
-                        <label for="email" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
+                        <label for="email" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300 peer-focus:-top-6 peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.email}
                         </label>
                     </div>
@@ -80,22 +88,22 @@ const contactContent = contactEntry.data;
                     <div class="group relative" id="custom-select">
                         <input type="hidden" name="subject" id="subject-input" required>
 
-                        <button type="button" id="select-trigger" class="block w-full text-left bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 flex justify-between items-center group-hover:border-[var(--theme-border-primary)]">
+                        <button type="button" id="select-trigger" class="block w-full text-left bg-transparent border-b border-[var(--theme-border-strong)] py-4 text-xl text-[var(--theme-text-primary)] focus:outline-none focus:border-brand-accent transition-colors duration-300 flex justify-between items-center group-hover:border-brand-accent/30">
                             <span id="select-value" class="text-transparent">Select</span> <!-- Hidden placeholder text to keep height -->
                             <div class="text-brand-accent transform transition-transform duration-300" id="select-arrow">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><path d="m6 9 6 6 6-6"/></svg>
                             </div>
                         </button>
 
-                        <label id="select-label" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 pointer-events-none">
+                        <label id="select-label" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300 pointer-events-none">
                             {contactContent.formLabels?.subject}
                         </label>
 
                         <!-- Dropdown Menu -->
-                        <div id="select-options" class="absolute left-0 top-full w-full bg-[var(--theme-bg-primary)] border border-[var(--theme-border-strong)] shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2">
+                        <div id="select-options" class="absolute left-0 top-full w-full bg-[var(--theme-bg-primary)] border border-brand-accent/30 shadow-2xl z-50 hidden opacity-0 transform translate-y-2 transition-all duration-200 origin-top mt-2 backdrop-blur-xl">
                             <div class="p-1">
                                 {contactContent.subjectOptions?.map((option) => (
-                                    <div class="option px-5 py-4 hover:bg-[var(--theme-hover-bg-strong)] cursor-pointer text-[var(--theme-text-primary)] text-lg font-light transition-colors flex items-center gap-3 group/option" data-value={option.value}>
+                                    <div class="option px-5 py-4 hover:bg-brand-accent/5 cursor-pointer text-[var(--theme-text-primary)] text-lg font-light transition-colors flex items-center gap-3 group/option" data-value={option.value}>
                                         <span class="w-1.5 h-1.5 rounded-full bg-brand-accent opacity-0 group-hover/option:opacity-100 transition-opacity"></span>
                                         {option.label}
                                     </div>
@@ -113,52 +121,63 @@ const contactContent = contactEntry.data;
                             placeholder="Message"
                             required
                         ></textarea>
-                        <label for="message" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-sm font-mono uppercase tracking-widest transition-all duration-300 peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-xs peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
+                        <label for="message" class="absolute left-0 top-4 text-[var(--theme-text-muted)] text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300 peer-focus:-top-6 peer-focus:text-brand-accent peer-valid:-top-6 peer-valid:text-[var(--theme-text-secondary)] pointer-events-none">
                             {contactContent.formLabels?.message}
                         </label>
                     </div>
 
                     <div class="pt-8">
-                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-4 px-8 py-4 bg-transparent border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="font-mono text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">{contactContent.formLabels?.submit}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--theme-text-muted)] group-hover:text-brand-accent group-hover:translate-x-1 transition-all"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-6 px-8 py-4 bg-brand-accent/5 border border-brand-accent/30 hover:bg-brand-accent hover:border-brand-accent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
+                            <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="relative z-10 font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-accent group-hover:text-brand-dark transition-colors">{contactContent.formLabels?.submit}</span>
+                            <div class="relative z-10 w-8 h-8 flex items-center justify-center border border-brand-accent/20 group-hover:border-brand-dark/30 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-brand-accent group-hover:text-brand-dark group-hover:translate-x-1 transition-all">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
                         </button>
                     </div>
                 </form>
             </div>
 
             <!-- Right Column: System Status / Info -->
-            <div class="lg:col-span-5 space-y-16 animate-on-scroll slide-left stagger-4">
+            <div class="lg:col-span-5 space-y-16 lg:pt-24">
 
                 <!-- Data Block 1 -->
-                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
-                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Direct Link</h3>
-                    <a href={`mailto:${contactContent.email}`} class="text-2xl md:text-3xl font-bold text-[var(--theme-text-primary)] hover:text-brand-accent transition-colors break-all">
+                <div class="relative pl-6 border-l border-brand-accent/30 group">
+                    <h3 class="font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                        <span class="text-brand-accent">/</span> DIRECT_LINK
+                    </h3>
+                    <a href={`mailto:${contactContent.email}`} class="text-2xl md:text-3xl font-bold text-[var(--theme-text-primary)] hover:text-brand-accent transition-colors break-all uppercase tracking-tight">
                         {contactContent.email}
                     </a>
                 </div>
 
                 <!-- Data Block 2 -->
-                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
-                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Coordinates</h3>
-                    <p class="text-xl text-[var(--theme-text-primary)] font-light">
+                <div class="relative pl-6 border-l border-brand-accent/30 group">
+                    <h3 class="font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                        <span class="text-brand-accent">/</span> GEOSPATIAL_COORDS
+                    </h3>
+                    <p class="text-xl text-[var(--theme-text-primary)] font-bold uppercase tracking-tight mb-2">
                         {contactContent.location}<br>
-                        <span class="text-[var(--theme-text-muted)] text-base">{contactContent.locationCountry}</span>
+                        <span class="text-[var(--theme-text-muted)] text-sm tracking-widest">{contactContent.locationCountry}</span>
                     </p>
-                    <div class="mt-4 font-mono text-xs text-brand-accent">
+                    <div class="font-mono text-xs text-brand-accent/60 group-hover:text-brand-accent transition-colors">
                         {contactContent.coordinates}
                     </div>
                 </div>
 
                 <!-- Data Block 3 -->
-                <div class="relative pl-6 border-l border-[var(--theme-border-primary)]">
-                    <h3 class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-widest mb-4">Social Feed</h3>
+                <div class="relative pl-6 border-l border-brand-accent/30">
+                    <h3 class="font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                        <span class="text-brand-accent">/</span> SOCIAL_MANIFEST
+                    </h3>
                     <ul class="space-y-4">
-                        {contactContent.socialLinks?.map((link) => (
-                            <li>
-                                <a href={link.url} class="flex items-center gap-4 group">
-                                    <span class="text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors text-lg">{link.name}</span>
-                                    <svg class="w-4 h-4 text-[var(--theme-text-subtle)] group-hover:text-brand-accent transition-colors transform group-hover:translate-x-1 group-hover:-translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                        {contactContent.socialLinks?.map((link, idx) => (
+                            <li class="group/social">
+                                <a href={link.url} class="flex items-center gap-4">
+                                    <span class="font-mono text-[9px] text-brand-accent opacity-0 group-hover/social:opacity-100 transition-opacity">[SIG.0{idx + 1}]</span>
+                                    <span class="text-[var(--theme-text-secondary)] group-hover/social:text-brand-accent transition-colors text-xl font-bold uppercase tracking-tight">{link.name}</span>
+                                    <div class="w-1.5 h-1.5 rounded-full bg-brand-accent/20 group-hover/social:bg-brand-accent transition-all"></div>
                                 </a>
                             </li>
                         ))}
@@ -174,76 +193,78 @@ const contactContent = contactEntry.data;
     <div id="toast-container" class="fixed top-6 right-6 z-50 pointer-events-none"></div>
 
     <!-- Full-Screen Modal for Loading and Response -->
-    <div id="transmission-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--theme-overlay-heavy)] backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="transmission-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--theme-bg-primary)]/95 backdrop-blur-2xl opacity-0 pointer-events-none transition-opacity duration-500">
+        <!-- Technical Grid Overlay for Modal -->
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
 
         <!-- Loading State -->
-        <div id="loading-state" class="text-center">
+        <div id="loading-state" class="relative z-10 text-center">
             <!-- Animated Transmission Graphic -->
-            <div class="relative w-32 h-32 mx-auto mb-12">
+            <div class="relative w-40 h-40 mx-auto mb-16">
                 <!-- Outer rotating ring -->
-                <div class="absolute inset-0 border-2 border-brand-accent/20 rounded-full animate-spin-slow"></div>
+                <div class="absolute inset-0 border border-brand-accent/20 rounded-full animate-spin-slow"></div>
                 <!-- Middle pulsing ring -->
-                <div class="absolute inset-4 border-2 border-brand-accent/40 rounded-full animate-pulse"></div>
+                <div class="absolute inset-6 border border-brand-accent/40 rounded-full animate-pulse"></div>
                 <!-- Inner dot -->
                 <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-4 h-4 bg-brand-accent rounded-full animate-ping"></div>
-                    <div class="w-4 h-4 bg-brand-accent rounded-full absolute"></div>
+                    <div class="w-6 h-6 bg-brand-accent rounded-full animate-ping opacity-40"></div>
+                    <div class="w-2 h-2 bg-brand-accent rounded-full absolute"></div>
                 </div>
-                <!-- Signal waves -->
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-brand-accent to-transparent animate-pulse"></div>
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center rotate-90">
-                    <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-brand-accent to-transparent animate-pulse delay-150"></div>
+                <!-- Scanning bars -->
+                <div class="absolute inset-0 overflow-hidden rounded-full">
+                    <div class="w-full h-full bg-gradient-to-b from-transparent via-brand-accent/10 to-transparent animate-scan-sweep-vertical"></div>
                 </div>
             </div>
 
             <!-- Loading Text -->
-            <div class="space-y-4">
-                <h2 class="text-3xl md:text-5xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">
-                    <span id="loading-text">Transmitting</span>
-                </h2>
-                <div class="flex items-center justify-center gap-2">
-                    <div class="w-2 h-2 bg-brand-accent rounded-full animate-bounce"></div>
-                    <div class="w-2 h-2 bg-brand-accent rounded-full animate-bounce delay-100"></div>
-                    <div class="w-2 h-2 bg-brand-accent rounded-full animate-bounce delay-200"></div>
+            <div class="space-y-6">
+                <div class="flex items-center justify-center gap-3">
+                    <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+                    <h2 class="text-4xl md:text-6xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tighter">
+                        <span id="loading-text">TRANSMITTING</span>
+                    </h2>
+                    <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
                 </div>
-                <p class="font-mono text-sm text-[var(--theme-text-secondary)] uppercase tracking-widest">Signal Processing</p>
+                <div class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.4em] flex items-center justify-center gap-4">
+                    <span class="opacity-40">ENCRYPTING_PACKETS</span>
+                    <span class="w-8 h-px bg-brand-accent/20"></span>
+                    <span class="animate-pulse">STABLIZING_UPLINK</span>
+                </div>
             </div>
         </div>
 
         <!-- Response State (hidden initially) -->
-        <div id="response-state" class="hidden w-full h-full absolute inset-0 z-10 flex flex-col items-center justify-center p-6 opacity-0 transition-all duration-700">
+        <div id="response-state" class="hidden w-full h-full absolute inset-0 z-20 flex flex-col items-center justify-center p-6 lg:p-12 opacity-0 transition-all duration-700">
             <!-- Close button -->
-            <button id="close-modal" class="absolute top-8 right-8 z-50 p-3 border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/10 transition-all duration-300 group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+            <button id="close-modal" class="absolute top-12 right-12 z-50 group flex items-center gap-4">
+                <span class="font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em] group-hover:text-brand-accent transition-colors">Terminate_Session [ESC]</span>
+                <div class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-strong)] group-hover:border-brand-accent group-hover:bg-brand-accent/5 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
             </button>
 
             <!-- Content Container -->
-            <div class="w-full max-w-5xl mx-auto flex flex-col items-center relative">
+            <div class="w-full max-w-6xl mx-auto flex flex-col items-center relative">
                 
-                <!-- Header - More subtle now -->
-                <div class="text-center mb-12 animate-scale-in">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
-                        <p class="font-mono text-sm text-brand-accent uppercase tracking-widest">Transmission Received</p>
-                        <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
-                    </div>
-                </div>
-
                 <!-- Response content - The Focal Point -->
-                <div class="w-full relative">
-                    <!-- Decorative corner markers -->
-                    <div class="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-brand-accent opacity-50"></div>
-                    <div class="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-brand-accent opacity-50"></div>
-                    <div class="absolute -bottom-4 -left-4 w-8 h-8 border-b-2 border-l-2 border-brand-accent opacity-50"></div>
-                    <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-brand-accent opacity-50"></div>
+                <div class="w-full relative bg-white/[0.01] border border-white/5 backdrop-blur-sm p-8 md:p-16 lg:p-24">
+                    <!-- Technical Corner Accents -->
+                    <div class="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-brand-accent"></div>
+                    <div class="absolute -top-px -right-px w-12 h-12 border-t-2 border-r-2 border-brand-accent"></div>
+                    <div class="absolute -bottom-px -left-px w-12 h-12 border-b-2 border-l-2 border-brand-accent"></div>
+                    <div class="absolute -bottom-px -right-px w-12 h-12 border-b-2 border-r-2 border-brand-accent"></div>
+
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 mb-12">
+                        <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                        <span class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.4em]">INCOMING_RESPONSE /// MSG.ID_ACK</span>
+                    </div>
 
                     <!-- Content -->
-                    <div id="response-content" class="prose-response max-h-[70vh] overflow-y-auto custom-scrollbar px-4 md:px-8 py-4"></div>
+                    <div id="response-content" class="prose-response max-h-[60vh] overflow-y-auto custom-scrollbar pr-4"></div>
                 </div>
             </div>
         </div>
@@ -282,13 +303,16 @@ const contactContent = contactEntry.data;
         to { transform: rotate(360deg); }
     }
 
+    @keyframes scan-sweep-vertical {
+        0% { transform: translateY(-100%); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(100%); opacity: 0; }
+    }
+
     @keyframes scale-in {
         0% {
-            transform: scale(0);
+            transform: scale(0.9);
             opacity: 0;
-        }
-        50% {
-            transform: scale(1.1);
         }
         100% {
             transform: scale(1);
@@ -297,11 +321,15 @@ const contactContent = contactEntry.data;
     }
 
     .animate-spin-slow {
-        animation: spin-slow 3s linear infinite;
+        animation: spin-slow 8s linear infinite;
+    }
+
+    .animate-scan-sweep-vertical {
+        animation: scan-sweep-vertical 2s ease-in-out infinite;
     }
 
     .animate-scale-in {
-        animation: scale-in 0.6s ease-out forwards;
+        animation: scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .delay-100 {
@@ -354,35 +382,58 @@ const contactContent = contactEntry.data;
     }
 
     .prose-response h1 {
-        font-size: 3.5rem;
-        background: linear-gradient(to right, var(--theme-text-primary), var(--theme-text-secondary));
+        font-size: 2.5rem;
+        background: linear-gradient(to right, var(--theme-text-primary), var(--color-brand-accent));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.5em;
     }
 
     .prose-response h2 {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
+        border-bottom: 1px solid var(--theme-border-primary);
+        padding-bottom: 0.5rem;
     }
 
     .prose-response h3 {
-        font-size: 1.75rem;
+        font-size: 1.25rem;
         color: var(--color-brand-accent);
     }
 
     .prose-response p {
         margin-bottom: 1.5em;
-        line-height: 1.8;
+        line-height: 1.7;
         color: var(--theme-text-secondary);
-        font-size: 1.5rem;
-        font-weight: 300;
-        max-width: 65ch;
+        font-size: 1.125rem;
+        font-weight: 400;
+        max-width: 75ch;
         margin-right: auto;
     }
 
     .prose-response strong {
+        color: var(--theme-text-primary);
+        font-weight: 700;
+    }
+
+    .prose-response ul, .prose-response ol {
+        margin-bottom: 1.5em;
+        space-y: 0.5em;
+    }
+
+    .prose-response li {
+        position: relative;
+        padding-left: 1.5rem;
+        color: var(--theme-text-secondary);
+    }
+
+    .prose-response li::before {
+        content: "///";
+        position: absolute;
+        left: 0;
         color: var(--color-brand-accent);
-        font-weight: 600;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
     .prose-response em {
