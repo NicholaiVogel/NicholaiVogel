@@ -23,79 +23,112 @@ const { role, client, year, region, projectTitle, projectSubtitle, projectDescri
 
     <!-- Video Background -->
     <div class="absolute inset-0 z-0">
+        <!-- Industrial Scanlines -->
+        <div class="absolute inset-0 z-1 pointer-events-none opacity-[0.05] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+        
         <video
             autoplay
             loop
             muted
             playsinline
-            class="w-full h-full object-cover opacity-70 transition-opacity duration-700 group-hover:opacity-100"
+            class="w-full h-full object-cover opacity-60 transition-opacity duration-700 group-hover:opacity-100"
         >
             <source src={videoUrl} type="video/mp4" />
         </video>
         <!-- Cinematic Letterboxing / Gradient Vignette -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[var(--theme-hero-gradient-top)] via-transparent to-[var(--theme-hero-gradient-top)] pointer-events-none transition-colors duration-500"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[var(--theme-hero-gradient-side)] via-transparent to-[var(--theme-hero-gradient-side)] pointer-events-none transition-colors duration-500"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-80"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg-primary)] via-transparent to-[var(--theme-bg-primary)] pointer-events-none transition-colors duration-500 opacity-40"></div>
 
         <!-- Subtle Grid Overlay -->
-        <div class="absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none opacity-30"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-20"></div>
+        
+        <!-- Technical Telemetry Overlay (Decorative) -->
+        <div class="absolute top-1/2 left-6 -translate-y-1/2 hidden lg:flex flex-col gap-12 font-mono text-[9px] text-brand-accent/30 uppercase tracking-[0.4em] [writing-mode:vertical-lr]">
+            <div class="flex items-center gap-4">
+                <div class="w-px h-12 bg-brand-accent/20"></div>
+                <span>SIGNAL_STRENGTH: OPTIMAL</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-px h-12 bg-brand-accent/20"></div>
+                <span>BUFFERING: COMPLETE</span>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content Container - Spaced to frame the video -->
-    <div class="container mx-auto px-6 lg:px-12 relative z-10 flex-1 flex flex-col justify-between py-12 lg:py-16 pointer-events-none">
+    <div class="container mx-auto px-6 lg:px-12 relative z-10 flex-1 flex flex-col justify-between py-12 lg:py-20 pointer-events-none">
 
         <!-- TOP HUD: Telemetry Data -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-[var(--theme-border-strong)] pt-6 animate-on-scroll slide-up">
-            <div>
-                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Role</span>
-                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">{role}</span>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 border-t border-brand-accent/20 pt-8 animate-on-scroll slide-up">
+            <div class="relative">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+                    <span class="text-[9px] font-mono text-brand-accent uppercase tracking-[0.2em] block">SYS.ROLE</span>
+                </div>
+                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight leading-tight block">{role}</span>
             </div>
             <div>
-                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Client</span>
-                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">{client}</span>
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-[0.2em] block mb-2 opacity-60">SYS.CLIENT</span>
+                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight leading-tight block">{client}</span>
             </div>
             <div>
-                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Year</span>
-                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">{year}</span>
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-[0.2em] block mb-2 opacity-60">SYS.YEAR</span>
+                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight leading-tight block">{year}</span>
             </div>
-            <div class="text-right md:text-left">
-                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-widest block mb-1">/// Region</span>
-                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight">{region}</span>
+            <div class="text-left md:text-left">
+                <span class="text-[9px] font-mono text-brand-accent uppercase tracking-[0.2em] block mb-2 opacity-60">SYS.REGION</span>
+                <span class="text-xl md:text-2xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight leading-tight block">{region}</span>
             </div>
         </div>
 
-        <!-- CENTER AREA: Clear for Video -->
-        <div class="flex-1 relative">
-            <!-- Side Vertical Title (Optional, unobtrusive) -->
-            <div class="hidden lg:block absolute -left-8 top-1/2 -translate-y-1/2 origin-left -rotate-90">
-                 <h2 class="text-6xl font-bold text-transparent text-stroke uppercase tracking-tighter opacity-20 select-none">
-                    {projectTitle}
-                </h2>
+        <!-- CENTER AREA: Vertical Label -->
+        <div class="flex-1 relative flex items-center min-h-[100px] lg:min-h-0">
+            <div class="hidden lg:block absolute -left-12 origin-left -rotate-90">
+                 <h3 class="text-[10px] font-mono font-bold text-brand-accent uppercase tracking-[0.6em] opacity-40">
+                    CASE_STUDY_REF. {projectTitle.replace(/\s+/g, '_').toUpperCase()}
+                </h3>
             </div>
         </div>
 
         <!-- BOTTOM HUD: Project Details & Stats -->
-        <div class="border-b border-[var(--theme-border-strong)] pb-6 animate-on-scroll slide-up stagger-1">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="border-b border-brand-accent/20 pb-8 animate-on-scroll slide-up stagger-1">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-end">
 
                 <!-- Title & Description -->
-                <div class="lg:col-span-7">
-                    <h2 class="text-5xl md:text-7xl font-bold uppercase text-[var(--theme-text-primary)] mb-4 tracking-tighter leading-none">
-                        {projectTitle} <span class="text-transparent text-stroke">{projectSubtitle}</span>
+                <div class="lg:col-span-8">
+                    <h2 class="text-4xl md:text-7xl lg:text-8xl font-bold uppercase text-[var(--theme-text-primary)] mb-6 tracking-tighter leading-[0.85]">
+                        {projectTitle} <span class="block text-brand-accent">{projectSubtitle}</span>
                     </h2>
-                    <p class="text-[var(--theme-text-secondary)] font-light max-w-lg text-sm md:text-base leading-relaxed">
+                    <p class="text-[var(--theme-text-secondary)] font-light max-w-xl text-sm md:text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
                         {projectDescription}
                     </p>
                 </div>
 
                 <!-- Technical Stats (Mini-Table) -->
-                <div class="lg:col-span-5">
-                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 font-mono text-xs">
-                        {stats.map((stat) => (
-                            <div class="border-l border-brand-accent/30 pl-3">
-                                <span class="block text-[var(--theme-text-muted)] text-[10px] uppercase mb-1">{stat.label}</span>
-                                <span class="block text-[var(--theme-text-primary)] font-bold">{stat.value}</span>
+                <div class="lg:col-span-4 mt-8 lg:mt-0">
+                    <div class="grid grid-cols-1 gap-6 font-mono">
+                        {stats.map((stat, idx) => (
+                            <div class="relative group/stat">
+                                <div class="flex justify-between items-baseline mb-2 gap-4">
+                                    <span class="text-[var(--theme-text-muted)] text-[9px] uppercase tracking-[0.2em] truncate">0{idx + 1}. {stat.label}</span>
+                                    <span class="text-brand-accent font-bold text-base md:text-lg whitespace-nowrap">{stat.value}</span>
+                                </div>
+                                <div class="w-full h-px bg-[var(--theme-border-primary)] relative overflow-hidden">
+                                    <div class="absolute inset-0 bg-brand-accent w-1/3 transform -translate-x-full group-hover:translate-x-[300%] transition-transform duration-[2s] ease-in-out"></div>
+                                </div>
                             </div>
                         ))}
+                    </div>
+                    
+                    <div class="mt-10 flex justify-end">
+                        <div class="flex items-center gap-3 group/btn">
+                            <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-brand-accent">UPLINK.PROJECT_DETAIL</span>
+                            <div class="w-8 h-8 flex items-center justify-center border border-brand-accent/30 text-brand-accent group-hover/btn:bg-brand-accent group-hover/btn:text-brand-dark transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
