@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import Navigation from '../components/Navigation.astro';
 import CustomCursor from '../components/CustomCursor';
-import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
 
 interface Props {
   title?: string;
@@ -17,15 +17,49 @@ interface Props {
   modifiedTime?: Date;
 }
 
-const { 
-  title = SITE_TITLE, 
-  description = SITE_DESCRIPTION, 
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
   usePadding = true,
   image,
   type = 'website',
   publishedTime,
   modifiedTime,
 } = Astro.props;
+
+// Master Person schema - establishes canonical identity across all pages
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${SOCIAL_LINKS.website}/#person`,
+  "name": "Nicholai Vogel",
+  "url": SOCIAL_LINKS.website,
+  "email": SOCIAL_LINKS.email,
+  "jobTitle": "VFX Supervisor & Technical Artist",
+  "description": "VFX Supervisor specializing in both 2D and 3D VFX, AI and high-end technical visualization.",
+  "knowsAbout": [
+    "Houdini",
+    "Nuke",
+    "ComfyUI",
+    "Python",
+    "VFX Pipeline",
+    "Real-time VFX",
+    "Motion Graphics",
+    "Technical Art"
+  ],
+  "sameAs": [
+    SOCIAL_LINKS.linkedin,
+    "https://www.instagram.com/nicholai.exe"
+  ],
+  "affiliation": {
+    "@type": "Organization",
+    "name": "Biohazard VFX",
+    "url": "https://biohazardvfx.com",
+    "founder": {
+      "@id": `${SOCIAL_LINKS.website}/#person`
+    }
+  }
+};
 ---
 
 <!DOCTYPE html>
@@ -40,14 +74,18 @@ const {
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
-    <BaseHead 
-      title={title} 
-      description={description} 
+    <BaseHead
+      title={title}
+      description={description}
       image={image}
       type={type}
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
     />
+
+    <!-- Master Person Schema - Canonical Identity -->
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
     <slot name="head" />
   </head>
   

@@ -8,6 +8,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import PostNavigation from '../components/PostNavigation.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import { Image } from 'astro:assets';
+import { SOCIAL_LINKS } from '../consts';
 
 interface NavPost {
 	title: string;
@@ -56,6 +57,7 @@ const {
 } = Astro.props;
 
 // Article structured data (JSON-LD)
+// References the canonical Person @id from BaseLayout for knowledge graph linking
 const articleSchema = {
 	"@context": "https://schema.org",
 	"@type": "Article",
@@ -64,14 +66,10 @@ const articleSchema = {
 	"datePublished": pubDate.toISOString(),
 	"dateModified": (updatedDate || pubDate).toISOString(),
 	"author": {
-		"@type": "Person",
-		"name": "Nicholai Vogel",
-		"url": "https://nicholai.work"
+		"@id": `${SOCIAL_LINKS.website}/#person`
 	},
 	"publisher": {
-		"@type": "Person",
-		"name": "Nicholai Vogel",
-		"url": "https://nicholai.work"
+		"@id": `${SOCIAL_LINKS.website}/#person`
 	},
 	"mainEntityOfPage": {
 		"@type": "WebPage",
