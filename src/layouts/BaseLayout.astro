@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import Navigation from '../components/Navigation.astro';
 import CustomCursor from '../components/CustomCursor';
+import ThemePreferenceDialog from '../components/ThemePreferenceDialog.astro';
 import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
 
 interface Props {
@@ -69,8 +70,13 @@ const personSchema = {
     <!-- Theme initialization script - runs before page render to prevent flash -->
     <script is:inline>
       (function() {
-        const stored = localStorage.getItem('theme');
-        const theme = (stored === 'light' || stored === 'dark') ? stored : 'dark';
+        // Check localStorage first (persistent), then sessionStorage (current session)
+        const storedLocal = localStorage.getItem('theme');
+        const storedSession = sessionStorage.getItem('theme');
+        const theme =
+          (storedLocal === 'light' || storedLocal === 'dark') ? storedLocal :
+          (storedSession === 'light' || storedSession === 'dark') ? storedSession :
+          'dark'; // Default fallback
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
@@ -90,6 +96,9 @@ const personSchema = {
   </head>
   
   <body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
+    <!-- First-visit theme preference dialog -->
+    <ThemePreferenceDialog />
+
     <!-- Only hydrate custom cursor on devices that can actually benefit from it -->
     <CustomCursor client:media="(pointer: fine) and (hover: hover)" />
     <GridOverlay />

@@ -1,0 +1,252 @@
+---
+// First-visit theme preference dialog
+// Shows only to true first-time visitors
+// Two-step flow: theme selection → remember preference
+---
+
+<div
+  id="theme-preference-dialog"
+  class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] w-[calc(100vw-2rem)] md:w-auto max-w-md translate-y-[120%] opacity-0 transition-all duration-500 ease-out"
+  style="will-change: transform, opacity;"
+>
+  <!-- Dialog container -->
+  <div class="relative p-6 border border-[var(--theme-border-primary)] bg-[var(--theme-bg-primary)] shadow-2xl backdrop-blur-sm">
+    <!-- Corner accents (smaller) -->
+    <div class="absolute -top-px -left-px w-6 h-6 border-t-2 border-l-2 border-brand-accent"></div>
+    <div class="absolute -top-px -right-px w-6 h-6 border-t-2 border-r-2 border-brand-accent"></div>
+    <div class="absolute -bottom-px -left-px w-6 h-6 border-b-2 border-l-2 border-brand-accent"></div>
+    <div class="absolute -bottom-px -right-px w-6 h-6 border-b-2 border-r-2 border-brand-accent"></div>
+
+    <!-- Step 1: Theme Selection -->
+    <div id="theme-selection-step" class="transition-opacity duration-300">
+      <!-- Technical header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+          <span class="font-mono text-[9px] text-brand-accent uppercase tracking-[0.3em]">
+            THEME_SELECT
+          </span>
+        </div>
+        <button
+          type="button"
+          id="close-dialog"
+          class="text-[var(--theme-text-muted)] hover:text-brand-accent transition-colors"
+          aria-label="Close"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Main heading -->
+      <h2 class="text-xl font-bold uppercase tracking-tight mb-2 text-[var(--theme-text-primary)]">
+        Choose Theme
+      </h2>
+      <p class="text-[var(--theme-text-secondary)] text-sm mb-6">
+        Select your preferred visual mode
+      </p>
+
+      <!-- Theme preview cards -->
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <!-- Dark Theme Card -->
+        <button
+          type="button"
+          id="select-dark-theme"
+          class="group relative p-4 border border-[var(--theme-border-primary)] hover:border-brand-accent transition-all duration-300 text-left"
+        >
+          <div class="flex flex-col gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#0B0D11] border border-white/20"></div>
+            <span class="font-mono text-[10px] uppercase tracking-wide text-[var(--theme-text-primary)]">
+              Dark
+            </span>
+          </div>
+        </button>
+
+        <!-- Light Theme Card -->
+        <button
+          type="button"
+          id="select-light-theme"
+          class="group relative p-4 border border-[var(--theme-border-primary)] hover:border-brand-accent transition-all duration-300 text-left"
+        >
+          <div class="flex flex-col gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#efefef] border border-black/10"></div>
+            <span class="font-mono text-[10px] uppercase tracking-wide text-[var(--theme-text-primary)]">
+              Light
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Remember Preference -->
+    <div id="remember-preference-step" class="hidden transition-opacity duration-300">
+      <!-- Technical header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+          <span class="font-mono text-[9px] text-brand-accent uppercase tracking-[0.3em]">
+            SAVE_PREF
+          </span>
+        </div>
+      </div>
+
+      <!-- Main heading -->
+      <h2 class="text-xl font-bold uppercase tracking-tight mb-2 text-[var(--theme-text-primary)]">
+        Remember This?
+      </h2>
+      <p class="text-[var(--theme-text-secondary)] text-sm mb-6">
+        Save your preference for future visits?
+      </p>
+
+      <!-- Choice buttons -->
+      <div class="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          id="remember-yes"
+          class="group px-4 py-3 border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent transition-all duration-300"
+        >
+          <span class="text-sm font-bold uppercase tracking-tight text-[var(--theme-text-primary)] group-hover:text-brand-dark">
+            Save
+          </span>
+        </button>
+
+        <button
+          type="button"
+          id="remember-no"
+          class="group px-4 py-3 border border-[var(--theme-border-strong)] hover:border-[var(--theme-text-subtle)] transition-all duration-300"
+        >
+          <span class="text-sm font-bold uppercase tracking-tight text-[var(--theme-text-primary)]">
+            Session
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme preference dialog logic
+  const dialog = document.getElementById('theme-preference-dialog');
+  const themeSelectionStep = document.getElementById('theme-selection-step');
+  const rememberPreferenceStep = document.getElementById('remember-preference-step');
+  const selectDarkBtn = document.getElementById('select-dark-theme');
+  const selectLightBtn = document.getElementById('select-light-theme');
+  const rememberYesBtn = document.getElementById('remember-yes');
+  const rememberNoBtn = document.getElementById('remember-no');
+  const closeBtn = document.getElementById('close-dialog');
+
+  let selectedTheme: 'dark' | 'light' = 'dark';
+
+  // Check if user prefers reduced motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Check if we should show the dialog
+  function shouldShowDialog(): boolean {
+    const preferenceSet = localStorage.getItem('theme-preference-set');
+    return preferenceSet === null;
+  }
+
+  // Apply theme immediately
+  function applyTheme(theme: 'dark' | 'light') {
+    if (!prefersReducedMotion) {
+      document.documentElement.classList.add('theme-transition');
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+
+    // Update existing theme toggles if they exist
+    const toggles = document.querySelectorAll('.theme-toggle-group');
+    toggles.forEach(group => {
+      const darkBtn = group.querySelector('.theme-toggle-dark');
+      const lightBtn = group.querySelector('.theme-toggle-light');
+      darkBtn?.classList.remove('is-current-theme');
+      lightBtn?.classList.remove('is-current-theme');
+      if (theme === 'dark') {
+        darkBtn?.classList.add('is-current-theme');
+      } else {
+        lightBtn?.classList.add('is-current-theme');
+      }
+    });
+
+    if (!prefersReducedMotion) {
+      setTimeout(() => {
+        document.documentElement.classList.remove('theme-transition');
+      }, 300);
+    }
+  }
+
+  // Show dialog with smooth slide-up animation
+  function showDialog() {
+    if (!dialog) return;
+
+    // Remove initial translate
+    dialog.classList.remove('translate-y-[120%]');
+    dialog.classList.add('translate-y-0', 'opacity-100');
+
+    // Set ARIA attributes for accessibility
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-labelledby', 'theme-selection-step');
+  }
+
+  // Hide dialog with smooth slide-down animation
+  function hideDialog() {
+    if (!dialog) return;
+
+    dialog.classList.remove('translate-y-0', 'opacity-100');
+    dialog.classList.add('translate-y-[120%]', 'opacity-0');
+
+    // Remove ARIA attributes
+    dialog.removeAttribute('role');
+    dialog.removeAttribute('aria-modal');
+    dialog.removeAttribute('aria-labelledby');
+  }
+
+  // Show step 2
+  function showRememberStep() {
+    if (!themeSelectionStep || !rememberPreferenceStep) return;
+    themeSelectionStep.classList.add('hidden');
+    rememberPreferenceStep.classList.remove('hidden');
+  }
+
+  // Handle theme selection
+  selectDarkBtn?.addEventListener('click', () => {
+    selectedTheme = 'dark';
+    applyTheme('dark');
+    showRememberStep();
+  });
+
+  selectLightBtn?.addEventListener('click', () => {
+    selectedTheme = 'light';
+    applyTheme('light');
+    showRememberStep();
+  });
+
+  // Handle remember preference - YES
+  rememberYesBtn?.addEventListener('click', () => {
+    localStorage.setItem('theme', selectedTheme);
+    localStorage.setItem('theme-preference-set', 'true');
+    hideDialog();
+  });
+
+  // Handle remember preference - NO
+  rememberNoBtn?.addEventListener('click', () => {
+    sessionStorage.setItem('theme', selectedTheme);
+    localStorage.setItem('theme-preference-set', 'true');
+    hideDialog();
+  });
+
+  // Handle close button
+  closeBtn?.addEventListener('click', () => {
+    // Set default dark theme and mark as set
+    localStorage.setItem('theme-preference-set', 'true');
+    hideDialog();
+  });
+
+  // Show dialog on first visit with delay for smooth entrance
+  if (shouldShowDialog()) {
+    setTimeout(() => {
+      showDialog();
+    }, prefersReducedMotion ? 100 : 800);
+  }
+</script>
