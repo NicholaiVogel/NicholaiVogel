@@ -6,6 +6,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import BlogFilters from '../../components/BlogFilters.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { calculateReadingTime } from '../../utils/reading-time';
 
 // Fetch all posts sorted by date (newest first)
 const allPosts = (await getCollection('blog')).sort(
@@ -114,7 +115,7 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 								</span>
 								<span class="h-px w-8 bg-[var(--theme-border-strong)]"></span>
 								<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest">
-									5 min read
+									{calculateReadingTime(featuredPost.body)}
 								</span>
 							</div>
 							
@@ -202,6 +203,7 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 							category={post.data.category}
 							tags={post.data.tags}
 							href={`/blog/${post.id}/`}
+							readTime={calculateReadingTime(post.body)}
 						/>
 					</div>
 				))}

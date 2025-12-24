@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { calculateReadingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -90,11 +91,8 @@ interface Props {
 const { post, prevPost, nextPost, relatedPosts } = Astro.props;
 const { Content, headings } = await render(post);
 
-// Calculate reading time (average 200 words per minute)
-const wordsPerMinute = 200;
-const wordCount = post.body?.split(/\s+/).length || 0;
-const readingTime = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-const readTimeText = `${readingTime} min read`;
+// Calculate reading time
+const readTimeText = calculateReadingTime(post.body);
 ---
 
 <BlogPost

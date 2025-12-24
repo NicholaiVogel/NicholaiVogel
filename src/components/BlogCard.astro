@@ -11,6 +11,7 @@ interface Props {
 	category?: string;
 	tags?: string[];
 	href: string;
+	readTime?: string;
 	variant?: 'default' | 'compact' | 'featured';
 	class?: string;
 }
@@ -23,13 +24,10 @@ const {
 	category,
 	tags,
 	href,
+	readTime = '5 min read',
 	variant = 'default',
 	class: className = '',
 } = Astro.props;
-
-// Compute estimated read time (rough estimate: 200 words per minute)
-// For now, we'll show a placeholder since we don't have word count in frontmatter
-const readTime = '5 min read';
 
 const isCompact = variant === 'compact';
 const isFeatured = variant === 'featured';

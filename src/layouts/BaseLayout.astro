@@ -70,7 +70,7 @@ const personSchema = {
     <!-- Theme initialization script - runs before page render to prevent flash -->
     <script is:inline>
       (function() {
-        // Check localStorage first (persistent), then sessionStorage (current session)
+        // Apply theme
         const storedLocal = localStorage.getItem('theme');
         const storedSession = sessionStorage.getItem('theme');
         const theme =
@@ -78,6 +78,12 @@ const personSchema = {
           (storedSession === 'light' || storedSession === 'dark') ? storedSession :
           'dark'; // Default fallback
         document.documentElement.setAttribute('data-theme', theme);
+
+        // Apply saved accent color
+        const savedColor = localStorage.getItem('accent-color');
+        if (savedColor) {
+          document.documentElement.style.setProperty('--color-brand-accent', savedColor);
+        }
       })();
     </script>
     <BaseHead
