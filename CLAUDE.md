@@ -26,6 +26,9 @@ pnpm notepad                       # Quick note-taking utility
 pnpm run convert:avif:all          # Convert all images
 pnpm run convert:avif:jpeg         # Convert JPEG only
 pnpm run convert:avif:png          # Convert PNG only
+
+# Cloudflare types generation
+pnpm cf-typegen                    # Generate Cloudflare types for TypeScript
 ```
 
 ## High-Level Architecture
@@ -36,13 +39,13 @@ This is an Astro-based portfolio and blog site deployed on Cloudflare Pages. The
 Content is managed via Astro's Content Collections API with schema validation defined in `src/content.config.ts`:
 
 - **`blog/`** - Blog posts as MDX files
-  - Schema: title, description, pubDate, heroImage (optional), featured (boolean), category, tags
+  - Schema: title, description, pubDate, updatedDate (optional), heroImage (optional), featured (boolean), category, tags
   - Posts are sorted by pubDate (newest first)
 
 - **`sections/`** - Homepage section content (hero, experience, skills, featured-project)
   - Each section has a custom schema for its specific data needs
-  - Experience entries include systemId, status, dates, company, role, achievements, links
-  - Skills entries include domain, tools, proficiency
+  - Experience entries include systemId, status, dates, company, role, tags, description, achievements, link
+  - Skills entries include id, domain, tools, proficiency
 
 - **`pages/`** - Page-specific content (contact form configuration)
   - Includes form labels, social links, subject options
