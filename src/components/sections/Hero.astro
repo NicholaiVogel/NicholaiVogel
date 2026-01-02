@@ -146,40 +146,52 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
     const finePointer = window.matchMedia?.('(pointer: fine) and (hover: hover)')?.matches ?? false;
 
-    // ===== CLOCK (pause on hidden tab, align to second boundaries) =====
-    let clockTimer = 0;
+    // Track active timers to clear them on navigation/cleanup
+    let clockTimer: number | undefined;
+    let pulseInterval: number | undefined;
 
-    function updateClockOnce() {
-        const clock = document.getElementById('clock');
-        if (!clock) return;
-
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Denver' });
-        clock.textContent = `${timeString} MST`;
+    function cleanup() {
+        if (clockTimer) window.clearTimeout(clockTimer);
+        if (pulseInterval) window.clearInterval(pulseInterval);
+        clockTimer = undefined;
+        pulseInterval = undefined;
     }
 
-    function startClock() {
-        if (clockTimer) window.clearTimeout(clockTimer);
+    function initHero() {
+        // Clean up previous instances first
+        cleanup();
 
-        const tick = () => {
-            if (document.hidden) {
-                clockTimer = window.setTimeout(tick, 1000);
-                return;
+        // ===== CLOCK =====
+        const clock = document.getElementById('clock');
+        if (clock) {
+            function updateClockOnce() {
+                if (!clock) return;
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Denver' });
+                clock.textContent = `${timeString} MST`;
             }
 
-            updateClockOnce();
-            // Align to the next second boundary to reduce drift.
-            const msToNextSecond = 1000 - (Date.now() % 1000);
-            clockTimer = window.setTimeout(tick, msToNextSecond);
-        };
+            function startClock() {
+                const tick = () => {
+                    // Stop if element is gone
+                    if (!document.body.contains(clock)) return;
 
-        tick();
-    }
+                    if (document.hidden) {
+                        clockTimer = window.setTimeout(tick, 1000);
+                        return;
+                    }
 
-    startClock();
+                    updateClockOnce();
+                    // Align to the next second boundary to reduce drift.
+                    const msToNextSecond = 1000 - (Date.now() % 1000);
+                    clockTimer = window.setTimeout(tick, msToNextSecond);
+                };
+                tick();
+            }
+            startClock();
+        }
 
-    // Intro Animation Sequence
-    window.addEventListener('load', () => {
+        // ===== INTRO ANIMATIONS =====
         // Trigger Intro Elements
         const introElements = document.querySelectorAll('.intro-element');
         introElements.forEach(el => {
@@ -192,9 +204,11 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
             portrait.classList.add('portrait-visible');
         }
 
+        const section = document.getElementById('hero');
+        const cells = document.querySelectorAll('.grid-cell');
+
         // Trigger Grid Ripple (skip if reduced motion)
-        if (!reduceMotion) {
-            const cells = document.querySelectorAll('.grid-cell');
+        if (!reduceMotion && cells.length > 0) {
             // Diagonal sweep effect
             cells.forEach((cell, i) => {
                 const row = Math.floor(i / 10);
@@ -209,93 +223,100 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
                 }, delay);
             });
         }
-    });
 
+        // ===== GRID INTERACTION =====
+        if (section && cells.length > 0) {
+            // Throttle mousemove work to one update per frame.
+            let latestX = 0;
+            let latestY = 0;
+            let pending = false;
+            let lastIndex = -1;
+            const timeouts: number[] = new Array(cells.length).fill(0);
 
-    // Robust Grid Interaction
-    const section = document.getElementById('hero');
-    const cells = document.querySelectorAll('.grid-cell');
+            const process = () => {
+                pending = false;
+                if (!finePointer || reduceMotion) return;
+                
+                // Safety check if section is still valid
+                if (!document.body.contains(section)) return;
 
-    if (section) {
-        // Throttle mousemove work to one update per frame.
-        let latestX = 0;
-        let latestY = 0;
-        let pending = false;
-        let lastIndex = -1;
-        const timeouts: number[] = new Array(cells.length).fill(0);
+                const rect = section.getBoundingClientRect();
+                const width = rect.width;
+                const height = rect.height;
+                if (width <= 0 || height <= 0) return;
 
-        const process = () => {
-            pending = false;
-            if (!finePointer || reduceMotion) return;
+                const x = latestX - rect.left;
+                const y = latestY - rect.top;
 
-            const rect = section.getBoundingClientRect();
-            const width = rect.width;
-            const height = rect.height;
-            if (width <= 0 || height <= 0) return;
+                const col = Math.floor((x / width) * 10);
+                const row = Math.floor((y / height) * 10);
 
-            const x = latestX - rect.left;
-            const y = latestY - rect.top;
+                if (col < 0 || col >= 10 || row < 0 || row >= 10) return;
 
-            const col = Math.floor((x / width) * 10);
-            const row = Math.floor((y / height) * 10);
+                const index = row * 10 + col;
+                if (index === lastIndex) return;
+                lastIndex = index;
 
-            if (col < 0 || col >= 10 || row < 0 || row >= 10) return;
+                const cell = cells[index] as HTMLElement | undefined;
+                if (!cell) return;
 
-            const index = row * 10 + col;
-            if (index === lastIndex) return;
-            lastIndex = index;
+                cell.classList.add('active');
 
-            const cell = cells[index] as HTMLElement | undefined;
-            if (!cell) return;
+                const prev = timeouts[index];
+                if (prev) window.clearTimeout(prev);
 
-            cell.classList.add('active');
+                // Shorter hold time for a quicker trail.
+                timeouts[index] = window.setTimeout(() => {
+                    cell.classList.remove('active');
+                    timeouts[index] = 0;
+                }, 35);
+            };
 
-            const prev = timeouts[index];
-            if (prev) window.clearTimeout(prev);
+            section.addEventListener('mousemove', (e) => {
+                latestX = e.clientX;
+                latestY = e.clientY;
+                if (pending) return;
+                pending = true;
+                window.requestAnimationFrame(process);
+            }, { passive: true });
+        }
 
-            // Shorter hold time for a quicker trail.
-            timeouts[index] = window.setTimeout(() => {
-                cell.classList.remove('active');
-                timeouts[index] = 0;
-            }, 35);
-        };
+        // ===== PULSE ANIMATION =====
+        if (finePointer && !reduceMotion && cells.length > 0) {
+            pulseInterval = window.setInterval(() => {
+                if (document.hidden) return;
+                
+                // Stop if elements are gone
+                if (cells.length > 0 && !document.body.contains(cells[0])) {
+                    clearInterval(pulseInterval);
+                    return;
+                }
 
-        section.addEventListener('mousemove', (e) => {
-            latestX = e.clientX;
-            latestY = e.clientY;
-            if (pending) return;
-            pending = true;
-            window.requestAnimationFrame(process);
-        }, { passive: true });
+                const randomIndex = Math.floor(Math.random() * cells.length);
+                const cell = cells[randomIndex] as HTMLElement | undefined;
+                if (!cell) return;
+
+                cell.classList.add('active');
+                window.setTimeout(() => {
+                    cell.classList.remove('active');
+                }, 160);
+            }, 1200);
+        }
     }
 
-    // Random pulse for liveliness
-    let pulseInterval = 0;
-
-    function startPulse() {
-        if (pulseInterval) window.clearInterval(pulseInterval);
-        if (!finePointer || reduceMotion) return;
-
-        pulseInterval = window.setInterval(() => {
-            if (document.hidden) return;
-
-            const randomIndex = Math.floor(Math.random() * cells.length);
-            const cell = cells[randomIndex] as HTMLElement | undefined;
-            if (!cell) return;
-
-            cell.classList.add('active');
-            window.setTimeout(() => {
-                cell.classList.remove('active');
-            }, 160);
-        }, 1200);
-    }
-
-    startPulse();
-
+    // Run on every navigation
+    document.addEventListener('astro:page-load', initHero);
+    
+    // Clean up before swap
+    document.addEventListener('astro:before-swap', cleanup);
+    
+    // Visibility change handler for clock updates (keep persistent)
     document.addEventListener('visibilitychange', () => {
-        // Keep timers light in background.
-        if (!document.hidden) {
-            updateClockOnce();
+        const clock = document.getElementById('clock');
+        if (!document.hidden && clock) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/Denver' });
+            clock.textContent = `${timeString} MST`;
         }
     });
 </script>

@@ -1,0 +1,82 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	link: string;
+	category: string;
+	tags?: string[];
+	order?: number;
+}
+
+const { title, description, link, category, tags = [], order = 0 } = Astro.props;
+---
+
+<div class="group relative flex flex-col h-full border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent/40 transition-all duration-500 overflow-hidden">
+    <!-- Accent indicator strip -->
+    <div class="absolute top-0 left-0 w-1 h-full bg-brand-accent"></div>
+    <div class="absolute top-0 left-0 w-full h-1 bg-brand-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+    <div class="p-8 lg:p-10 flex flex-col h-full">
+        <!-- Technical header -->
+        <div class="flex items-center gap-3 mb-6">
+            <span class="text-[10px] font-mono text-brand-accent uppercase tracking-widest font-bold">
+                PRJ.0{order || 'X'}
+            </span>
+            <span class="h-px w-8 bg-[var(--theme-border-strong)]"></span>
+            <span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest">
+                {category}
+            </span>
+        </div>
+
+        <!-- Title -->
+        <a href={link} target="_blank" rel="noopener noreferrer">
+            <h2 class="text-3xl lg:text-4xl font-bold text-[var(--theme-text-primary)] uppercase tracking-tight mb-6 group-hover:text-brand-accent transition-colors duration-300 leading-tight">
+                {title}
+            </h2>
+        </a>
+
+        <!-- Description -->
+        <p class="text-[var(--theme-text-secondary)] text-base font-light leading-relaxed mb-8 flex-grow">
+            {description}
+        </p>
+
+        <!-- Tags -->
+        {tags && tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-10">
+                {tags.map((tag) => (
+                    <span class="px-3 py-1.5 text-[10px] font-mono uppercase border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] group-hover:border-[var(--theme-border-strong)] transition-colors">
+                        {tag}
+                    </span>
+                ))}
+            </div>
+        )}
+
+        <!-- Link -->
+        <div class="pt-6 border-t border-[var(--theme-border-primary)] mt-auto">
+            <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:text-brand-accent transition-all duration-300 group/link"
+            >
+                Launch Project
+                <span class="block w-8 h-[1px] bg-[var(--theme-border-strong)] group-hover/link:bg-brand-accent group-hover/link:w-12 transition-all duration-300"></span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="group-hover/link:translate-x-1 transition-transform duration-300"
+                >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
