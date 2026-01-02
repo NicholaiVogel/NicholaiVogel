@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from 'astro';
+import { ClientRouter } from 'astro:transitions';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
@@ -67,9 +68,10 @@ const personSchema = {
 <html lang="en" class="scroll-smooth" data-theme="dark">
   <head>
     <meta name="x-nicholai-marker" content={HTML_MARKER} />
+    <ClientRouter />
     <!-- Theme initialization script - runs before page render to prevent flash -->
     <script is:inline>
-      (function() {
+      function applyTheme() {
         // Apply theme
         const storedLocal = localStorage.getItem('theme');
         const storedSession = sessionStorage.getItem('theme');
@@ -84,7 +86,13 @@ const personSchema = {
         if (savedColor) {
           document.documentElement.style.setProperty('--color-brand-accent', savedColor);
         }
-      })();
+      }
+
+      // Run immediately
+      applyTheme();
+
+      // Re-run on view transition
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
     <BaseHead
       title={title}
@@ -176,68 +184,6 @@ const personSchema = {
 
       // Re-bind on Astro page transitions (if enabled)
       document.addEventListener('astro:page-load', bindScrollAnimations);
-    </script>
-
-    <script>
-      // ===== INTENT-BASED PREFETCH (hover/focus) =====
-      // Lightweight prefetch to make navigation feel instant without a full SPA router.
-      const prefetched = new Set();
-
-      function isPrefetchableUrl(url) {
-        try {
-          const u = new URL(url, window.location.href);
-          if (u.origin !== window.location.origin) return false;
-          if (u.hash) return false;
-          if (u.pathname === window.location.pathname && u.search === window.location.search) return false;
-          return true;
-        } catch {
-          return false;
-        }
-      }
-
-      function prefetchDocument(url) {
-        if (!isPrefetchableUrl(url)) return;
-        const u = new URL(url, window.location.href);
-        const key = u.href;
-        if (prefetched.has(key)) return;
-        prefetched.add(key);
-
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.as = 'document';
-        link.href = key;
-        document.head.appendChild(link);
-      }
-
-      function getAnchorFromEventTarget(target) {
-        if (!(target instanceof Element)) return null;
-        return target.closest('a[href]');
-      }
-
-      const schedule = (href) => {
-        // Don't block input; prefetch when the browser is idle if possible.
-        // @ts-ignore - requestIdleCallback isn't in all TS lib targets
-        if (window.requestIdleCallback) {
-          // @ts-ignore
-          window.requestIdleCallback(() => prefetchDocument(href), { timeout: 1000 });
-        } else {
-          setTimeout(() => prefetchDocument(href), 0);
-        }
-      };
-
-      document.addEventListener('mouseover', (e) => {
-        const a = getAnchorFromEventTarget(e.target);
-        const href = a?.getAttribute('href');
-        if (!href) return;
-        schedule(href);
-      }, { passive: true });
-
-      document.addEventListener('focusin', (e) => {
-        const a = getAnchorFromEventTarget(e.target);
-        const href = a?.getAttribute('href');
-        if (!href) return;
-        schedule(href);
-      }, { passive: true });
     </script>
   </body>
 </html>
