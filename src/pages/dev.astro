@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DevEngageModal from '../components/dev/DevEngageModal.tsx';
 import { SITE_TITLE } from '../consts';
 
-// Fetch all projects sorted by order
 const allProjects = (await getCollection('projects')).sort(
 	(a, b) => a.data.order - b.data.order,
 );
@@ -12,15 +12,12 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
 ---
 
 <BaseLayout title={pageTitle} description="Development projects and system architecture.">
-    <!-- Global Background Elements -->
     <div class="fixed inset-0 z-0 pointer-events-none">
         <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%] opacity-[0.04]"></div>
         <div class="absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-10"></div>
     </div>
 
-	<!-- Page Hero -->
 	<section class="relative z-10 px-6 lg:px-12 pt-32 lg:pt-48 pb-20 border-b border-[var(--theme-border-primary)]">
-        <!-- Back Navigation -->
 		<div class="absolute top-12 lg:top-24 left-6 lg:left-12">
 			<a href="/" class="inline-flex items-center gap-3 text-xs font-mono font-bold uppercase tracking-widest text-[var(--theme-text-muted)] hover:text-brand-accent transition-colors duration-300 group">
 				<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
@@ -48,15 +45,15 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
 		</div>
 	</section>
 
-    <!-- Projects Grid -->
     <section class="relative z-10 py-24 container mx-auto px-6 lg:px-12">
         <div class="grid grid-cols-1 gap-24">
             {allProjects.map((project, index) => (
-                <article class={`group relative border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] overflow-hidden flex flex-col lg:flex-row animate-on-scroll slide-up stagger-${(index % 4) + 1} min-h-[600px]`}>
+                <article 
+                    class={`group relative border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] overflow-hidden flex flex-col lg:flex-row animate-on-scroll slide-up stagger-${(index % 4) + 1} min-h-[600px]`}
+                    data-project-index={index}
+                >
                     
-                    <!-- Left: Info Panel -->
                     <div class="relative z-10 w-full lg:w-1/3 p-8 lg:p-12 flex flex-col justify-between bg-[var(--theme-bg-secondary)]/95 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-[var(--theme-border-primary)]">
-                        <!-- Header -->
                         <div>
                              <div class="flex justify-between items-start mb-8">
                                 <div class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.2em] flex items-center gap-3">
@@ -73,7 +70,6 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                                 {project.data.description}
                             </p>
 
-                            <!-- Stack -->
                              <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-[0.2em] mb-4">
                                 /// STACK_MANIFEST
                             </div>
@@ -88,22 +84,39 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                             )}
                         </div>
 
-                         <a
-                            href={project.data.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="w-full flex items-center justify-between px-6 py-4 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:bg-brand-accent hover:text-brand-dark hover:border-brand-accent transition-all duration-300 group/btn mt-auto"
-                        >
-                            <span>Initialize Project</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:translate-x-1 transition-transform">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </a>
+                        <div class="flex flex-col gap-3 mt-auto">
+                            <button
+                                type="button"
+                                class="engage-btn w-full flex items-center justify-between px-6 py-4 bg-brand-accent/10 border border-brand-accent text-xs font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group/btn"
+                                data-project={JSON.stringify({
+                                    title: project.data.title,
+                                    description: project.data.description,
+                                    link: project.data.link,
+                                    category: project.data.category,
+                                    tags: project.data.tags || [],
+                                    order: project.data.order
+                                })}
+                            >
+                                <span>Engage Fullscreen</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:scale-110 transition-transform">
+                                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+                                </svg>
+                            </button>
+                            <a
+                                href={project.data.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="w-full flex items-center justify-between px-6 py-4 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:border-brand-accent/50 hover:text-brand-accent transition-all duration-300 group/btn"
+                            >
+                                <span>Open Externally</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:translate-x-1 transition-transform">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
 
-                    <!-- Right: Live Preview (Iframe) -->
-                    <div class="relative w-full lg:w-2/3 h-[400px] lg:h-auto overflow-hidden bg-[var(--theme-bg-primary)] group-hover:border-brand-accent/50 transition-colors duration-500">
-                        <!-- Iframe Container with Scale Hack for Desktop View -->
+                    <div class="relative w-full lg:w-2/3 h-[400px] lg:h-auto overflow-hidden bg-[var(--theme-bg-primary)] group-hover:border-brand-accent/50 transition-colors duration-500 cursor-pointer engage-preview" data-project-index={index}>
                         <div class="w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none">
                             <iframe 
                                 src={project.data.link} 
@@ -113,16 +126,16 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                             ></iframe>
                         </div>
 
-                        <!-- Scanline Overlay -->
                         <div class="absolute inset-0 pointer-events-none z-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%] opacity-20"></div>
                         
-                        <!-- Vignette -->
                         <div class="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]"></div>
 
-                        <!-- Hover "Engage" Overlay -->
-                        <div class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                            <div class="px-6 py-3 bg-brand-accent/10 border border-brand-accent backdrop-blur-md text-brand-accent font-mono text-xs font-bold uppercase tracking-widest">
-                                Live Connection
+                        <div class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="px-6 py-3 bg-brand-accent/10 border border-brand-accent backdrop-blur-md text-brand-accent font-mono text-xs font-bold uppercase tracking-widest flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+                                </svg>
+                                Click to Engage
                             </div>
                         </div>
                     </div>
@@ -131,7 +144,6 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
         </div>
     </section>
 
-    <!-- VFX Bridge Section -->
     <section class="relative z-10 py-32 border-t border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)]">
         <div class="container mx-auto px-6 lg:px-12">
              <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -159,4 +171,49 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
             </div>
         </div>
     </section>
+
+    <DevEngageModal client:load />
 </BaseLayout>
+
+<script>
+    function initEngageButtons() {
+        const engageButtons = document.querySelectorAll('.engage-btn');
+        const engagePreviews = document.querySelectorAll('.engage-preview');
+
+        engageButtons.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                const projectData = target.dataset.project;
+                if (!projectData) return;
+                
+                try {
+                    const project = JSON.parse(projectData);
+                    window.dispatchEvent(new CustomEvent('dev:engage', {
+                        detail: { project, trigger: target }
+                    }));
+                } catch (err) {
+                    console.error('Failed to parse project data:', err);
+                }
+            });
+        });
+
+        engagePreviews.forEach((preview) => {
+            preview.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLElement;
+                const index = target.dataset.projectIndex;
+                if (index === undefined) return;
+                
+                const correspondingBtn = document.querySelector(
+                    `article[data-project-index="${index}"] .engage-btn`
+                ) as HTMLButtonElement | null;
+                
+                if (correspondingBtn) {
+                    correspondingBtn.click();
+                }
+            });
+        });
+    }
+
+    initEngageButtons();
+    document.addEventListener('astro:page-load', initEngageButtons);
+</script>
