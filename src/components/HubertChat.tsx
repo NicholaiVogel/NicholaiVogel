@@ -38,24 +38,19 @@ export default function HubertChat() {
 	useEffect(() => {
 		const initVisitor = async () => {
 			try {
-				console.log('[Hubert] Starting initialization...');
 				setIsInitializing(true);
 				setInitError(null);
 
-				console.log('[Hubert] Fetching /api/hubert/new-visitor...');
 				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' }
 				}, 8000); // 8 second timeout
-
-				console.log('[Hubert] Response status:', response.status);
 
 				if (!response.ok) {
 					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 				}
 
 				const data = await response.json();
-				console.log('[Hubert] Initialization successful:', data);
 
 				setVisitorId(data.visitor_id);
 				setConversationId(data.conversation_id);
@@ -74,10 +69,8 @@ export default function HubertChat() {
 				if (error instanceof Error) {
 					if (error.name === 'AbortError') {
 						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
-						console.error('[Hubert] Request timed out after 8 seconds');
 					} else if (error.message.includes('Failed to fetch')) {
 						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
-						console.error('[Hubert] Network error - API route may not exist');
 					} else {
 						errorMessage = `/// ERROR: ${error.message}`;
 					}
@@ -90,7 +83,6 @@ export default function HubertChat() {
 					timestamp: new Date().toISOString(),
 				}]);
 			} finally {
-				console.log('[Hubert] Initialization complete, setting isInitializing to false');
 				setIsInitializing(false);
 			}
 		};
@@ -99,7 +91,6 @@ export default function HubertChat() {
 
 	// Retry initialization
 	const retryInit = () => {
-		console.log('[Hubert] Retrying initialization...');
 		setIsInitializing(true);
 		setInitError(null);
 		setMessages([]);
@@ -107,24 +98,19 @@ export default function HubertChat() {
 		// Re-trigger initialization
 		const initVisitor = async () => {
 			try {
-				console.log('[Hubert] Starting initialization...');
 				setIsInitializing(true);
 				setInitError(null);
 
-				console.log('[Hubert] Fetching /api/hubert/new-visitor...');
 				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' }
 				}, 8000);
-
-				console.log('[Hubert] Response status:', response.status);
 
 				if (!response.ok) {
 					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 				}
 
 				const data = await response.json();
-				console.log('[Hubert] Initialization successful:', data);
 
 				setVisitorId(data.visitor_id);
 				setConversationId(data.conversation_id);
@@ -142,10 +128,8 @@ export default function HubertChat() {
 				if (error instanceof Error) {
 					if (error.name === 'AbortError') {
 						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
-						console.error('[Hubert] Request timed out after 8 seconds');
 					} else if (error.message.includes('Failed to fetch')) {
 						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
-						console.error('[Hubert] Network error - API route may not exist');
 					} else {
 						errorMessage = `/// ERROR: ${error.message}`;
 					}
@@ -158,7 +142,6 @@ export default function HubertChat() {
 					timestamp: new Date().toISOString(),
 				}]);
 			} finally {
-				console.log('[Hubert] Initialization complete, setting isInitializing to false');
 				setIsInitializing(false);
 			}
 		};
@@ -176,19 +159,9 @@ export default function HubertChat() {
 	}, [messages]);
 
 	const sendMessage = async () => {
-		console.log('[Hubert] sendMessage called', { input, isTyping, visitorId, conversationId });
-
 		if (!input.trim() || isTyping || !visitorId || !conversationId) {
-			console.log('[Hubert] sendMessage blocked:', {
-				noInput: !input.trim(),
-				isTyping,
-				noVisitorId: !visitorId,
-				noConversationId: !conversationId
-			});
 			return;
 		}
-
-		console.log('[Hubert] Sending message:', input);
 		const userMessage: Message = {
 			role: 'user',
 			content: input,
@@ -200,7 +173,6 @@ export default function HubertChat() {
 		setIsTyping(true);
 
 		try {
-			console.log('[Hubert] Fetching /api/hubert/chat...');
 			const response = await fetch('/api/hubert/chat', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -214,14 +186,11 @@ export default function HubertChat() {
 				}),
 			});
 
-			console.log('[Hubert] Response status:', response.status);
-
 			if (!response.ok) {
 				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 			}
 
 			const data = await response.json();
-			console.log('[Hubert] Response data:', data);
 
 			if (data.error) {
 				throw new Error(data.error);
@@ -233,7 +202,6 @@ export default function HubertChat() {
 				timestamp: new Date().toISOString(),
 			};
 
-			console.log('[Hubert] Adding assistant message:', assistantMessage.content);
 			setMessages(prev => [...prev, assistantMessage]);
 		} catch (error) {
 			console.error('[Hubert] Chat error:', error);

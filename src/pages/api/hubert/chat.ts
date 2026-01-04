@@ -75,11 +75,6 @@ export const POST = async (context) => {
 		// In Astro with Cloudflare adapter, env is at locals.runtime.env
 		const env = locals?.runtime?.env;
 
-		console.log('[Hubert API] Chat endpoint called');
-		console.log('[Hubert API] env object:', env);
-		console.log('[Hubert API] env keys:', env ? Object.keys(env) : 'no env');
-		console.log('[Hubert API] OPENROUTER_API_KEY present:', !!(env?.OPENROUTER_API_KEY));
-
 		const { messages, conversation_id, visitor_id } = await request.json();
 
 		if (!messages || !conversation_id || !visitor_id) {
