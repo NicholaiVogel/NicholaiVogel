@@ -1,0 +1,42 @@
+---
+interface Props {
+	sectionTitle: string;
+	sectionSubtitle: string;
+	sectionLabel: string;
+	description: string;
+}
+
+const { sectionTitle, sectionSubtitle, sectionLabel, description } = Astro.props;
+
+import HubertChat from '../HubertChat';
+---
+
+<section id="hubert" class="py-16 lg:py-24 relative overflow-hidden">
+	{/* Grid overlay background */}
+	<div class="absolute inset-0 pointer-events-none opacity-10">
+		<div class="w-full h-full bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px]" />
+	</div>
+
+	<div class="container mx-auto px-6 lg:px-12 relative z-10">
+		<!-- Section Header -->
+		<div class="mb-12">
+			<div class="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-brand-accent mb-4">
+				/// SYS.03 /// INTERVIEW_TERMINAL
+			</div>
+			<h2 class="text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-tighter text-[var(--theme-text-primary)] leading-[0.9] mb-4">
+				{sectionTitle.split(' ').slice(0, -1).join(' ')}{' '}
+				<span class="text-brand-accent">
+					{sectionTitle.split(' ').slice(-1)}
+				</span>
+			</h2>
+			<p class="text-[var(--theme-text-secondary)] text-lg max-w-2xl">
+				{description}
+			</p>
+		</div>
+
+		<!-- Hubert Chat Interface -->
+		<client:load>
+			<HubertChat />
+		</client:load>
+	</div>
+</section>

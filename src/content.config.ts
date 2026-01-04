@@ -72,10 +72,10 @@ const sections = defineCollection({
 			label: z.string(),
 			value: z.string(),
 		})).optional(),
-		videoUrl: z.string().optional(),
 		linkUrl: z.string().optional(),
 	}),
 });
+
 
 const pages = defineCollection({
 	loader: glob({ base: './src/content/pages', pattern: '**/*.{md,mdx}' }),

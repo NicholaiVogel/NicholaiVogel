@@ -4,6 +4,7 @@ import Hero from '../components/sections/Hero.astro';
 import Experience from '../components/sections/Experience.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
 import Skills from '../components/sections/Skills.astro';
+import Hubert from '../components/sections/Hubert.astro';
 import { getEntry } from 'astro:content';
 
 // Fetch all section content
@@ -11,6 +12,7 @@ const heroEntry = await getEntry('sections', 'hero');
 const experienceEntry = await getEntry('sections', 'experience');
 const skillsEntry = await getEntry('sections', 'skills');
 const featuredProjectEntry = await getEntry('sections', 'featured-project');
+const hubertEntry = await getEntry('sections', 'hubert');
 
 // Extract content from entries
 const heroContent = {
@@ -49,6 +51,13 @@ const featuredProjectContent = {
 	videoUrl: featuredProjectEntry.data.videoUrl || '',
 	linkUrl: featuredProjectEntry.data.linkUrl || '',
 };
+
+const hubertContent = {
+	sectionTitle: hubertEntry.data.sectionTitle || '',
+	sectionSubtitle: hubertEntry.data.sectionSubtitle || '',
+	sectionLabel: hubertEntry.data.sectionLabel || '',
+	description: hubertEntry.data.description || '',
+};
 ---
 
 <BaseLayout usePadding={false}>
@@ -68,4 +77,6 @@ const featuredProjectContent = {
 
 	<FeaturedProject {...featuredProjectContent} />
 	<Skills {...skillsContent} />
-</BaseLayout>
+
+	<Hubert {...hubertContent} />
+	</BaseLayout>
