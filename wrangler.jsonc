@@ -28,10 +28,14 @@
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
+	"vars": {
+		"OPENROUTER_API_KEY": ""
+	},
 	/**
 	 * Note: Use secrets to store sensitive data.
 	 * https:// developers.cloudflare.com/workers/configuration/secrets/
+	 * For dev: Add OPENROUTER_API_KEY to .dev.vars file
+	 * For production: Use wrangler secret put OPENROUTER_API_KEY
 	 */
 	/**
 	 * Static Assets

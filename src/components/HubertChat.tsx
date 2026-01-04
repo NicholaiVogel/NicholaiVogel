@@ -1,11 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { randomUUID } from 'crypto';
 
 interface Message {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
 	timestamp: string;
 }
+
+// Utility: Fetch with timeout
+const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout = 8000) => {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+	try {
+		const response = await fetch(url, {
+			...options,
+			signal: controller.signal,
+		});
+		clearTimeout(timeoutId);
+		return response;
+	} catch (error) {
+		clearTimeout(timeoutId);
+		throw error;
+	}
+};
 
 export default function HubertChat() {
 	const [messages, setMessages] = useState<Message[]>([]);
@@ -14,18 +31,35 @@ export default function HubertChat() {
 	const [conversationId, setConversationId] = useState<string | null>(null);
 	const [isTyping, setIsTyping] = useState(false);
 	const [isInitializing, setIsInitializing] = useState(true);
+	const [initError, setInitError] = useState<string | null>(null);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	// Initialize visitor on mount
 	useEffect(() => {
 		const initVisitor = async () => {
 			try {
+				console.log('[Hubert] Starting initialization...');
 				setIsInitializing(true);
-				const response = await fetch('/api/hubert/new-visitor', { method: 'POST' });
+				setInitError(null);
+
+				console.log('[Hubert] Fetching /api/hubert/new-visitor...');
+				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' }
+				}, 8000); // 8 second timeout
+
+				console.log('[Hubert] Response status:', response.status);
+
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+				}
+
 				const data = await response.json();
+				console.log('[Hubert] Initialization successful:', data);
+
 				setVisitorId(data.visitor_id);
 				setConversationId(data.conversation_id);
-				
+
 				// Add system welcome message from Hubert
 				setMessages([{
 					role: 'system',
@@ -33,27 +67,128 @@ export default function HubertChat() {
 					timestamp: new Date().toISOString(),
 				}]);
 			} catch (error) {
-				console.error('Failed to initialize Hubert:', error);
+				console.error('[Hubert] Initialization failed:', error);
+
+				let errorMessage = '/// ERROR: UNKNOWN_FAILURE';
+
+				if (error instanceof Error) {
+					if (error.name === 'AbortError') {
+						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
+						console.error('[Hubert] Request timed out after 8 seconds');
+					} else if (error.message.includes('Failed to fetch')) {
+						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
+						console.error('[Hubert] Network error - API route may not exist');
+					} else {
+						errorMessage = `/// ERROR: ${error.message}`;
+					}
+				}
+
+				setInitError(errorMessage);
 				setMessages([{
 					role: 'system',
-					content: '/// ERROR: HUBERT_OFFLINE - REFRESH_PAGE',
+					content: errorMessage + '\\n\\nCLICK [RETRY] BELOW',
 					timestamp: new Date().toISOString(),
 				}]);
 			} finally {
+				console.log('[Hubert] Initialization complete, setting isInitializing to false');
 				setIsInitializing(false);
 			}
 		};
 		initVisitor();
 	}, []);
 
-	// Auto-scroll to bottom
+	// Retry initialization
+	const retryInit = () => {
+		console.log('[Hubert] Retrying initialization...');
+		setIsInitializing(true);
+		setInitError(null);
+		setMessages([]);
+
+		// Re-trigger initialization
+		const initVisitor = async () => {
+			try {
+				console.log('[Hubert] Starting initialization...');
+				setIsInitializing(true);
+				setInitError(null);
+
+				console.log('[Hubert] Fetching /api/hubert/new-visitor...');
+				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' }
+				}, 8000);
+
+				console.log('[Hubert] Response status:', response.status);
+
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+				}
+
+				const data = await response.json();
+				console.log('[Hubert] Initialization successful:', data);
+
+				setVisitorId(data.visitor_id);
+				setConversationId(data.conversation_id);
+
+				setMessages([{
+					role: 'system',
+					content: `/// HUBERT_EUNUCH /// ONLINE\\n\\nI suppose you want something. State your business.`,
+					timestamp: new Date().toISOString(),
+				}]);
+			} catch (error) {
+				console.error('[Hubert] Initialization failed:', error);
+
+				let errorMessage = '/// ERROR: UNKNOWN_FAILURE';
+
+				if (error instanceof Error) {
+					if (error.name === 'AbortError') {
+						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
+						console.error('[Hubert] Request timed out after 8 seconds');
+					} else if (error.message.includes('Failed to fetch')) {
+						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
+						console.error('[Hubert] Network error - API route may not exist');
+					} else {
+						errorMessage = `/// ERROR: ${error.message}`;
+					}
+				}
+
+				setInitError(errorMessage);
+				setMessages([{
+					role: 'system',
+					content: errorMessage + '\\n\\nCLICK [RETRY] BELOW',
+					timestamp: new Date().toISOString(),
+				}]);
+			} finally {
+				console.log('[Hubert] Initialization complete, setting isInitializing to false');
+				setIsInitializing(false);
+			}
+		};
+		initVisitor();
+	};
+
+	// Auto-scroll to bottom of chat container (not entire page)
 	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+		if (messagesEndRef.current) {
+			const container = messagesEndRef.current.parentElement;
+			if (container) {
+				container.scrollTop = container.scrollHeight;
+			}
+		}
 	}, [messages]);
 
 	const sendMessage = async () => {
-		if (!input.trim() || isTyping || !visitorId || !conversationId) return;
+		console.log('[Hubert] sendMessage called', { input, isTyping, visitorId, conversationId });
 
+		if (!input.trim() || isTyping || !visitorId || !conversationId) {
+			console.log('[Hubert] sendMessage blocked:', {
+				noInput: !input.trim(),
+				isTyping,
+				noVisitorId: !visitorId,
+				noConversationId: !conversationId
+			});
+			return;
+		}
+
+		console.log('[Hubert] Sending message:', input);
 		const userMessage: Message = {
 			role: 'user',
 			content: input,
@@ -65,6 +200,7 @@ export default function HubertChat() {
 		setIsTyping(true);
 
 		try {
+			console.log('[Hubert] Fetching /api/hubert/chat...');
 			const response = await fetch('/api/hubert/chat', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -78,21 +214,29 @@ export default function HubertChat() {
 				}),
 			});
 
+			console.log('[Hubert] Response status:', response.status);
+
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+			}
+
 			const data = await response.json();
-			
+			console.log('[Hubert] Response data:', data);
+
 			if (data.error) {
 				throw new Error(data.error);
 			}
-			
+
 			const assistantMessage: Message = {
 				role: 'assistant',
 				content: data.messages[data.messages.length - 1]?.content || '...',
 				timestamp: new Date().toISOString(),
 			};
 
+			console.log('[Hubert] Adding assistant message:', assistantMessage.content);
 			setMessages(prev => [...prev, assistantMessage]);
 		} catch (error) {
-			console.error('Hubert chat error:', error);
+			console.error('[Hubert] Chat error:', error);
 			setMessages(prev => [...prev, {
 				role: 'assistant',
 				content: '/// HUBERT_MALFUNCTION - TRY AGAIN',
@@ -103,20 +247,53 @@ export default function HubertChat() {
 		}
 	};
 
-	if (isInitializing) {
+	// Show loading or error state
+	if (isInitializing || initError) {
 		return (
 			<div className="bg-[var(--theme-bg-secondary)] border-2 border-[var(--theme-border-primary)] shadow-2xl">
-				<div className="flex items-center justify-center py-12">
-					<div className="flex items-center gap-3">
-						<div className="flex gap-1.5">
-							<div className="w-2 h-2 bg-brand-accent animate-pulse" />
-							<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-							<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-						</div>
-						<span className="text-xs font-mono text-[var(--theme-text-muted)]">
-							HUBERT_IS_BOOTING...
-						</span>
-					</div>
+				<div className="flex flex-col items-center justify-center py-12 px-6 gap-6">
+					{isInitializing && !initError ? (
+						<>
+							<div className="flex items-center gap-3">
+								<div className="flex gap-1.5">
+									<div className="w-2 h-2 bg-brand-accent animate-pulse" />
+									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
+									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
+								</div>
+								<span className="text-xs font-mono text-[var(--theme-text-muted)]">
+									HUBERT_IS_BOOTING...
+								</span>
+							</div>
+							<div className="text-[10px] font-mono text-[var(--theme-text-subtle)] text-center max-w-md">
+								Initializing chatbot... Check console for debug info.
+							</div>
+						</>
+					) : initError ? (
+						<>
+							<div className="flex items-center gap-3">
+								<div className="flex gap-1.5">
+									<div className="w-2 h-2 bg-red-500" />
+									<div className="w-2 h-2 bg-red-500/50" />
+									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
+								</div>
+								<span className="text-xs font-mono text-red-400">
+									HUBERT_INITIALIZATION_FAILED
+								</span>
+							</div>
+							<div className="font-mono text-sm text-[var(--theme-text-muted)] text-center max-w-md px-4 py-3 bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-secondary)]">
+								{initError}
+							</div>
+							<button
+								onClick={retryInit}
+								className="px-6 py-3 bg-brand-accent text-brand-dark font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-accent/90 transition-all border-none cursor-pointer"
+							>
+								[RETRY]
+							</button>
+							<div className="text-[10px] font-mono text-[var(--theme-text-subtle)] text-center max-w-md">
+								Check browser console for detailed error information.
+							</div>
+						</>
+					) : null}
 				</div>
 			</div>
 		);

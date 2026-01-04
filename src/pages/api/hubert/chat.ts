@@ -71,7 +71,15 @@ const searchBlog = tool(
  */
 export const POST = async (context) => {
 	try {
-		const { request, env } = context || {};
+		const { request, locals } = context || {};
+		// In Astro with Cloudflare adapter, env is at locals.runtime.env
+		const env = locals?.runtime?.env;
+
+		console.log('[Hubert API] Chat endpoint called');
+		console.log('[Hubert API] env object:', env);
+		console.log('[Hubert API] env keys:', env ? Object.keys(env) : 'no env');
+		console.log('[Hubert API] OPENROUTER_API_KEY present:', !!(env?.OPENROUTER_API_KEY));
+
 		const { messages, conversation_id, visitor_id } = await request.json();
 
 		if (!messages || !conversation_id || !visitor_id) {
@@ -88,7 +96,7 @@ export const POST = async (context) => {
 		const openRouterApiKey = env?.OPENROUTER_API_KEY;
 		if (!openRouterApiKey) {
 			// Dev mode fallback: return a canned response
-			console.log('[Hubert] Dev mode: No API key, using fallback response');
+			console.log('[Hubert API] Dev mode: No API key found, using fallback response');
 			return new Response(
 				JSON.stringify({
 					messages: [
@@ -167,7 +175,8 @@ When they say goodbye or conversation ends, use the save_conversation tool to ar
 		const data = await response.json();
 		const assistantContent = data.choices[0]?.message?.content || '...';
 
-		console.log(`[Hubert] Generated response in ${Date.now() - Date.parse(response.headers.get('date') || '').getTime()}ms`);
+		const responseTime = response.headers.get('date') ? Date.now() - Date.parse(response.headers.get('date')) : 0;
+		console.log(`[Hubert] Generated response in ${responseTime}ms`);
 
 		return new Response(
 			JSON.stringify({
