@@ -1,0 +1,429 @@
+---
+// Context-aware custom right-click menu
+const navItems = [
+    { href: '/', label: 'Home' },
+    { href: '/dev', label: 'Dev' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/hubert', label: 'Hubert' },
+    { href: '/contact', label: 'Contact' },
+];
+---
+
+<!-- Context Menu Container -->
+<div
+    id="context-menu"
+    class="fixed z-[110] opacity-0 pointer-events-none duration-150 ease-out scale-95 origin-top-left transition-[opacity,transform]"
+    role="menu"
+    aria-hidden="true"
+>
+    <div class="min-w-[180px] py-2 bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] rounded-lg shadow-xl backdrop-blur-md">
+        <!-- Context-specific actions (populated dynamically) -->
+        <div id="context-actions" class="hidden">
+            <!-- Actions will be injected here -->
+        </div>
+
+        <!-- Divider (shown when context actions exist) -->
+        <div id="context-divider" class="hidden h-px bg-[var(--theme-border-primary)] mx-3 my-2"></div>
+
+        <!-- Navigation Links -->
+        <div class="context-nav">
+            {navItems.map((item) => (
+                <a
+                    href={item.href}
+                    class="context-menu-item flex items-center gap-3 px-4 py-2 text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors duration-150"
+                    role="menuitem"
+                    data-nav-item
+                >
+                    <span class="w-4 h-4 flex items-center justify-center opacity-60">
+                        {item.href === '/' && (
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            </svg>
+                        )}
+                        {item.href === '/dev' && (
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                        )}
+                        {item.href === '/blog' && (
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        )}
+                        {item.href === '/hubert' && (
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        )}
+                        {item.href === '/contact' && (
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        )}
+                    </span>
+                    <span>{item.label}</span>
+                </a>
+            ))}
+        </div>
+
+        <!-- Copy Page URL (always shown) -->
+        <div class="h-px bg-[var(--theme-border-primary)] mx-3 my-2"></div>
+        <button
+            id="copy-page-url"
+            class="context-menu-item w-full flex items-center gap-3 px-4 py-2 text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors duration-150"
+            role="menuitem"
+        >
+            <span class="w-4 h-4 flex items-center justify-center opacity-60">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+            </span>
+            <span>Copy page URL</span>
+        </button>
+    </div>
+</div>
+
+<!-- Hidden icon templates for dynamic actions -->
+<template id="icon-external-link">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+    </svg>
+</template>
+<template id="icon-link">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+    </svg>
+</template>
+<template id="icon-text">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+    </svg>
+</template>
+<template id="icon-copy">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+    </svg>
+</template>
+<template id="icon-image">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+    </svg>
+</template>
+<template id="icon-download">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+    </svg>
+</template>
+<template id="icon-code">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+    </svg>
+</template>
+
+<style>
+    #context-menu {
+        /* Ensure menu doesn't get clipped */
+        transform-origin: top left;
+    }
+
+    #context-menu.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+    }
+
+    #context-menu.origin-bottom-left {
+        transform-origin: bottom left;
+    }
+
+    #context-menu.origin-top-right {
+        transform-origin: top right;
+    }
+
+    #context-menu.origin-bottom-right {
+        transform-origin: bottom right;
+    }
+
+    .context-menu-item {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .context-menu-item:active {
+        background-color: var(--theme-hover-bg-strong);
+    }
+
+    /* Hide templates */
+    template {
+        display: none;
+    }
+</style>
+
+<script>
+    interface ContextAction {
+        icon: string;
+        label: string;
+        action: () => void;
+    }
+
+    function initContextMenu() {
+        const menu = document.getElementById('context-menu');
+        const actionsContainer = document.getElementById('context-actions');
+        const divider = document.getElementById('context-divider');
+        const copyPageUrlBtn = document.getElementById('copy-page-url');
+
+        if (!menu || !actionsContainer || !divider || !copyPageUrlBtn) return;
+
+        function getIcon(iconName: string): Node | null {
+            const template = document.getElementById(`icon-${iconName}`) as HTMLTemplateElement | null;
+            if (template) {
+                return template.content.cloneNode(true);
+            }
+            return null;
+        }
+
+        function showMenu(x: number, y: number) {
+            if (!menu) return;
+
+            // Reset transform origin
+            menu.classList.remove('origin-bottom-left', 'origin-top-right', 'origin-bottom-right');
+
+            // Get viewport dimensions
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            // Position menu
+            menu.style.left = `${x}px`;
+            menu.style.top = `${y}px`;
+
+            // Make visible to measure
+            menu.classList.add('visible');
+            menu.setAttribute('aria-hidden', 'false');
+
+            // Get menu dimensions after making visible
+            const menuRect = menu.getBoundingClientRect();
+
+            // Adjust for viewport overflow
+            let adjustedX = x;
+            let adjustedY = y;
+            let originX = 'left';
+            let originY = 'top';
+
+            if (x + menuRect.width > vw - 10) {
+                adjustedX = x - menuRect.width;
+                originX = 'right';
+            }
+
+            if (y + menuRect.height > vh - 10) {
+                adjustedY = y - menuRect.height;
+                originY = 'bottom';
+            }
+
+            // Apply adjusted position
+            menu.style.left = `${Math.max(10, adjustedX)}px`;
+            menu.style.top = `${Math.max(10, adjustedY)}px`;
+
+            // Set transform origin for animation
+            if (originY === 'bottom' && originX === 'left') {
+                menu.classList.add('origin-bottom-left');
+            } else if (originY === 'top' && originX === 'right') {
+                menu.classList.add('origin-top-right');
+            } else if (originY === 'bottom' && originX === 'right') {
+                menu.classList.add('origin-bottom-right');
+            }
+        }
+
+        function hideMenu() {
+            if (!menu) return;
+            menu.classList.remove('visible');
+            menu.setAttribute('aria-hidden', 'true');
+        }
+
+        function createActionItem(action: ContextAction): HTMLButtonElement {
+            const button = document.createElement('button');
+            button.className = 'context-menu-item w-full flex items-center gap-3 px-4 py-2 text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors duration-150';
+            button.setAttribute('role', 'menuitem');
+
+            // Create icon container
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'w-4 h-4 flex items-center justify-center opacity-60';
+            const iconNode = getIcon(action.icon);
+            if (iconNode) {
+                iconSpan.appendChild(iconNode);
+            }
+
+            // Create label
+            const labelSpan = document.createElement('span');
+            labelSpan.textContent = action.label;
+
+            button.appendChild(iconSpan);
+            button.appendChild(labelSpan);
+
+            button.addEventListener('click', () => {
+                action.action();
+                hideMenu();
+            });
+
+            return button;
+        }
+
+        function buildContextActions(e: MouseEvent): ContextAction[] {
+            const actions: ContextAction[] = [];
+            const target = e.target as Element;
+
+            // Check for link
+            const link = target.closest('a');
+            if (link && link.href) {
+                actions.push({
+                    icon: 'external-link',
+                    label: 'Open in new tab',
+                    action: () => window.open(link.href, '_blank'),
+                });
+                actions.push({
+                    icon: 'link',
+                    label: 'Copy link URL',
+                    action: () => navigator.clipboard.writeText(link.href),
+                });
+                const linkText = link.textContent?.trim();
+                if (linkText) {
+                    actions.push({
+                        icon: 'text',
+                        label: 'Copy link text',
+                        action: () => navigator.clipboard.writeText(linkText),
+                    });
+                }
+            }
+
+            // Check for image
+            const img = target.closest('img') as HTMLImageElement | null;
+            if (img && img.src) {
+                actions.push({
+                    icon: 'image',
+                    label: 'Open image',
+                    action: () => window.open(img.src, '_blank'),
+                });
+                actions.push({
+                    icon: 'link',
+                    label: 'Copy image URL',
+                    action: () => navigator.clipboard.writeText(img.src),
+                });
+                actions.push({
+                    icon: 'download',
+                    label: 'Download image',
+                    action: () => {
+                        const a = document.createElement('a');
+                        a.href = img.src;
+                        a.download = img.alt || 'image';
+                        a.click();
+                    },
+                });
+            }
+
+            // Check for text selection
+            const selection = window.getSelection();
+            const selectedText = selection?.toString().trim();
+            if (selectedText) {
+                actions.push({
+                    icon: 'copy',
+                    label: 'Copy selected text',
+                    action: () => navigator.clipboard.writeText(selectedText),
+                });
+            }
+
+            // Check for code blocks
+            const codeBlock = target.closest('pre, code');
+            if (codeBlock) {
+                // Get the pre element for full code block, or just the code element
+                const pre = target.closest('pre');
+                const codeElement = pre?.querySelector('code') || codeBlock;
+                const codeText = codeElement.textContent?.trim();
+                if (codeText) {
+                    actions.push({
+                        icon: 'code',
+                        label: 'Copy code',
+                        action: () => navigator.clipboard.writeText(codeText),
+                    });
+                }
+            }
+
+            return actions;
+        }
+
+        function handleContextMenu(e: MouseEvent) {
+            // Don't intercept context menu on inputs/textareas for accessibility
+            const target = e.target as Element;
+            if (target.closest('input, textarea, [contenteditable="true"]')) {
+                return;
+            }
+
+            e.preventDefault();
+
+            // Build context-specific actions
+            const actions = buildContextActions(e);
+
+            // Clear previous actions using safe DOM methods
+            while (actionsContainer!.firstChild) {
+                actionsContainer!.removeChild(actionsContainer!.firstChild);
+            }
+
+            // Add context actions
+            if (actions.length > 0) {
+                actions.forEach(action => {
+                    actionsContainer!.appendChild(createActionItem(action));
+                });
+                actionsContainer!.classList.remove('hidden');
+                divider!.classList.remove('hidden');
+            } else {
+                actionsContainer!.classList.add('hidden');
+                divider!.classList.add('hidden');
+            }
+
+            // Show menu at cursor position
+            showMenu(e.clientX, e.clientY);
+        }
+
+        function handleClick(e: MouseEvent) {
+            // Close menu if clicking outside
+            if (!menu?.contains(e.target as Node)) {
+                hideMenu();
+            }
+        }
+
+        function handleKeydown(e: KeyboardEvent) {
+            if (e.key === 'Escape') {
+                hideMenu();
+            }
+        }
+
+        // Copy page URL action
+        copyPageUrlBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href);
+            hideMenu();
+        });
+
+        // Navigation items should close menu after navigation starts
+        menu.querySelectorAll('[data-nav-item]').forEach(item => {
+            item.addEventListener('click', () => {
+                // Small delay to allow navigation to start
+                setTimeout(hideMenu, 50);
+            });
+        });
+
+        // Event listeners
+        document.addEventListener('contextmenu', handleContextMenu);
+        document.addEventListener('click', handleClick);
+        document.addEventListener('keydown', handleKeydown);
+
+        // Close on scroll
+        document.addEventListener('scroll', hideMenu, { passive: true });
+    }
+
+    // Initialize on load
+    initContextMenu();
+
+    // Re-initialize on Astro page transitions
+    document.addEventListener('astro:page-load', initContextMenu);
+</script>
