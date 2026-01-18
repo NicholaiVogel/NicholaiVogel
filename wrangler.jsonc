@@ -55,7 +55,7 @@
 		{
 			"binding": "HUBERT_DB",
 			"database_name": "hubert-conversations",
-			"database_id": "<your-database-id-from-wrangler-output>"
+			"database_id": "7af8ab75-8ff0-4367-b6a6-d518c94e12e7"
 		}
 	]
 }
