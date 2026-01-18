@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
-import { motion } from 'framer-motion';
 import { useHubertChat } from '../hooks/useHubertChat';
+import HubertInput from './HubertInput';
 
 // Configure marked for safe rendering
 marked.setOptions({
@@ -28,34 +28,6 @@ export default function HubertChat() {
 		retryInit,
 		messagesEndRef,
 	} = useHubertChat({ initTimeout: 8000, chatTimeout: 30000 });
-
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [inputHeight, setInputHeight] = useState(40);
-
-	// Auto-resize textarea and track height for dynamic border radius
-	const adjustTextareaHeight = () => {
-		const textarea = textareaRef.current;
-		if (textarea) {
-			textarea.style.height = 'auto';
-			const newHeight = Math.min(textarea.scrollHeight, 200);
-			textarea.style.height = `${newHeight}px`;
-			setInputHeight(newHeight);
-		}
-	};
-
-	useEffect(() => {
-		adjustTextareaHeight();
-	}, [input]);
-
-	// Check if multiline for padding adjustments
-	const isMultiline = inputHeight > 48;
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault();
-			sendMessage();
-		}
-	};
 
 	// Initial/Loading state - centered branding with input
 	if (isInitializing && !initError) {
@@ -102,35 +74,13 @@ export default function HubertChat() {
 
 				{/* Input bar */}
 				<div className="w-full max-w-2xl">
-					<motion.div
-						layout
-						transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-						className={`relative bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] focus-within:border-[var(--theme-border-strong)] ${isMultiline ? 'p-4' : 'flex items-center px-6 py-3'}`}
-						style={{ borderRadius: isMultiline ? 28 : 9999 }}
-					>
-						<textarea
-							ref={textareaRef}
-							value={input}
-							onChange={(e) => setInput(e.target.value)}
-							onKeyDown={handleKeyDown}
-							placeholder="What do you want to know?"
-							aria-label="Type your message"
-							rows={1}
-							className={`bg-transparent text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] text-base outline-none resize-none max-h-[200px] ${isMultiline ? 'w-full leading-relaxed px-2' : 'flex-1 leading-[40px]'}`}
-						/>
-						<motion.div layout={false} className={isMultiline ? 'flex justify-end mt-3' : 'ml-3 flex-shrink-0'}>
-							<button
-								onClick={sendMessage}
-								disabled={isTyping || !input.trim()}
-								aria-label="Send message"
-								className="w-10 h-10 rounded-full bg-[var(--theme-text-primary)] hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
-							>
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--theme-bg-primary)]">
-									<path d="M12 19V5M5 12l7-7 7 7"/>
-								</svg>
-							</button>
-						</motion.div>
-					</motion.div>
+					<HubertInput
+						value={input}
+						onChange={setInput}
+						onSubmit={sendMessage}
+						disabled={isTyping}
+						placeholder="What do you want to know?"
+					/>
 				</div>
 
 				{/* Subtitle */}
@@ -205,35 +155,13 @@ export default function HubertChat() {
 			{/* Input bar - pinned to bottom */}
 			<div className="flex-shrink-0 px-4 pb-4 pt-2">
 				<div className="max-w-3xl mx-auto">
-					<motion.div
-						layout
-						transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-						className={`relative bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] focus-within:border-[var(--theme-border-strong)] ${isMultiline ? 'p-4' : 'flex items-center px-6 py-3'}`}
-						style={{ borderRadius: isMultiline ? 28 : 9999 }}
-					>
-						<textarea
-							ref={textareaRef}
-							value={input}
-							onChange={(e) => setInput(e.target.value)}
-							onKeyDown={handleKeyDown}
-							placeholder="How can Hubert help?"
-							aria-label="Type your message"
-							rows={1}
-							className={`bg-transparent text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] text-base outline-none resize-none max-h-[200px] ${isMultiline ? 'w-full leading-relaxed px-2' : 'flex-1 leading-[40px]'}`}
-						/>
-						<motion.div layout={false} className={isMultiline ? 'flex justify-end mt-3' : 'ml-3 flex-shrink-0'}>
-							<button
-								onClick={sendMessage}
-								disabled={isTyping || !input.trim()}
-								aria-label="Send message"
-								className="w-10 h-10 rounded-full bg-[var(--theme-text-primary)] hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
-							>
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--theme-bg-primary)]">
-									<path d="M12 19V5M5 12l7-7 7 7"/>
-								</svg>
-							</button>
-						</motion.div>
-					</motion.div>
+					<HubertInput
+						value={input}
+						onChange={setInput}
+						onSubmit={sendMessage}
+						disabled={isTyping}
+						placeholder="How can Hubert help?"
+					/>
 				</div>
 			</div>
 
