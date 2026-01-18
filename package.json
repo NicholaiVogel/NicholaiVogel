@@ -3,8 +3,9 @@
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "astro dev",
-		"build": "astro build",
+		"prebuild:ecosystem": "node scripts/build-ecosystem-data.mjs",
+		"dev": "pnpm prebuild:ecosystem && astro dev",
+		"build": "pnpm prebuild:ecosystem && astro build",
 		"preview": "astro build && wrangler pages dev",
 		"astro": "astro",
 		"deploy": "astro build && wrangler pages deploy",
@@ -44,6 +45,7 @@
 	"devDependencies": {
 		"@types/dompurify": "^3.2.0",
 		"@types/node": "^24.10.1",
+		"archiver": "^7.0.1",
 		"wrangler": "^4.53.0"
 	}
 }

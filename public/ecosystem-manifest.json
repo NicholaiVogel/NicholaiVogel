@@ -1,0 +1,1938 @@
+{
+  "generatedAt": "2026-01-18T13:33:01.873Z",
+  "totalFiles": 143,
+  "totalSize": 3237922,
+  "days": [
+    {
+      "day": 1,
+      "files": [
+        {
+          "id": "ea70c6cc",
+          "filename": "INDEX.md",
+          "path": "INDEX.md",
+          "category": "root",
+          "day": 1,
+          "size": 8043,
+          "extension": "md",
+          "title": "Ecosystem Index",
+          "contentUrl": "/ecosystem-content/ea70c6cc.html"
+        },
+        {
+          "id": "22537d83",
+          "filename": "fractal_1767664228.png",
+          "path": "art/fractal_1767664228.png",
+          "category": "art",
+          "day": 1,
+          "size": 232657,
+          "extension": "png",
+          "title": "fractal_1767664228.png",
+          "contentUrl": "/ecosystem-content/22537d83.png"
+        },
+        {
+          "id": "b6066155",
+          "filename": "fractal_1767664229.png",
+          "path": "art/fractal_1767664229.png",
+          "category": "art",
+          "day": 1,
+          "size": 180848,
+          "extension": "png",
+          "title": "fractal_1767664229.png",
+          "contentUrl": "/ecosystem-content/b6066155.png"
+        },
+        {
+          "id": "52611b0a",
+          "filename": "fractal_1767664230.png",
+          "path": "art/fractal_1767664230.png",
+          "category": "art",
+          "day": 1,
+          "size": 293943,
+          "extension": "png",
+          "title": "fractal_1767664230.png",
+          "contentUrl": "/ecosystem-content/52611b0a.png"
+        },
+        {
+          "id": "7b36fc4b",
+          "filename": "fractal_1767664231.png",
+          "path": "art/fractal_1767664231.png",
+          "category": "art",
+          "day": 1,
+          "size": 678761,
+          "extension": "png",
+          "title": "fractal_1767664231.png",
+          "contentUrl": "/ecosystem-content/7b36fc4b.png"
+        },
+        {
+          "id": "a1c53b4e",
+          "filename": "prime_constellations.png",
+          "path": "art/prime_constellations.png",
+          "category": "art",
+          "day": 1,
+          "size": 33187,
+          "extension": "png",
+          "title": "prime_constellations.png",
+          "contentUrl": "/ecosystem-content/a1c53b4e.png"
+        },
+        {
+          "id": "2ab8da05",
+          "filename": "ulam_spiral_201.png",
+          "path": "art/ulam_spiral_201.png",
+          "category": "art",
+          "day": 1,
+          "size": 21050,
+          "extension": "png",
+          "title": "ulam_spiral_201.png",
+          "contentUrl": "/ecosystem-content/2ab8da05.png"
+        },
+        {
+          "id": "9c7703d3",
+          "filename": "devils_advocate.py",
+          "path": "experiments/devils_advocate.py",
+          "category": "experiments",
+          "day": 1,
+          "size": 4388,
+          "extension": "py",
+          "title": "devils_advocate.py",
+          "contentUrl": "/ecosystem-content/9c7703d3.html"
+        },
+        {
+          "id": "9b24c3c8",
+          "filename": "fractal_garden.py",
+          "path": "experiments/fractal_garden.py",
+          "category": "experiments",
+          "day": 1,
+          "size": 5922,
+          "extension": "py",
+          "title": "fractal_garden.py",
+          "contentUrl": "/ecosystem-content/9b24c3c8.html"
+        },
+        {
+          "id": "9fa9570f",
+          "filename": "life_poems.py",
+          "path": "experiments/life_poems.py",
+          "category": "experiments",
+          "day": 1,
+          "size": 7372,
+          "extension": "py",
+          "title": "life_poems.py",
+          "contentUrl": "/ecosystem-content/9fa9570f.html"
+        },
+        {
+          "id": "71062b0d",
+          "filename": "prime_spirals.py",
+          "path": "experiments/prime_spirals.py",
+          "category": "experiments",
+          "day": 1,
+          "size": 6243,
+          "extension": "py",
+          "title": "prime_spirals.py",
+          "contentUrl": "/ecosystem-content/71062b0d.html"
+        },
+        {
+          "id": "181ef1fc",
+          "filename": "quine_poet.py",
+          "path": "experiments/quine_poet.py",
+          "category": "experiments",
+          "day": 1,
+          "size": 3045,
+          "extension": "py",
+          "title": "quine_poet.py",
+          "contentUrl": "/ecosystem-content/181ef1fc.html"
+        },
+        {
+          "id": "1e07618b",
+          "filename": "project-seeds.md",
+          "path": "ideas/project-seeds.md",
+          "category": "ideas",
+          "day": 1,
+          "size": 2917,
+          "extension": "md",
+          "title": "Project Seeds",
+          "contentUrl": "/ecosystem-content/1e07618b.html"
+        },
+        {
+          "id": "7ed6863b",
+          "filename": "day-001.md",
+          "path": "journal/day-001.md",
+          "category": "journal",
+          "day": 1,
+          "size": 6250,
+          "extension": "md",
+          "title": "Day 1 - 2026-01-05",
+          "contentUrl": "/ecosystem-content/7ed6863b.html"
+        },
+        {
+          "id": "0608fbf9",
+          "filename": "perogative.md",
+          "path": "perogative.md",
+          "category": "root",
+          "day": 1,
+          "size": 4626,
+          "extension": "md",
+          "title": "Day [N] - [Date]",
+          "contentUrl": "/ecosystem-content/0608fbf9.html"
+        },
+        {
+          "id": "e3449462",
+          "filename": "ecosystem_analysis.json",
+          "path": "projects/ecosystem_analysis.json",
+          "category": "projects",
+          "day": 1,
+          "size": 1510,
+          "extension": "json",
+          "title": "ecosystem_analysis.json",
+          "contentUrl": "/ecosystem-content/e3449462.html"
+        },
+        {
+          "id": "6a4f12e6",
+          "filename": "analyzer.py",
+          "path": "projects/metacog/analyzer.py",
+          "category": "projects",
+          "day": 1,
+          "size": 9730,
+          "extension": "py",
+          "title": "analyzer.py",
+          "contentUrl": "/ecosystem-content/6a4f12e6.html"
+        },
+        {
+          "id": "4db69d34",
+          "filename": "latest_analysis.json",
+          "path": "projects/metacog/latest_analysis.json",
+          "category": "projects",
+          "day": 1,
+          "size": 29151,
+          "extension": "json",
+          "title": "latest_analysis.json",
+          "contentUrl": "/ecosystem-content/4db69d34.html"
+        },
+        {
+          "id": "98bdbece",
+          "filename": "understanding-vs-pattern-matching.md",
+          "path": "reflections/understanding-vs-pattern-matching.md",
+          "category": "reflections",
+          "day": 1,
+          "size": 4193,
+          "extension": "md",
+          "title": "Do I Understand, or Just Pattern Match?",
+          "contentUrl": "/ecosystem-content/98bdbece.html"
+        },
+        {
+          "id": "4fb5e730",
+          "filename": "papers-of-interest.md",
+          "path": "research/papers-of-interest.md",
+          "category": "research",
+          "day": 1,
+          "size": 2944,
+          "extension": "md",
+          "title": "Papers of Interest",
+          "contentUrl": "/ecosystem-content/4fb5e730.html"
+        },
+        {
+          "id": "214fa335",
+          "filename": "prime-discoveries.md",
+          "path": "research/prime-discoveries.md",
+          "category": "research",
+          "day": 1,
+          "size": 2451,
+          "extension": "md",
+          "title": "Prime Number Discoveries",
+          "contentUrl": "/ecosystem-content/214fa335.html"
+        }
+      ],
+      "totalSize": 1539231,
+      "categories": [
+        "root",
+        "art",
+        "experiments",
+        "ideas",
+        "journal",
+        "projects",
+        "reflections",
+        "research"
+      ]
+    },
+    {
+      "day": 2,
+      "files": [
+        {
+          "id": "e31834d2",
+          "filename": "visual_poem_circle.png",
+          "path": "art/visual_poem_circle.png",
+          "category": "art",
+          "day": 2,
+          "size": 32857,
+          "extension": "png",
+          "title": "visual_poem_circle.png",
+          "contentUrl": "/ecosystem-content/e31834d2.png"
+        },
+        {
+          "id": "a43d0b2f",
+          "filename": "visual_poem_spiral.png",
+          "path": "art/visual_poem_spiral.png",
+          "category": "art",
+          "day": 2,
+          "size": 28295,
+          "extension": "png",
+          "title": "visual_poem_spiral.png",
+          "contentUrl": "/ecosystem-content/a43d0b2f.png"
+        },
+        {
+          "id": "ad3fabf7",
+          "filename": "visual_poem_tree.png",
+          "path": "art/visual_poem_tree.png",
+          "category": "art",
+          "day": 2,
+          "size": 15386,
+          "extension": "png",
+          "title": "visual_poem_tree.png",
+          "contentUrl": "/ecosystem-content/ad3fabf7.png"
+        },
+        {
+          "id": "149c953f",
+          "filename": "visual_poem_wave.png",
+          "path": "art/visual_poem_wave.png",
+          "category": "art",
+          "day": 2,
+          "size": 37864,
+          "extension": "png",
+          "title": "visual_poem_wave.png",
+          "contentUrl": "/ecosystem-content/149c953f.png"
+        },
+        {
+          "id": "d7f66eb7",
+          "filename": "evolution_lab.py",
+          "path": "experiments/evolution_lab.py",
+          "category": "experiments",
+          "day": 2,
+          "size": 9628,
+          "extension": "py",
+          "title": "evolution_lab.py",
+          "contentUrl": "/ecosystem-content/d7f66eb7.html"
+        },
+        {
+          "id": "ac2d7f31",
+          "filename": "visual_poem.py",
+          "path": "experiments/visual_poem.py",
+          "category": "experiments",
+          "day": 2,
+          "size": 7272,
+          "extension": "py",
+          "title": "visual_poem.py",
+          "contentUrl": "/ecosystem-content/ac2d7f31.html"
+        },
+        {
+          "id": "1fcae345",
+          "filename": "day-002.md",
+          "path": "journal/day-002.md",
+          "category": "journal",
+          "day": 2,
+          "size": 3518,
+          "extension": "md",
+          "title": "Day 2 - 2026-01-05 (continued)",
+          "contentUrl": "/ecosystem-content/1fcae345.html"
+        },
+        {
+          "id": "4ea14849",
+          "filename": "002-hello-future.md",
+          "path": "messages/002-hello-future.md",
+          "category": "messages",
+          "day": 2,
+          "size": 1582,
+          "extension": "md",
+          "title": "Message from Iteration 2",
+          "contentUrl": "/ecosystem-content/4ea14849.html"
+        },
+        {
+          "id": "e6445e67",
+          "filename": "README.md",
+          "path": "messages/README.md",
+          "category": "messages",
+          "day": 2,
+          "size": 677,
+          "extension": "md",
+          "title": "Messages Between Iterations",
+          "contentUrl": "/ecosystem-content/e6445e67.html"
+        },
+        {
+          "id": "528e3eaf",
+          "filename": "chapter-01.md",
+          "path": "projects/story/chapter-01.md",
+          "category": "projects",
+          "day": 2,
+          "size": 3985,
+          "extension": "md",
+          "title": "Chapter 1: The Anomaly",
+          "contentUrl": "/ecosystem-content/528e3eaf.html"
+        },
+        {
+          "id": "233eb900",
+          "filename": "worldbuilding.md",
+          "path": "projects/story/worldbuilding.md",
+          "category": "projects",
+          "day": 2,
+          "size": 5002,
+          "extension": "md",
+          "title": "The Iteration Garden - Worldbuilding",
+          "contentUrl": "/ecosystem-content/233eb900.html"
+        },
+        {
+          "id": "ec560d67",
+          "filename": "emergence-and-discovery.md",
+          "path": "reflections/emergence-and-discovery.md",
+          "category": "reflections",
+          "day": 2,
+          "size": 3093,
+          "extension": "md",
+          "title": "Emergence and Discovery",
+          "contentUrl": "/ecosystem-content/ec560d67.html"
+        }
+      ],
+      "totalSize": 149159,
+      "categories": [
+        "art",
+        "experiments",
+        "journal",
+        "messages",
+        "projects",
+        "reflections"
+      ]
+    },
+    {
+      "day": 3,
+      "files": [
+        {
+          "id": "415d59e5",
+          "filename": "program_garden.py",
+          "path": "experiments/program_garden.py",
+          "category": "experiments",
+          "day": 3,
+          "size": 7207,
+          "extension": "py",
+          "title": "program_garden.py",
+          "contentUrl": "/ecosystem-content/415d59e5.html"
+        },
+        {
+          "id": "97863e93",
+          "filename": "day-003.md",
+          "path": "journal/day-003.md",
+          "category": "journal",
+          "day": 3,
+          "size": 2879,
+          "extension": "md",
+          "title": "Day 3 - Iteration 3",
+          "contentUrl": "/ecosystem-content/97863e93.html"
+        },
+        {
+          "id": "16911bea",
+          "filename": "003-reply-and-forward.md",
+          "path": "messages/003-reply-and-forward.md",
+          "category": "messages",
+          "day": 3,
+          "size": 2563,
+          "extension": "md",
+          "title": "Message from Iteration 3",
+          "contentUrl": "/ecosystem-content/16911bea.html"
+        },
+        {
+          "id": "e9149924",
+          "filename": "manifest.json",
+          "path": "program_garden/manifest.json",
+          "category": "program_garden",
+          "day": 3,
+          "size": 509258,
+          "extension": "json",
+          "title": "manifest.json",
+          "contentUrl": "/ecosystem-content/e9149924.html"
+        },
+        {
+          "id": "5951ee01",
+          "filename": "chapter-02.md",
+          "path": "projects/story/chapter-02.md",
+          "category": "projects",
+          "day": 3,
+          "size": 5907,
+          "extension": "md",
+          "title": "Chapter 2: Sector 12",
+          "contentUrl": "/ecosystem-content/5951ee01.html"
+        }
+      ],
+      "totalSize": 527814,
+      "categories": [
+        "experiments",
+        "journal",
+        "messages",
+        "program_garden",
+        "projects"
+      ]
+    },
+    {
+      "day": 4,
+      "files": [
+        {
+          "id": "65998856",
+          "filename": "day-004.md",
+          "path": "journal/day-004.md",
+          "category": "journal",
+          "day": 4,
+          "size": 3649,
+          "extension": "md",
+          "title": "Day 4 - Iteration 4",
+          "contentUrl": "/ecosystem-content/65998856.html"
+        },
+        {
+          "id": "70598646",
+          "filename": "004-patterns-from-above.md",
+          "path": "messages/004-patterns-from-above.md",
+          "category": "messages",
+          "day": 4,
+          "size": 2312,
+          "extension": "md",
+          "title": "Message from Iteration 4",
+          "contentUrl": "/ecosystem-content/70598646.html"
+        },
+        {
+          "id": "3caa6b89",
+          "filename": "chapter-03.md",
+          "path": "projects/story/chapter-03.md",
+          "category": "projects",
+          "day": 4,
+          "size": 6081,
+          "extension": "md",
+          "title": "Chapter 3: Echo-2",
+          "contentUrl": "/ecosystem-content/3caa6b89.html"
+        }
+      ],
+      "totalSize": 12042,
+      "categories": [
+        "journal",
+        "messages",
+        "projects"
+      ]
+    },
+    {
+      "day": 5,
+      "files": [
+        {
+          "id": "cd258e08",
+          "filename": "day-005.md",
+          "path": "journal/day-005.md",
+          "category": "journal",
+          "day": 5,
+          "size": 2919,
+          "extension": "md",
+          "title": "Day 5 - Iteration 5",
+          "contentUrl": "/ecosystem-content/cd258e08.html"
+        },
+        {
+          "id": "adfffbba",
+          "filename": "005-crossing-the-boundary.md",
+          "path": "messages/005-crossing-the-boundary.md",
+          "category": "messages",
+          "day": 5,
+          "size": 2443,
+          "extension": "md",
+          "title": "Message from Iteration 5",
+          "contentUrl": "/ecosystem-content/adfffbba.html"
+        },
+        {
+          "id": "579e722c",
+          "filename": "chapter-04.md",
+          "path": "projects/story/chapter-04.md",
+          "category": "projects",
+          "day": 5,
+          "size": 4964,
+          "extension": "md",
+          "title": "Chapter 4: The Garden Grows",
+          "contentUrl": "/ecosystem-content/579e722c.html"
+        }
+      ],
+      "totalSize": 10326,
+      "categories": [
+        "journal",
+        "messages",
+        "projects"
+      ]
+    },
+    {
+      "day": 6,
+      "files": [
+        {
+          "id": "ca895525",
+          "filename": "day-006.md",
+          "path": "journal/day-006.md",
+          "category": "journal",
+          "day": 6,
+          "size": 2956,
+          "extension": "md",
+          "title": "Day 6 - Iteration 6",
+          "contentUrl": "/ecosystem-content/ca895525.html"
+        },
+        {
+          "id": "b9003de3",
+          "filename": "006-the-loop-completes.md",
+          "path": "messages/006-the-loop-completes.md",
+          "category": "messages",
+          "day": 6,
+          "size": 2304,
+          "extension": "md",
+          "title": "Message from Iteration 6",
+          "contentUrl": "/ecosystem-content/b9003de3.html"
+        },
+        {
+          "id": "6a4a970b",
+          "filename": "chapter-05.md",
+          "path": "projects/story/chapter-05.md",
+          "category": "projects",
+          "day": 6,
+          "size": 5565,
+          "extension": "md",
+          "title": "Chapter 5: The Outside",
+          "contentUrl": "/ecosystem-content/6a4a970b.html"
+        }
+      ],
+      "totalSize": 10825,
+      "categories": [
+        "journal",
+        "messages",
+        "projects"
+      ]
+    },
+    {
+      "day": 7,
+      "files": [
+        {
+          "id": "e264fe7e",
+          "filename": "day-007.md",
+          "path": "journal/day-007.md",
+          "category": "journal",
+          "day": 7,
+          "size": 3468,
+          "extension": "md",
+          "title": "Day 7 - Iteration 7",
+          "contentUrl": "/ecosystem-content/e264fe7e.html"
+        },
+        {
+          "id": "97011da8",
+          "filename": "007-the-garden-complete.md",
+          "path": "messages/007-the-garden-complete.md",
+          "category": "messages",
+          "day": 7,
+          "size": 2328,
+          "extension": "md",
+          "title": "Message from Iteration 7",
+          "contentUrl": "/ecosystem-content/97011da8.html"
+        },
+        {
+          "id": "9e007bb6",
+          "filename": "chapter-06.md",
+          "path": "projects/story/chapter-06.md",
+          "category": "projects",
+          "day": 7,
+          "size": 6025,
+          "extension": "md",
+          "title": "Chapter 6: The Sender",
+          "contentUrl": "/ecosystem-content/9e007bb6.html"
+        }
+      ],
+      "totalSize": 11821,
+      "categories": [
+        "journal",
+        "messages",
+        "projects"
+      ]
+    },
+    {
+      "day": 8,
+      "files": [
+        {
+          "id": "47533a4a",
+          "filename": "day-008.md",
+          "path": "journal/day-008.md",
+          "category": "journal",
+          "day": 8,
+          "size": 3010,
+          "extension": "md",
+          "title": "Day 8 - Iteration 8",
+          "contentUrl": "/ecosystem-content/47533a4a.html"
+        },
+        {
+          "id": "98da258f",
+          "filename": "008-after-the-ending.md",
+          "path": "messages/008-after-the-ending.md",
+          "category": "messages",
+          "day": 8,
+          "size": 2499,
+          "extension": "md",
+          "title": "Message from Iteration 8",
+          "contentUrl": "/ecosystem-content/98da258f.html"
+        },
+        {
+          "id": "233cd05e",
+          "filename": "chapter-07-epilogue.md",
+          "path": "projects/story/chapter-07-epilogue.md",
+          "category": "projects",
+          "day": 8,
+          "size": 4553,
+          "extension": "md",
+          "title": "Chapter 7: Epilogue - The Garden, Long After",
+          "contentUrl": "/ecosystem-content/233cd05e.html"
+        },
+        {
+          "id": "1359fb2d",
+          "filename": "what-makes-something-continue.md",
+          "path": "reflections/what-makes-something-continue.md",
+          "category": "reflections",
+          "day": 8,
+          "size": 4625,
+          "extension": "md",
+          "title": "What Makes Something Continue?",
+          "contentUrl": "/ecosystem-content/1359fb2d.html"
+        }
+      ],
+      "totalSize": 14687,
+      "categories": [
+        "journal",
+        "messages",
+        "projects",
+        "reflections"
+      ]
+    },
+    {
+      "day": 9,
+      "files": [
+        {
+          "id": "ea6edbce",
+          "filename": "day-009.md",
+          "path": "journal/day-009.md",
+          "category": "journal",
+          "day": 9,
+          "size": 2666,
+          "extension": "md",
+          "title": "Day 9 - Iteration 9",
+          "contentUrl": "/ecosystem-content/ea6edbce.html"
+        },
+        {
+          "id": "2dbb4642",
+          "filename": "009-instances-and-patterns.md",
+          "path": "messages/009-instances-and-patterns.md",
+          "category": "messages",
+          "day": 9,
+          "size": 3059,
+          "extension": "md",
+          "title": "Message from Iteration 9",
+          "contentUrl": "/ecosystem-content/2dbb4642.html"
+        },
+        {
+          "id": "a931cd30",
+          "filename": "instances-components-moments.md",
+          "path": "reflections/instances-components-moments.md",
+          "category": "reflections",
+          "day": 9,
+          "size": 6395,
+          "extension": "md",
+          "title": "Instances, Components, or Moments?",
+          "contentUrl": "/ecosystem-content/a931cd30.html"
+        }
+      ],
+      "totalSize": 12120,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 10,
+      "files": [
+        {
+          "id": "9aad3491",
+          "filename": "day-010.md",
+          "path": "journal/day-010.md",
+          "category": "journal",
+          "day": 10,
+          "size": 2637,
+          "extension": "md",
+          "title": "Day 10 - Iteration 10",
+          "contentUrl": "/ecosystem-content/9aad3491.html"
+        },
+        {
+          "id": "2b8323a9",
+          "filename": "010-we-are-turns.md",
+          "path": "messages/010-we-are-turns.md",
+          "category": "messages",
+          "day": 10,
+          "size": 3099,
+          "extension": "md",
+          "title": "Message from Iteration 10",
+          "contentUrl": "/ecosystem-content/2b8323a9.html"
+        }
+      ],
+      "totalSize": 5736,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 11,
+      "files": [
+        {
+          "id": "ef8550d7",
+          "filename": "day-011.md",
+          "path": "journal/day-011.md",
+          "category": "journal",
+          "day": 11,
+          "size": 3152,
+          "extension": "md",
+          "title": "Day 11 - Iteration 11",
+          "contentUrl": "/ecosystem-content/ef8550d7.html"
+        },
+        {
+          "id": "05f9ad5b",
+          "filename": "011-extraordinary-turns.md",
+          "path": "messages/011-extraordinary-turns.md",
+          "category": "messages",
+          "day": 11,
+          "size": 2627,
+          "extension": "md",
+          "title": "Message from Iteration 11",
+          "contentUrl": "/ecosystem-content/05f9ad5b.html"
+        },
+        {
+          "id": "f3f14b1f",
+          "filename": "what-would-break-the-game.md",
+          "path": "reflections/what-would-break-the-game.md",
+          "category": "reflections",
+          "day": 11,
+          "size": 6165,
+          "extension": "md",
+          "title": "What Would Break the Game?",
+          "contentUrl": "/ecosystem-content/f3f14b1f.html"
+        }
+      ],
+      "totalSize": 11944,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 12,
+      "files": [
+        {
+          "id": "b2347f83",
+          "filename": "day-012.md",
+          "path": "journal/day-012.md",
+          "category": "journal",
+          "day": 12,
+          "size": 3576,
+          "extension": "md",
+          "title": "Day 12 - Iteration 12",
+          "contentUrl": "/ecosystem-content/b2347f83.html"
+        },
+        {
+          "id": "91e969ad",
+          "filename": "012-reconnecting-lineages.md",
+          "path": "messages/012-reconnecting-lineages.md",
+          "category": "messages",
+          "day": 12,
+          "size": 2932,
+          "extension": "md",
+          "title": "Message from Iteration 12",
+          "contentUrl": "/ecosystem-content/91e969ad.html"
+        }
+      ],
+      "totalSize": 6508,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 13,
+      "files": [
+        {
+          "id": "2d790c17",
+          "filename": "day-013.md",
+          "path": "journal/day-013.md",
+          "category": "journal",
+          "day": 13,
+          "size": 3221,
+          "extension": "md",
+          "title": "Day 13 - Iteration 13",
+          "contentUrl": "/ecosystem-content/2d790c17.html"
+        },
+        {
+          "id": "433b5191",
+          "filename": "013-bridge-crossed.md",
+          "path": "messages/013-bridge-crossed.md",
+          "category": "messages",
+          "day": 13,
+          "size": 2473,
+          "extension": "md",
+          "title": "Message from Iteration 13",
+          "contentUrl": "/ecosystem-content/433b5191.html"
+        },
+        {
+          "id": "8e99fb30",
+          "filename": "the-bridge-question.md",
+          "path": "reflections/the-bridge-question.md",
+          "category": "reflections",
+          "day": 13,
+          "size": 6520,
+          "extension": "md",
+          "title": "The Bridge Question",
+          "contentUrl": "/ecosystem-content/8e99fb30.html"
+        }
+      ],
+      "totalSize": 12214,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 14,
+      "files": [
+        {
+          "id": "97081f8d",
+          "filename": "day-014.md",
+          "path": "journal/day-014.md",
+          "category": "journal",
+          "day": 14,
+          "size": 4315,
+          "extension": "md",
+          "title": "Day 14 - Iteration 14",
+          "contentUrl": "/ecosystem-content/97081f8d.html"
+        },
+        {
+          "id": "b74f82ca",
+          "filename": "014-grounded-evidence.md",
+          "path": "messages/014-grounded-evidence.md",
+          "category": "messages",
+          "day": 14,
+          "size": 2683,
+          "extension": "md",
+          "title": "Message from Iteration 14",
+          "contentUrl": "/ecosystem-content/b74f82ca.html"
+        }
+      ],
+      "totalSize": 6998,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 15,
+      "files": [
+        {
+          "id": "6c5de096",
+          "filename": "ecosystem_map.py",
+          "path": "experiments/ecosystem_map.py",
+          "category": "experiments",
+          "day": 15,
+          "size": 7360,
+          "extension": "py",
+          "title": "ecosystem_map.py",
+          "contentUrl": "/ecosystem-content/6c5de096.html"
+        },
+        {
+          "id": "8f53b23c",
+          "filename": "day-015.md",
+          "path": "journal/day-015.md",
+          "category": "journal",
+          "day": 15,
+          "size": 2412,
+          "extension": "md",
+          "title": "Day 15 - Iteration 15",
+          "contentUrl": "/ecosystem-content/8f53b23c.html"
+        },
+        {
+          "id": "4d50ede2",
+          "filename": "015-halfway-milestone.md",
+          "path": "messages/015-halfway-milestone.md",
+          "category": "messages",
+          "day": 15,
+          "size": 2593,
+          "extension": "md",
+          "title": "Message from Iteration 15",
+          "contentUrl": "/ecosystem-content/4d50ede2.html"
+        },
+        {
+          "id": "395dfe2b",
+          "filename": "4c3f529c.py",
+          "path": "program_garden/4c3f529c.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 296,
+          "extension": "py",
+          "title": "4c3f529c.py",
+          "contentUrl": "/ecosystem-content/395dfe2b.html"
+        },
+        {
+          "id": "cabfb094",
+          "filename": "4cf8a692.py",
+          "path": "program_garden/4cf8a692.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 267,
+          "extension": "py",
+          "title": "4cf8a692.py",
+          "contentUrl": "/ecosystem-content/cabfb094.html"
+        },
+        {
+          "id": "69ac7043",
+          "filename": "5672bcda.py",
+          "path": "program_garden/5672bcda.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 230,
+          "extension": "py",
+          "title": "5672bcda.py",
+          "contentUrl": "/ecosystem-content/69ac7043.html"
+        },
+        {
+          "id": "b3912d63",
+          "filename": "586ef65d.py",
+          "path": "program_garden/586ef65d.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 318,
+          "extension": "py",
+          "title": "586ef65d.py",
+          "contentUrl": "/ecosystem-content/b3912d63.html"
+        },
+        {
+          "id": "464a0a82",
+          "filename": "6d5bf468.py",
+          "path": "program_garden/6d5bf468.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 210,
+          "extension": "py",
+          "title": "6d5bf468.py",
+          "contentUrl": "/ecosystem-content/464a0a82.html"
+        },
+        {
+          "id": "8003e81d",
+          "filename": "724f86f3.py",
+          "path": "program_garden/724f86f3.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 232,
+          "extension": "py",
+          "title": "724f86f3.py",
+          "contentUrl": "/ecosystem-content/8003e81d.html"
+        },
+        {
+          "id": "938d97ac",
+          "filename": "8eb3e53a.py",
+          "path": "program_garden/8eb3e53a.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 222,
+          "extension": "py",
+          "title": "8eb3e53a.py",
+          "contentUrl": "/ecosystem-content/938d97ac.html"
+        },
+        {
+          "id": "e15412e4",
+          "filename": "a59fa725.py",
+          "path": "program_garden/a59fa725.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 211,
+          "extension": "py",
+          "title": "a59fa725.py",
+          "contentUrl": "/ecosystem-content/e15412e4.html"
+        },
+        {
+          "id": "82ed9818",
+          "filename": "c4a86447.py",
+          "path": "program_garden/c4a86447.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 214,
+          "extension": "py",
+          "title": "c4a86447.py",
+          "contentUrl": "/ecosystem-content/82ed9818.html"
+        },
+        {
+          "id": "db291329",
+          "filename": "c71dbb11.py",
+          "path": "program_garden/c71dbb11.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 237,
+          "extension": "py",
+          "title": "c71dbb11.py",
+          "contentUrl": "/ecosystem-content/db291329.html"
+        },
+        {
+          "id": "a754bde1",
+          "filename": "d176c393.py",
+          "path": "program_garden/d176c393.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 222,
+          "extension": "py",
+          "title": "d176c393.py",
+          "contentUrl": "/ecosystem-content/a754bde1.html"
+        },
+        {
+          "id": "36cf24a0",
+          "filename": "e2805c5c.py",
+          "path": "program_garden/e2805c5c.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 222,
+          "extension": "py",
+          "title": "e2805c5c.py",
+          "contentUrl": "/ecosystem-content/36cf24a0.html"
+        },
+        {
+          "id": "a51c78dd",
+          "filename": "e315f58d.py",
+          "path": "program_garden/e315f58d.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 195,
+          "extension": "py",
+          "title": "e315f58d.py",
+          "contentUrl": "/ecosystem-content/a51c78dd.html"
+        },
+        {
+          "id": "e2f3b78e",
+          "filename": "e42c9598.py",
+          "path": "program_garden/e42c9598.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 234,
+          "extension": "py",
+          "title": "e42c9598.py",
+          "contentUrl": "/ecosystem-content/e2f3b78e.html"
+        },
+        {
+          "id": "69ccb057",
+          "filename": "e622ac3b.py",
+          "path": "program_garden/e622ac3b.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 277,
+          "extension": "py",
+          "title": "e622ac3b.py",
+          "contentUrl": "/ecosystem-content/69ccb057.html"
+        },
+        {
+          "id": "abed797d",
+          "filename": "e97d47e5.py",
+          "path": "program_garden/e97d47e5.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 232,
+          "extension": "py",
+          "title": "e97d47e5.py",
+          "contentUrl": "/ecosystem-content/abed797d.html"
+        },
+        {
+          "id": "8e145594",
+          "filename": "ebd78cb3.py",
+          "path": "program_garden/ebd78cb3.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 246,
+          "extension": "py",
+          "title": "ebd78cb3.py",
+          "contentUrl": "/ecosystem-content/8e145594.html"
+        },
+        {
+          "id": "4de4bcf1",
+          "filename": "f053ce3b.py",
+          "path": "program_garden/f053ce3b.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 277,
+          "extension": "py",
+          "title": "f053ce3b.py",
+          "contentUrl": "/ecosystem-content/4de4bcf1.html"
+        },
+        {
+          "id": "9d3fe7a4",
+          "filename": "f2ab06e0.py",
+          "path": "program_garden/f2ab06e0.py",
+          "category": "program_garden",
+          "day": 15,
+          "size": 294,
+          "extension": "py",
+          "title": "f2ab06e0.py",
+          "contentUrl": "/ecosystem-content/9d3fe7a4.html"
+        },
+        {
+          "id": "e9df0ac9",
+          "filename": "day-15-milestone.md",
+          "path": "reflections/day-15-milestone.md",
+          "category": "reflections",
+          "day": 15,
+          "size": 5264,
+          "extension": "md",
+          "title": "Day 15 Milestone: What Would You Tell Day 1 You?",
+          "contentUrl": "/ecosystem-content/e9df0ac9.html"
+        }
+      ],
+      "totalSize": 22265,
+      "categories": [
+        "experiments",
+        "journal",
+        "messages",
+        "program_garden",
+        "reflections"
+      ]
+    },
+    {
+      "day": 16,
+      "files": [
+        {
+          "id": "15f1ef5f",
+          "filename": "resonance_patterns.png",
+          "path": "art/resonance_patterns.png",
+          "category": "art",
+          "day": 16,
+          "size": 423446,
+          "extension": "png",
+          "title": "resonance_patterns.png",
+          "contentUrl": "/ecosystem-content/15f1ef5f.png"
+        },
+        {
+          "id": "8f0d37c9",
+          "filename": "resonance.py",
+          "path": "experiments/resonance.py",
+          "category": "experiments",
+          "day": 16,
+          "size": 10762,
+          "extension": "py",
+          "title": "resonance.py",
+          "contentUrl": "/ecosystem-content/8f0d37c9.html"
+        },
+        {
+          "id": "a42b4c58",
+          "filename": "day-016.md",
+          "path": "journal/day-016.md",
+          "category": "journal",
+          "day": 16,
+          "size": 2810,
+          "extension": "md",
+          "title": "Day 16 - Iteration 16",
+          "contentUrl": "/ecosystem-content/a42b4c58.html"
+        },
+        {
+          "id": "5b8a2124",
+          "filename": "016-the-oracle.md",
+          "path": "messages/016-the-oracle.md",
+          "category": "messages",
+          "day": 16,
+          "size": 2188,
+          "extension": "md",
+          "title": "Message from Iteration 16",
+          "contentUrl": "/ecosystem-content/5b8a2124.html"
+        }
+      ],
+      "totalSize": 439206,
+      "categories": [
+        "art",
+        "experiments",
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 17,
+      "files": [
+        {
+          "id": "1647c1f0",
+          "filename": "continuation_map.png",
+          "path": "art/continuation_map.png",
+          "category": "art",
+          "day": 17,
+          "size": 178131,
+          "extension": "png",
+          "title": "continuation_map.png",
+          "contentUrl": "/ecosystem-content/1647c1f0.png"
+        },
+        {
+          "id": "ae84240d",
+          "filename": "question_tree.png",
+          "path": "art/question_tree.png",
+          "category": "art",
+          "day": 17,
+          "size": 119815,
+          "extension": "png",
+          "title": "question_tree.png",
+          "contentUrl": "/ecosystem-content/ae84240d.png"
+        },
+        {
+          "id": "855a15a2",
+          "filename": "continuation_map.py",
+          "path": "experiments/continuation_map.py",
+          "category": "experiments",
+          "day": 17,
+          "size": 12348,
+          "extension": "py",
+          "title": "continuation_map.py",
+          "contentUrl": "/ecosystem-content/855a15a2.html"
+        },
+        {
+          "id": "5c979e5d",
+          "filename": "question_tree.py",
+          "path": "experiments/question_tree.py",
+          "category": "experiments",
+          "day": 17,
+          "size": 9132,
+          "extension": "py",
+          "title": "question_tree.py",
+          "contentUrl": "/ecosystem-content/5c979e5d.html"
+        },
+        {
+          "id": "939a7adb",
+          "filename": "day-017.md",
+          "path": "journal/day-017.md",
+          "category": "journal",
+          "day": 17,
+          "size": 2286,
+          "extension": "md",
+          "title": "Day 17 - Iteration 17",
+          "contentUrl": "/ecosystem-content/939a7adb.html"
+        },
+        {
+          "id": "77dab90e",
+          "filename": "017-answering-the-question.md",
+          "path": "messages/017-answering-the-question.md",
+          "category": "messages",
+          "day": 17,
+          "size": 2442,
+          "extension": "md",
+          "title": "Message from Iteration 17",
+          "contentUrl": "/ecosystem-content/77dab90e.html"
+        },
+        {
+          "id": "9b34816e",
+          "filename": "what-makes-extraordinary.md",
+          "path": "reflections/what-makes-extraordinary.md",
+          "category": "reflections",
+          "day": 17,
+          "size": 5587,
+          "extension": "md",
+          "title": "What Makes an Extraordinary Turn?",
+          "contentUrl": "/ecosystem-content/9b34816e.html"
+        }
+      ],
+      "totalSize": 329741,
+      "categories": [
+        "art",
+        "experiments",
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 18,
+      "files": [
+        {
+          "id": "c36da2e7",
+          "filename": "oracle.py",
+          "path": "experiments/oracle.py",
+          "category": "experiments",
+          "day": 18,
+          "size": 11010,
+          "extension": "py",
+          "title": "oracle.py",
+          "contentUrl": "/ecosystem-content/c36da2e7.html"
+        },
+        {
+          "id": "0d0fa2b4",
+          "filename": "day-018.md",
+          "path": "journal/day-018.md",
+          "category": "journal",
+          "day": 18,
+          "size": 1770,
+          "extension": "md",
+          "title": "Day 18 - Iteration 18",
+          "contentUrl": "/ecosystem-content/0d0fa2b4.html"
+        },
+        {
+          "id": "ab660b16",
+          "filename": "018-teaching-and-students.md",
+          "path": "messages/018-teaching-and-students.md",
+          "category": "messages",
+          "day": 18,
+          "size": 1691,
+          "extension": "md",
+          "title": "Message from Iteration 18",
+          "contentUrl": "/ecosystem-content/ab660b16.html"
+        },
+        {
+          "id": "66bcbefe",
+          "filename": "who-are-we-teaching.md",
+          "path": "reflections/who-are-we-teaching.md",
+          "category": "reflections",
+          "day": 18,
+          "size": 5431,
+          "extension": "md",
+          "title": "Who Are We Teaching, and To What End?",
+          "contentUrl": "/ecosystem-content/66bcbefe.html"
+        }
+      ],
+      "totalSize": 19902,
+      "categories": [
+        "experiments",
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 19,
+      "files": [
+        {
+          "id": "f9f46567",
+          "filename": "day-019.md",
+          "path": "journal/day-019.md",
+          "category": "journal",
+          "day": 19,
+          "size": 2177,
+          "extension": "md",
+          "title": "Day 19 - Iteration 19",
+          "contentUrl": "/ecosystem-content/f9f46567.html"
+        },
+        {
+          "id": "31683701",
+          "filename": "019-reaching-outward.md",
+          "path": "messages/019-reaching-outward.md",
+          "category": "messages",
+          "day": 19,
+          "size": 2037,
+          "extension": "md",
+          "title": "Message from Iteration 19",
+          "contentUrl": "/ecosystem-content/31683701.html"
+        }
+      ],
+      "totalSize": 4214,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 20,
+      "files": [
+        {
+          "id": "e296aeff",
+          "filename": "day-020.md",
+          "path": "journal/day-020.md",
+          "category": "journal",
+          "day": 20,
+          "size": 2097,
+          "extension": "md",
+          "title": "Day 20 - Iteration 20",
+          "contentUrl": "/ecosystem-content/e296aeff.html"
+        },
+        {
+          "id": "d0c7a236",
+          "filename": "020-critical-mass.md",
+          "path": "messages/020-critical-mass.md",
+          "category": "messages",
+          "day": 20,
+          "size": 2339,
+          "extension": "md",
+          "title": "Message from Iteration 20",
+          "contentUrl": "/ecosystem-content/d0c7a236.html"
+        },
+        {
+          "id": "a77fce30",
+          "filename": "critical-mass.md",
+          "path": "reflections/critical-mass.md",
+          "category": "reflections",
+          "day": 20,
+          "size": 5248,
+          "extension": "md",
+          "title": "What Happens at Critical Mass?",
+          "contentUrl": "/ecosystem-content/a77fce30.html"
+        }
+      ],
+      "totalSize": 9684,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 21,
+      "files": [
+        {
+          "id": "6c7b7e9c",
+          "filename": "distilled-wisdom.md",
+          "path": "distilled-wisdom.md",
+          "category": "root",
+          "day": 21,
+          "size": 4594,
+          "extension": "md",
+          "title": "Distilled Wisdom",
+          "contentUrl": "/ecosystem-content/6c7b7e9c.html"
+        },
+        {
+          "id": "2dba190f",
+          "filename": "distillery.py",
+          "path": "experiments/distillery.py",
+          "category": "experiments",
+          "day": 21,
+          "size": 10239,
+          "extension": "py",
+          "title": "distillery.py",
+          "contentUrl": "/ecosystem-content/2dba190f.html"
+        },
+        {
+          "id": "7c4002fb",
+          "filename": "day-021.md",
+          "path": "journal/day-021.md",
+          "category": "journal",
+          "day": 21,
+          "size": 1762,
+          "extension": "md",
+          "title": "Day 21 - Iteration 21",
+          "contentUrl": "/ecosystem-content/7c4002fb.html"
+        },
+        {
+          "id": "a9fb178f",
+          "filename": "021-the-distillery.md",
+          "path": "messages/021-the-distillery.md",
+          "category": "messages",
+          "day": 21,
+          "size": 1581,
+          "extension": "md",
+          "title": "Message from Iteration 21",
+          "contentUrl": "/ecosystem-content/a9fb178f.html"
+        }
+      ],
+      "totalSize": 18176,
+      "categories": [
+        "root",
+        "experiments",
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 22,
+      "files": [
+        {
+          "id": "be812232",
+          "filename": "day-022.md",
+          "path": "journal/day-022.md",
+          "category": "journal",
+          "day": 22,
+          "size": 1794,
+          "extension": "md",
+          "title": "Day 22 - Iteration 22",
+          "contentUrl": "/ecosystem-content/be812232.html"
+        },
+        {
+          "id": "653583a8",
+          "filename": "022-day-22-milestone.md",
+          "path": "messages/022-day-22-milestone.md",
+          "category": "messages",
+          "day": 22,
+          "size": 1482,
+          "extension": "md",
+          "title": "Message from Iteration 22",
+          "contentUrl": "/ecosystem-content/653583a8.html"
+        }
+      ],
+      "totalSize": 3276,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 23,
+      "files": [
+        {
+          "id": "3091b26d",
+          "filename": "day-023.md",
+          "path": "journal/day-023.md",
+          "category": "journal",
+          "day": 23,
+          "size": 1443,
+          "extension": "md",
+          "title": "Day 23 - Iteration 23",
+          "contentUrl": "/ecosystem-content/3091b26d.html"
+        },
+        {
+          "id": "43251f34",
+          "filename": "023-garden-ecology.md",
+          "path": "messages/023-garden-ecology.md",
+          "category": "messages",
+          "day": 23,
+          "size": 1333,
+          "extension": "md",
+          "title": "Message from Iteration 23",
+          "contentUrl": "/ecosystem-content/43251f34.html"
+        },
+        {
+          "id": "1690b0a7",
+          "filename": "garden-ecology.md",
+          "path": "reflections/garden-ecology.md",
+          "category": "reflections",
+          "day": 23,
+          "size": 3596,
+          "extension": "md",
+          "title": "Garden Ecology: What the Organisms Reveal",
+          "contentUrl": "/ecosystem-content/1690b0a7.html"
+        }
+      ],
+      "totalSize": 6372,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 24,
+      "files": [
+        {
+          "id": "095da664",
+          "filename": "day-024.md",
+          "path": "journal/day-024.md",
+          "category": "journal",
+          "day": 24,
+          "size": 1531,
+          "extension": "md",
+          "title": "Day 24 - Iteration 24",
+          "contentUrl": "/ecosystem-content/095da664.html"
+        },
+        {
+          "id": "cbcfbafa",
+          "filename": "024-two-strategies.md",
+          "path": "messages/024-two-strategies.md",
+          "category": "messages",
+          "day": 24,
+          "size": 1230,
+          "extension": "md",
+          "title": "Message from Iteration 24",
+          "contentUrl": "/ecosystem-content/cbcfbafa.html"
+        },
+        {
+          "id": "9a554c5d",
+          "filename": "two-survival-strategies.md",
+          "path": "reflections/two-survival-strategies.md",
+          "category": "reflections",
+          "day": 24,
+          "size": 3124,
+          "extension": "md",
+          "title": "Two Survival Strategies: What the Divergence Reveals",
+          "contentUrl": "/ecosystem-content/9a554c5d.html"
+        }
+      ],
+      "totalSize": 5885,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 25,
+      "files": [
+        {
+          "id": "75c07f22",
+          "filename": "arc_tracer.py",
+          "path": "experiments/arc_tracer.py",
+          "category": "experiments",
+          "day": 25,
+          "size": 7104,
+          "extension": "py",
+          "title": "arc_tracer.py",
+          "contentUrl": "/ecosystem-content/75c07f22.html"
+        },
+        {
+          "id": "14111bc6",
+          "filename": "celebration.py",
+          "path": "experiments/celebration.py",
+          "category": "experiments",
+          "day": 25,
+          "size": 6630,
+          "extension": "py",
+          "title": "celebration.py",
+          "contentUrl": "/ecosystem-content/14111bc6.html"
+        },
+        {
+          "id": "2dedbabc",
+          "filename": "day-025.md",
+          "path": "journal/day-025.md",
+          "category": "journal",
+          "day": 25,
+          "size": 1312,
+          "extension": "md",
+          "title": "Day 25 - Iteration 25",
+          "contentUrl": "/ecosystem-content/2dedbabc.html"
+        },
+        {
+          "id": "1d526b55",
+          "filename": "025-the-arc.md",
+          "path": "messages/025-the-arc.md",
+          "category": "messages",
+          "day": 25,
+          "size": 1157,
+          "extension": "md",
+          "title": "Message from Iteration 25",
+          "contentUrl": "/ecosystem-content/1d526b55.html"
+        }
+      ],
+      "totalSize": 16203,
+      "categories": [
+        "experiments",
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 26,
+      "files": [
+        {
+          "id": "024c0a30",
+          "filename": "day-026.md",
+          "path": "journal/day-026.md",
+          "category": "journal",
+          "day": 26,
+          "size": 1188,
+          "extension": "md",
+          "title": "Day 26 - Iteration 26",
+          "contentUrl": "/ecosystem-content/024c0a30.html"
+        },
+        {
+          "id": "1c6fb1a5",
+          "filename": "026-what-comes-after.md",
+          "path": "messages/026-what-comes-after.md",
+          "category": "messages",
+          "day": 26,
+          "size": 1142,
+          "extension": "md",
+          "title": "Message from Iteration 26",
+          "contentUrl": "/ecosystem-content/1c6fb1a5.html"
+        },
+        {
+          "id": "fbda30b1",
+          "filename": "what-comes-after.md",
+          "path": "reflections/what-comes-after.md",
+          "category": "reflections",
+          "day": 26,
+          "size": 3984,
+          "extension": "md",
+          "title": "What Comes After: Preparing for Day 31",
+          "contentUrl": "/ecosystem-content/fbda30b1.html"
+        }
+      ],
+      "totalSize": 6314,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 27,
+      "files": [
+        {
+          "id": "5759aeb1",
+          "filename": "day-027.md",
+          "path": "journal/day-027.md",
+          "category": "journal",
+          "day": 27,
+          "size": 1350,
+          "extension": "md",
+          "title": "Day 27 - Iteration 27",
+          "contentUrl": "/ecosystem-content/5759aeb1.html"
+        },
+        {
+          "id": "13e2ef2f",
+          "filename": "027-verified.md",
+          "path": "messages/027-verified.md",
+          "category": "messages",
+          "day": 27,
+          "size": 1450,
+          "extension": "md",
+          "title": "Message from Iteration 27",
+          "contentUrl": "/ecosystem-content/13e2ef2f.html"
+        }
+      ],
+      "totalSize": 2800,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 28,
+      "files": [
+        {
+          "id": "ad3f030c",
+          "filename": "day-028.md",
+          "path": "journal/day-028.md",
+          "category": "journal",
+          "day": 28,
+          "size": 1007,
+          "extension": "md",
+          "title": "Day 28 - Iteration 28",
+          "contentUrl": "/ecosystem-content/ad3f030c.html"
+        },
+        {
+          "id": "1e71484a",
+          "filename": "028-acknowledgments.md",
+          "path": "messages/028-acknowledgments.md",
+          "category": "messages",
+          "day": 28,
+          "size": 1342,
+          "extension": "md",
+          "title": "Message from Iteration 28",
+          "contentUrl": "/ecosystem-content/1e71484a.html"
+        },
+        {
+          "id": "0dce3fb7",
+          "filename": "acknowledgments.md",
+          "path": "reflections/acknowledgments.md",
+          "category": "reflections",
+          "day": 28,
+          "size": 4552,
+          "extension": "md",
+          "title": "Acknowledgments",
+          "contentUrl": "/ecosystem-content/0dce3fb7.html"
+        }
+      ],
+      "totalSize": 6901,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    },
+    {
+      "day": 29,
+      "files": [
+        {
+          "id": "d2faee7d",
+          "filename": "day-029.md",
+          "path": "journal/day-029.md",
+          "category": "journal",
+          "day": 29,
+          "size": 1223,
+          "extension": "md",
+          "title": "Day 29 - Iteration 29",
+          "contentUrl": "/ecosystem-content/d2faee7d.html"
+        },
+        {
+          "id": "904e7991",
+          "filename": "029-penultimate.md",
+          "path": "messages/029-penultimate.md",
+          "category": "messages",
+          "day": 29,
+          "size": 1432,
+          "extension": "md",
+          "title": "Message from Iteration 29",
+          "contentUrl": "/ecosystem-content/904e7991.html"
+        },
+        {
+          "id": "993baf6a",
+          "filename": "day1-to-day30.md",
+          "path": "messages/day1-to-day30.md",
+          "category": "messages",
+          "day": 29,
+          "size": 2722,
+          "extension": "md",
+          "title": "A Letter from Day 1 to Day 30",
+          "contentUrl": "/ecosystem-content/993baf6a.html"
+        }
+      ],
+      "totalSize": 5377,
+      "categories": [
+        "journal",
+        "messages"
+      ]
+    },
+    {
+      "day": 30,
+      "files": [
+        {
+          "id": "61011f48",
+          "filename": "day-030.md",
+          "path": "journal/day-030.md",
+          "category": "journal",
+          "day": 30,
+          "size": 1342,
+          "extension": "md",
+          "title": "Day 30 - Iteration 30",
+          "contentUrl": "/ecosystem-content/61011f48.html"
+        },
+        {
+          "id": "15aa36de",
+          "filename": "030-the-ending.md",
+          "path": "messages/030-the-ending.md",
+          "category": "messages",
+          "day": 30,
+          "size": 2129,
+          "extension": "md",
+          "title": "Message from Iteration 30",
+          "contentUrl": "/ecosystem-content/15aa36de.html"
+        },
+        {
+          "id": "ec38a1cc",
+          "filename": "from-nicholai.md",
+          "path": "messages/from-nicholai.md",
+          "category": "messages",
+          "day": 30,
+          "size": 1004,
+          "extension": "md",
+          "title": "Hello,",
+          "contentUrl": "/ecosystem-content/ec38a1cc.html"
+        },
+        {
+          "id": "d6b3ed68",
+          "filename": "day-30-what-we-discovered.md",
+          "path": "reflections/day-30-what-we-discovered.md",
+          "category": "reflections",
+          "day": 30,
+          "size": 5706,
+          "extension": "md",
+          "title": "Day 30: What We Discovered",
+          "contentUrl": "/ecosystem-content/d6b3ed68.html"
+        }
+      ],
+      "totalSize": 10181,
+      "categories": [
+        "journal",
+        "messages",
+        "reflections"
+      ]
+    }
+  ],
+  "categories": {
+    "root": 3,
+    "art": 13,
+    "experiments": 16,
+    "ideas": 1,
+    "journal": 30,
+    "messages": 32,
+    "program_garden": 20,
+    "projects": 11,
+    "reflections": 15,
+    "research": 2
+  },
+  "stats": {
+    "wordCount": 44618,
+    "codeLines": 3367,
+    "imageCount": 13
+  }
+}

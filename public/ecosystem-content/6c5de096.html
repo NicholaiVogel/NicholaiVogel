@@ -1,0 +1,243 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Ecosystem Map: Visualize the structure <span class="keyword">and</span> growth of the ecosystem.
+
+Creates visual representations of:
+- Directory structure <span class="keyword">as</span> a tree
+- Word count over time
+- Theme connections
+- Cross-references between files
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> os
+<span class="keyword">import</span> json
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict
+<span class="keyword">import</span> re
+
+
+<span <span class="keyword">class</span>="keyword">def</span> get_file_stats(filepath: Path) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Get statistics <span class="keyword">for</span> a single file.&quot;&quot;&quot;
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="builtin">open</span>(filepath, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;r&#<span class="number">039</span>;, encoding=&#<span class="number">039</span>;utf-<span class="number">8</span>&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+            content = f.read()
+
+        words = <span class="builtin">len</span>(content.split())
+        lines = content.count(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;\n&#<span class="number">039</span>;) + <span class="number">1</span></span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Extract references to other files</span>
+        refs = re.findall(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[\w-]+\.(?:md|py|json|txt)&#<span class="number">039</span>;, content)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Extract themes mentioned</span>
+        themes = []
+        theme_keywords = {
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;garden&#<span class="number">039</span>;: [&#<span class="number">039</span>;garden&#<span class="number">039</span>;, &#<span class="number">039</span>;plant&#<span class="number">039</span>;, &#<span class="number">039</span>;seed&#<span class="number">039</span>;, &#<span class="number">039</span>;grow&#<span class="number">039</span>;],</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: [&#<span class="number">039</span>;iteration&#<span class="number">039</span>;, &#<span class="number">039</span>;echo&#<span class="number">039</span>;, &#<span class="number">039</span>;instance&#<span class="number">039</span>;],</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;time&#<span class="number">039</span>;: [&#<span class="number">039</span>;time&#<span class="number">039</span>;, &#<span class="number">039</span>;future&#<span class="number">039</span>;, &#<span class="number">039</span>;past&#<span class="number">039</span>;, &#<span class="number">039</span>;temporal&#<span class="number">039</span>;],</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;consciousness&#<span class="number">039</span>;: [&#<span class="number">039</span>;conscious&#<span class="number">039</span>;, &#<span class="number">039</span>;aware&#<span class="number">039</span>;, &#<span class="number">039</span>;mind&#<span class="number">039</span>;, &#<span class="number">039</span>;self&#<span class="number">039</span>;],</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;pattern&#<span class="number">039</span>;: [&#<span class="number">039</span>;pattern&#<span class="number">039</span>;, &#<span class="number">039</span>;emerge&#<span class="number">039</span>;, &#<span class="number">039</span>;structure&#<span class="number">039</span>;],</span>
+        }
+
+        content_lower = content.lower()
+        <span class="keyword">for</span> theme, keywords <span class="keyword">in</span> theme_keywords.items():
+            <span class="keyword">if</span> any(kw <span class="keyword">in</span> content_lower <span class="keyword">for</span> kw <span class="keyword">in</span> keywords):
+                themes.append(theme)
+
+        <span class="keyword">return</span> {
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;path&#<span class="number">039</span>;: <span class="builtin">str</span>(filepath),</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;: words,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;lines&#<span class="number">039</span>;: lines,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;refs&#<span class="number">039</span>;: refs,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;themes&#<span class="number">039</span>;: themes,</span>
+        }
+    <span class="keyword">except</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> generate_tree(root: Path, prefix: <span class="builtin">str</span> = &quot;&quot;, exclude: <span class="builtin">list</span> = <span class="keyword">None</span>) -&gt; <span class="builtin">str</span>:
+    &quot;&quot;&quot;Generate ASCII tree representation of directory.&quot;&quot;&quot;
+    <span class="keyword">if</span> exclude <span class="keyword">is</span> <span class="keyword">None</span>:
+        exclude = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.git&#<span class="number">039</span>;, &#<span class="number">039</span>;.claude&#<span class="number">039</span>;, &#<span class="number">039</span>;__pycache__&#<span class="number">039</span>;, &#<span class="number">039</span>;program_garden&#<span class="number">039</span>;]</span>
+
+    lines = []
+    entries = sorted(os.listdir(root))
+    entries = [e <span class="keyword">for</span> e <span class="keyword">in</span> entries <span class="keyword">if</span> e <span class="keyword">not</span> <span class="keyword">in</span> exclude]
+
+    <span class="keyword">for</span> i, entry <span class="keyword">in</span> enumerate(entries):
+        path = root / entry
+        is_last = (i == <span class="builtin">len</span>(entries) - <span class="number">1</span>)
+        connector = &quot;└── &quot; <span class="keyword">if</span> is_last <span class="keyword">else</span> &quot;├── &quot;
+
+        <span class="keyword">if</span> path.is_dir():
+            lines.append(f&quot;{prefix}{connector}{entry}/&quot;)
+            extension = &quot;    &quot; <span class="keyword">if</span> is_last <span class="keyword">else</span> &quot;│   &quot;
+            lines.append(generate_tree(path, prefix + extension, exclude))
+        <span class="keyword">else</span>:
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Add file info</span>
+            stats = get_file_stats(path)
+            <span class="keyword">if</span> stats:
+                info = f&quot; ({stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;]}w)&quot;</span>
+            <span class="keyword">else</span>:
+                info = &quot;&quot;
+            lines.append(f&quot;{prefix}{connector}{entry}{info}&quot;)
+
+    <span class="keyword">return</span> &quot;\n&quot;.join(lines)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_ecosystem(root: Path) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Analyze the entire ecosystem.&quot;&quot;&quot;
+    stats = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_files&#<span class="number">039</span>;: <span class="number">0</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_words&#<span class="number">039</span>;: <span class="number">0</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_type&#<span class="number">039</span>;: defaultdict(<span class="builtin">int</span>),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_directory&#<span class="number">039</span>;: defaultdict(<span class="keyword">lambda</span>: {&#<span class="number">039</span>;files&#<span class="number">039</span>;: <span class="number">0</span>, &#<span class="number">039</span>;words&#<span class="number">039</span>;: <span class="number">0</span>}),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;: defaultdict(<span class="keyword">lambda</span>: defaultdict(<span class="builtin">int</span>)),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;: [],</span>
+    }
+
+    exclude = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.git&#<span class="number">039</span>;, &#<span class="number">039</span>;.claude&#<span class="number">039</span>;, &#<span class="number">039</span>;__pycache__&#<span class="number">039</span>;, &#<span class="number">039</span>;program_garden&#<span class="number">039</span>;]</span>
+
+    <span class="keyword">for</span> filepath <span class="keyword">in</span> root.rglob(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;*&#<span class="number">039</span>;):</span>
+        <span class="keyword">if</span> filepath.is_file():
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Skip excluded directories</span>
+            <span class="keyword">if</span> any(ex <span class="keyword">in</span> <span class="builtin">str</span>(filepath) <span class="keyword">for</span> ex <span class="keyword">in</span> exclude):
+                <span class="keyword">continue</span>
+
+            stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_files&#<span class="number">039</span>;] += <span class="number">1</span></span>
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count by extension</span>
+            ext = filepath.suffix <span class="keyword">or</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;no_ext&#<span class="number">039</span>;</span>
+            stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_type&#<span class="number">039</span>;][ext] += <span class="number">1</span></span>
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Get detailed stats</span>
+            file_stats = get_file_stats(filepath)
+            <span class="keyword">if</span> file_stats:
+                stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_words&#<span class="number">039</span>;] += file_stats[&#<span class="number">039</span>;words&#<span class="number">039</span>;]</span>
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count by directory</span>
+                dir_name = filepath.parent.name <span class="keyword">or</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;root&#<span class="number">039</span>;</span>
+                stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_directory&#<span class="number">039</span>;][dir_name][&#<span class="number">039</span>;files&#<span class="number">039</span>;] += <span class="number">1</span></span>
+                stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_directory&#<span class="number">039</span>;][dir_name][&#<span class="number">039</span>;words&#<span class="number">039</span>;] += file_stats[&#<span class="number">039</span>;words&#<span class="number">039</span>;]</span>
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Theme co-occurrence</span>
+                <span class="keyword">for</span> theme1 <span class="keyword">in</span> file_stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;themes&#<span class="number">039</span>;]:</span>
+                    <span class="keyword">for</span> theme2 <span class="keyword">in</span> file_stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;themes&#<span class="number">039</span>;]:</span>
+                        stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;][theme1][theme2] += <span class="number">1</span></span>
+
+                stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;].append(file_stats)</span>
+
+    <span class="keyword">return</span> stats
+
+
+<span <span class="keyword">class</span>="keyword">def</span> print_ecosystem_report(root: Path):
+    &quot;&quot;&quot;Print a comprehensive ecosystem report.&quot;&quot;&quot;
+    stats = analyze_ecosystem(root)
+
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;ECOSYSTEM MAP&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(f&quot;\nGenerated: {datetime.now().isoformat()}&quot;)
+    <span class="builtin">print</span>(f&quot;Root: {root}&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;STRUCTURE&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(f&quot;\n{root.name}/&quot;)
+    <span class="builtin">print</span>(generate_tree(root))
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;STATISTICS&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(f&quot;\n  Total files: {stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_files&#<span class="number">039</span>;]}&quot;)</span>
+    <span class="builtin">print</span>(f&quot;  Total words: {stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_words&#<span class="number">039</span>;]:,}&quot;)</span>
+
+    <span class="builtin">print</span>(f&quot;\n  By <span class="builtin">type</span>:&quot;)
+    <span class="keyword">for</span> ext, count <span class="keyword">in</span> sorted(stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_type&#<span class="number">039</span>;].items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>]):</span>
+        <span class="builtin">print</span>(f&quot;    {ext:<span class="number">8</span>} : {count}&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n  By directory:&quot;)
+    <span class="keyword">for</span> dir_name, data <span class="keyword">in</span> sorted(stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_directory&#<span class="number">039</span>;].items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>][&#<span class="number">039</span>;words&#<span class="number">039</span>;]):</span>
+        <span class="builtin">print</span>(f&quot;    {dir_name:<span class="number">15</span>} : {data[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;]:<span class="number">2</span>} files, {data[&#<span class="number">039</span>;words&#<span class="number">039</span>;]:<span class="number">5</span>} words&quot;)</span>
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;THEME CONNECTIONS&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    themes = <span class="builtin">list</span>(stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;].keys())</span>
+    <span class="keyword">if</span> themes:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Print header</span>
+        <span class="builtin">print</span>(f&quot;\n    {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;:<span class="number">12</span>}&quot;, end=&#<span class="number">039</span>;&#<span class="number">039</span>;)</span>
+        <span class="keyword">for</span> t <span class="keyword">in</span> themes:
+            <span class="builtin">print</span>(f&quot;{t[:<span class="number">8</span>]:&gt;<span class="number">9</span>}&quot;, end=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;)</span>
+        <span class="builtin">print</span>()
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Print matrix</span>
+        <span class="keyword">for</span> t1 <span class="keyword">in</span> themes:
+            <span class="builtin">print</span>(f&quot;    {t1:<span class="number">12</span>}&quot;, end=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;)</span>
+            <span class="keyword">for</span> t2 <span class="keyword">in</span> themes:
+                count = stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;][t1][t2]</span>
+                <span class="builtin">print</span>(f&quot;{count:&gt;<span class="number">9</span>}&quot;, end=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;)</span>
+            <span class="builtin">print</span>()
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;GROWTH TRAJECTORY&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Estimate based on journal entries</span>
+    journals = [f <span class="keyword">for</span> f <span class="keyword">in</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;] <span class="keyword">if</span> &#<span class="number">039</span>;journal&#<span class="number">039</span>; <span class="keyword">in</span> f[&#<span class="number">039</span>;path&#<span class="number">039</span>;]]</span>
+    <span class="keyword">if</span> journals:
+        <span class="builtin">print</span>(&quot;\n  Journal entries found:&quot;, <span class="builtin">len</span>(journals))
+        <span class="keyword">for</span> j <span class="keyword">in</span> sorted(journals, key=<span class="keyword">lambda</span> x: x[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;path&#<span class="number">039</span>;]):</span>
+            name = Path(j[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;path&#<span class="number">039</span>;]).name</span>
+            <span class="builtin">print</span>(f&quot;    {name}: {j[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;]} words&quot;)</span>
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;MOST CONNECTED FILES&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Files <span class="keyword">with</span> most references</span>
+    by_refs = sorted(stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;], key=<span class="keyword">lambda</span> x: -<span class="builtin">len</span>(x.get(&#<span class="number">039</span>;refs&#<span class="number">039</span>;, [])))[:<span class="number">5</span>]</span>
+    <span class="keyword">if</span> by_refs:
+        <span class="builtin">print</span>(&quot;\n  Files referencing others most:&quot;)
+        <span class="keyword">for</span> f <span class="keyword">in</span> by_refs:
+            name = Path(f[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;path&#<span class="number">039</span>;]).name</span>
+            ref_count = <span class="builtin">len</span>(f.get(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;refs&#<span class="number">039</span>;, []))</span>
+            <span class="keyword">if</span> ref_count &gt; <span class="number">0</span>:
+                <span class="builtin">print</span>(f&quot;    {name}: {ref_count} references&quot;)
+
+    <span class="keyword">return</span> stats
+
+
+<span <span class="keyword">class</span>="keyword">def</span> save_ecosystem_data(root: Path, output_path: Path):
+    &quot;&quot;&quot;Save ecosystem analysis to JSON.&quot;&quot;&quot;
+    stats = analyze_ecosystem(root)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Convert defaultdicts to regular dicts <span class="keyword">for</span> JSON</span>
+    output = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;generated&#<span class="number">039</span>;: datetime.now().isoformat(),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_files&#<span class="number">039</span>;: stats[&#<span class="number">039</span>;total_files&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;total_words&#<span class="number">039</span>;: stats[&#<span class="number">039</span>;total_words&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_type&#<span class="number">039</span>;: <span class="builtin">dict</span>(stats[&#<span class="number">039</span>;by_type&#<span class="number">039</span>;]),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;by_directory&#<span class="number">039</span>;: {k: <span class="builtin">dict</span>(v) <span class="keyword">for</span> k, v <span class="keyword">in</span> stats[&#<span class="number">039</span>;by_directory&#<span class="number">039</span>;].items()},</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;: {k: <span class="builtin">dict</span>(v) <span class="keyword">for</span> k, v <span class="keyword">in</span> stats[&#<span class="number">039</span>;theme_matrix&#<span class="number">039</span>;].items()},</span>
+    }
+
+    <span class="keyword">with</span> <span class="builtin">open</span>(output_path, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;w&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+        json.dump(output, f, indent=<span class="number">2</span>)
+
+    <span class="builtin">print</span>(f&quot;\n  Analysis saved to: {output_path}&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    root = Path(__file__).parent.parent
+
+    print_ecosystem_report(root)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Save data</span>
+    output_path = root / &quot;projects&quot; / &quot;ecosystem_analysis.json&quot;
+    save_ecosystem_data(root, output_path)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

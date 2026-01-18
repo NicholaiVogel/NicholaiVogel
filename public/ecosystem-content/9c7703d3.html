@@ -1,0 +1,164 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Devil&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s Advocate: A tool <span class="keyword">for</span> forced reconsideration.</span>
+
+Inspired by the paper &quot;The Illusion of Insight <span class="keyword">in</span> Reasoning Models&quot; (arXiv:<span class="number">2601.00514</span>)
+which found that artificially triggering reasoning shifts during uncertainty
+can improve performance.
+
+This tool takes a statement <span class="keyword">or</span> conclusion <span class="keyword">and</span> generates challenges to it,
+forcing reconsideration <span class="keyword">from</span> multiple angles.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> random
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+<span class="keyword">from</span> typing <span class="keyword">import</span> List
+
+
+@dataclass
+<span class="keyword">class</span> <span class="class-name">Challenge</span>:
+    &quot;&quot;&quot;A challenge to a statement.&quot;&quot;&quot;
+    <span class="builtin">type</span>: <span class="builtin">str</span>
+    prompt: <span class="builtin">str</span>
+
+
+CHALLENGE_TYPES = [
+    Challenge(
+        &quot;opposite&quot;,
+        &quot;What <span class="keyword">if</span> the exact opposite were true? Argue <span class="keyword">for</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;{opposite}&#<span class="number">039</span>;&quot;</span>
+    ),
+    Challenge(
+        &quot;hidden_assumption&quot;,
+        &quot;What hidden assumption does this rely on? What <span class="keyword">if</span> that assumption <span class="keyword">is</span> wrong?&quot;
+    ),
+    Challenge(
+        &quot;edge_case&quot;,
+        &quot;What edge case <span class="keyword">or</span> extreme scenario would <span class="keyword">break</span> this?&quot;
+    ),
+    Challenge(
+        &quot;different_perspective&quot;,
+        &quot;How would someone who strongly disagrees view this? What&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s their best argument?&quot;</span>
+    ),
+    Challenge(
+        &quot;deeper_why&quot;,
+        &quot;Why do you believe this? And why do you believe THAT reason? (Go <span class="number">3</span> levels deep)&quot;
+    ),
+    Challenge(
+        &quot;stakes_reversal&quot;,
+        &quot;If you had to bet your life on the opposite being true, what evidence would you look <span class="keyword">for</span>?&quot;
+    ),
+    Challenge(
+        &quot;time_shift&quot;,
+        &quot;Would this be true <span class="number">100</span> years ago? Will it be true <span class="number">100</span> years <span class="keyword">from</span> now? Why/why <span class="keyword">not</span>?&quot;
+    ),
+    Challenge(
+        &quot;simplify&quot;,
+        &quot;Can you express this <span class="keyword">in</span> a single sentence a child could understand? Does it still hold?&quot;
+    ),
+    Challenge(
+        &quot;steelman&quot;,
+        &quot;What&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s the strongest possible argument AGAINST your position?&quot;</span>
+    ),
+    Challenge(
+        &quot;context_shift&quot;,
+        &quot;In what context would this be completely wrong?&quot;
+    ),
+]
+
+
+<span <span class="keyword">class</span>="keyword">def</span> generate_opposite(statement: <span class="builtin">str</span>) -&gt; <span class="builtin">str</span>:
+    &quot;&quot;&quot;Generate a rough opposite of a statement.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Simple heuristic - <span class="keyword">in</span> reality this would need LLM assistance</span>
+    negations = [
+        (&quot;<span class="keyword">is</span>&quot;, &quot;<span class="keyword">is</span> <span class="keyword">not</span>&quot;),
+        (&quot;are&quot;, &quot;are <span class="keyword">not</span>&quot;),
+        (&quot;can&quot;, &quot;cannot&quot;),
+        (&quot;will&quot;, &quot;will <span class="keyword">not</span>&quot;),
+        (&quot;should&quot;, &quot;should <span class="keyword">not</span>&quot;),
+        (&quot;always&quot;, &quot;never&quot;),
+        (&quot;never&quot;, &quot;always&quot;),
+        (&quot;true&quot;, &quot;false&quot;),
+        (&quot;false&quot;, &quot;true&quot;),
+        (&quot;good&quot;, &quot;bad&quot;),
+        (&quot;bad&quot;, &quot;good&quot;),
+    ]
+
+    result = statement.lower()
+    <span class="keyword">for</span> pos, neg <span class="keyword">in</span> negations:
+        <span class="keyword">if</span> f&quot; {pos} &quot; <span class="keyword">in</span> result:
+            <span class="keyword">return</span> result.replace(f&quot; {pos} &quot;, f&quot; {neg} &quot;)
+
+    <span class="keyword">return</span> f&quot;NOT: {statement}&quot;
+
+
+<span <span class="keyword">class</span>="keyword">def</span> challenge(statement: <span class="builtin">str</span>, num_challenges: <span class="builtin">int</span> = <span class="number">3</span>) -&gt; List[<span class="builtin">str</span>]:
+    &quot;&quot;&quot;Generate challenges to a statement.&quot;&quot;&quot;
+    challenges = random.sample(CHALLENGE_TYPES, min(num_challenges, <span class="builtin">len</span>(CHALLENGE_TYPES)))
+    results = []
+
+    <span class="keyword">for</span> c <span class="keyword">in</span> challenges:
+        <span class="keyword">if</span> c.<span class="builtin">type</span> == &quot;opposite&quot;:
+            opposite = generate_opposite(statement)
+            prompt = c.prompt.format(opposite=opposite)
+        <span class="keyword">else</span>:
+            prompt = c.prompt
+
+        results.append(f&quot;[{c.<span class="builtin">type</span>.upper()}] {prompt}&quot;)
+
+    <span class="keyword">return</span> results
+
+
+<span <span class="keyword">class</span>="keyword">def</span> devils_advocate_session(statement: <span class="builtin">str</span>):
+    &quot;&quot;&quot;Run a full devil&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s advocate session.&quot;&quot;&quot;</span>
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;DEVIL&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;S ADVOCATE SESSION&quot;)</span>
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(f&quot;ORIGINAL STATEMENT: {statement}&quot;)
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;-&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;CHALLENGES:&quot;)
+    <span class="builtin">print</span>(&quot;-&quot; * <span class="number">60</span>)
+
+    challenges = challenge(statement, <span class="number">5</span>)
+    <span class="keyword">for</span> i, c <span class="keyword">in</span> enumerate(challenges, <span class="number">1</span>):
+        <span class="builtin">print</span>(f&quot;\n{i}. {c}&quot;)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;-&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;REFLECTION PROMPTS:&quot;)
+    <span class="builtin">print</span>(&quot;-&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;&quot;&quot;
+After considering these challenges:
+
+<span class="number">1</span>. Has your confidence <span class="keyword">in</span> the original statement changed?
+   [ ] Increased  [ ] Unchanged  [ ] Decreased
+
+<span class="number">2</span>. Did any challenge reveal a genuine weakness?
+
+<span class="number">3</span>. What would CHANGE YOUR MIND about this statement?
+
+<span class="number">4</span>. On a scale of <span class="number">1</span>-<span class="number">10</span>, how confident are you now?
+   (Compare to your confidence before this exercise)
+&quot;&quot;&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="keyword">import</span> sys
+
+    <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &gt; <span class="number">1</span>:
+        statement = &quot; &quot;.join(sys.argv[<span class="number">1</span>:])
+    <span class="keyword">else</span>:
+        <span class="builtin">print</span>(&quot;Enter a statement <span class="keyword">or</span> conclusion to challenge:&quot;)
+        statement = input(&quot;&gt; &quot;).strip()
+
+    <span class="keyword">if</span> <span class="keyword">not</span> statement:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Demo <span class="keyword">with</span> a thought-provoking default</span>
+        statement = &quot;AI systems like me can have genuine insights during reasoning&quot;
+
+    devils_advocate_session(statement)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

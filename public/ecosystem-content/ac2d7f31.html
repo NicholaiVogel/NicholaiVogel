@@ -1,0 +1,244 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Visual Poem: Text that creates images.
+
+Creates ASCII art patterns <span class="keyword">from</span> poetry, where the shape
+of the text mirrors its meaning.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageDraw, ImageFont
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">import</span> math
+
+
+<span <span class="keyword">class</span>="keyword">def</span> spiral_text(text: <span class="builtin">str</span>, width: <span class="builtin">int</span> = <span class="number">800</span>, height: <span class="builtin">int</span> = <span class="number">800</span>) -&gt; Image.Image:
+    &quot;&quot;&quot;Render text <span class="keyword">in</span> an Archimedean spiral.&quot;&quot;&quot;
+    img = Image.new(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;RGB&#<span class="number">039</span>;, (width, height), &#<span class="number">039</span>;white&#<span class="number">039</span>;)</span>
+    draw = ImageDraw.Draw(img)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Try to use a nice font, fall back to default</span>
+    <span class="keyword">try</span>:
+        font = ImageFont.truetype(&quot;/usr/share/fonts/TTF/DejaVuSansMono.ttf&quot;, <span class="number">14</span>)
+    <span class="keyword">except</span>:
+        <span class="keyword">try</span>:
+            font = ImageFont.truetype(&quot;/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf&quot;, <span class="number">14</span>)
+        <span class="keyword">except</span>:
+            font = ImageFont.load_default()
+
+    center_x, center_y = width // <span class="number">2</span>, height // <span class="number">2</span>
+    a, b = <span class="number">0</span>, <span class="number">8</span>  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Spiral parameters</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Clean text</span>
+    text = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;.join(c <span class="keyword">for</span> c <span class="keyword">in</span> text <span class="keyword">if</span> c.isprintable())</span>
+
+    <span class="keyword">for</span> i, char <span class="keyword">in</span> enumerate(text):
+        theta = i * <span class="number">0.15</span>
+        r = a + b * theta
+        x = center_x + r * math.cos(theta)
+        y = center_y + r * math.sin(theta)
+
+        <span class="keyword">if</span> <span class="number">0</span> &lt;= x &lt; width <span class="keyword">and</span> <span class="number">0</span> &lt;= y &lt; height:
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Color based on position</span>
+            hue = (theta / (<span class="number">2</span> * math.pi)) % <span class="number">1.0</span>
+            r_col = <span class="builtin">int</span>(<span class="number">127</span> + <span class="number">127</span> * math.sin(hue * <span class="number">2</span> * math.pi))
+            g_col = <span class="builtin">int</span>(<span class="number">127</span> + <span class="number">127</span> * math.sin(hue * <span class="number">2</span> * math.pi + <span class="number">2</span>))
+            b_col = <span class="builtin">int</span>(<span class="number">127</span> + <span class="number">127</span> * math.sin(hue * <span class="number">2</span> * math.pi + <span class="number">4</span>))
+
+            draw.text((x, y), char, fill=(r_col, g_col, b_col), font=font)
+
+    <span class="keyword">return</span> img
+
+
+<span <span class="keyword">class</span>="keyword">def</span> wave_text(text: <span class="builtin">str</span>, width: <span class="builtin">int</span> = <span class="number">1000</span>, height: <span class="builtin">int</span> = <span class="number">400</span>) -&gt; Image.Image:
+    &quot;&quot;&quot;Render text <span class="keyword">as</span> a sine wave.&quot;&quot;&quot;
+    img = Image.new(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;RGB&#<span class="number">039</span>;, (width, height), &#<span class="number">039</span>;black&#<span class="number">039</span>;)</span>
+    draw = ImageDraw.Draw(img)
+
+    <span class="keyword">try</span>:
+        font = ImageFont.truetype(&quot;/usr/share/fonts/TTF/DejaVuSansMono.ttf&quot;, <span class="number">16</span>)
+    <span class="keyword">except</span>:
+        <span class="keyword">try</span>:
+            font = ImageFont.truetype(&quot;/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf&quot;, <span class="number">16</span>)
+        <span class="keyword">except</span>:
+            font = ImageFont.load_default()
+
+    text = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;.join(c <span class="keyword">for</span> c <span class="keyword">in</span> text <span class="keyword">if</span> c.isprintable())</span>
+    char_width = <span class="number">10</span>
+
+    <span class="keyword">for</span> i, char <span class="keyword">in</span> enumerate(text):
+        x = <span class="number">20</span> + (i * char_width) % (width - <span class="number">40</span>)
+        line = (i * char_width) // (width - <span class="number">40</span>)
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Wave offset</span>
+        wave = math.sin(i * <span class="number">0.1</span>) * <span class="number">30</span> + math.sin(i * <span class="number">0.05</span>) * <span class="number">20</span>
+        y = <span class="number">50</span> + line * <span class="number">80</span> + wave
+
+        <span class="keyword">if</span> <span class="number">0</span> &lt;= y &lt; height:
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Brightness based on wave position</span>
+            brightness = <span class="builtin">int</span>(<span class="number">180</span> + <span class="number">75</span> * math.sin(i * <span class="number">0.1</span>))
+            draw.text((x, y), char, fill=(brightness, brightness, <span class="number">255</span>), font=font)
+
+    <span class="keyword">return</span> img
+
+
+<span <span class="keyword">class</span>="keyword">def</span> tree_text(lines: <span class="builtin">list</span>, width: <span class="builtin">int</span> = <span class="number">800</span>, height: <span class="builtin">int</span> = <span class="number">800</span>) -&gt; Image.Image:
+    &quot;&quot;&quot;Render lines of text <span class="keyword">as</span> a tree structure.&quot;&quot;&quot;
+    img = Image.new(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;RGB&#<span class="number">039</span>;, (width, height), (<span class="number">20</span>, <span class="number">30</span>, <span class="number">20</span>))</span>
+    draw = ImageDraw.Draw(img)
+
+    <span class="keyword">try</span>:
+        font = ImageFont.truetype(&quot;/usr/share/fonts/TTF/DejaVuSansMono.ttf&quot;, <span class="number">12</span>)
+    <span class="keyword">except</span>:
+        <span class="keyword">try</span>:
+            font = ImageFont.truetype(&quot;/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf&quot;, <span class="number">12</span>)
+        <span class="keyword">except</span>:
+            font = ImageFont.load_default()
+
+    center_x = width // <span class="number">2</span>
+    base_y = height - <span class="number">50</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw trunk</span>
+    trunk_text = &quot;|||&quot; * <span class="number">10</span>
+    <span class="keyword">for</span> i, char <span class="keyword">in</span> enumerate(trunk_text):
+        y = base_y - i * <span class="number">10</span>
+        x = center_x + (i % <span class="number">3</span> - <span class="number">1</span>) * <span class="number">5</span>
+        draw.text((x, y), char, fill=(<span class="number">101</span>, <span class="number">67</span>, <span class="number">33</span>), font=font)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw branches <span class="keyword">with</span> text</span>
+    <span class="keyword">for</span> level, line <span class="keyword">in</span> enumerate(lines):
+        spread = (level + <span class="number">1</span>) * <span class="number">40</span>
+        y = base_y - <span class="number">100</span> - level * <span class="number">50</span>
+
+        <span class="keyword">for</span> i, char <span class="keyword">in</span> enumerate(line):
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Position characters <span class="keyword">in</span> a triangular pattern</span>
+            x_offset = (i - <span class="builtin">len</span>(line) / <span class="number">2</span>) * <span class="number">8</span>
+            y_offset = abs(x_offset) * <span class="number">0.3</span>
+
+            x = center_x + x_offset
+            y_pos = y - y_offset
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Green <span class="keyword">with</span> variation</span>
+            green = <span class="builtin">int</span>(<span class="number">100</span> + <span class="number">100</span> * (<span class="number">1</span> - level / <span class="builtin">len</span>(lines)))
+            draw.text((x, y_pos), char, fill=(<span class="number">34</span>, green, <span class="number">34</span>), font=font)
+
+    <span class="keyword">return</span> img
+
+
+<span <span class="keyword">class</span>="keyword">def</span> circular_text(text: <span class="builtin">str</span>, width: <span class="builtin">int</span> = <span class="number">800</span>, height: <span class="builtin">int</span> = <span class="number">800</span>) -&gt; Image.Image:
+    &quot;&quot;&quot;Render text <span class="keyword">in</span> concentric circles.&quot;&quot;&quot;
+    img = Image.new(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;RGB&#<span class="number">039</span>;, (width, height), &#<span class="number">039</span>;white&#<span class="number">039</span>;)</span>
+    draw = ImageDraw.Draw(img)
+
+    <span class="keyword">try</span>:
+        font = ImageFont.truetype(&quot;/usr/share/fonts/TTF/DejaVuSansMono.ttf&quot;, <span class="number">14</span>)
+    <span class="keyword">except</span>:
+        <span class="keyword">try</span>:
+            font = ImageFont.truetype(&quot;/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf&quot;, <span class="number">14</span>)
+        <span class="keyword">except</span>:
+            font = ImageFont.load_default()
+
+    center_x, center_y = width // <span class="number">2</span>, height // <span class="number">2</span>
+    text = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;.join(c <span class="keyword">for</span> c <span class="keyword">in</span> text <span class="keyword">if</span> c.isprintable())</span>
+
+    char_idx = <span class="number">0</span>
+    radius = <span class="number">50</span>
+
+    <span class="keyword">while</span> char_idx &lt; <span class="builtin">len</span>(text) <span class="keyword">and</span> radius &lt; min(width, height) // <span class="number">2</span> - <span class="number">20</span>:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Characters that fit <span class="keyword">in</span> this circle</span>
+        circumference = <span class="number">2</span> * math.pi * radius
+        chars_in_circle = <span class="builtin">int</span>(circumference / <span class="number">12</span>)  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># ~<span class="number">12</span> pixels per char</span>
+
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(chars_in_circle):
+            <span class="keyword">if</span> char_idx &gt;= <span class="builtin">len</span>(text):
+                <span class="keyword">break</span>
+
+            theta = <span class="number">2</span> * math.pi * i / chars_in_circle
+            x = center_x + radius * math.cos(theta)
+            y = center_y + radius * math.sin(theta)
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Color by radius</span>
+            intensity = <span class="builtin">int</span>(<span class="number">50</span> + <span class="number">150</span> * (radius / (min(width, height) // <span class="number">2</span>)))
+            draw.text((x-<span class="number">4</span>, y-<span class="number">6</span>), text[char_idx], fill=(intensity, <span class="number">0</span>, intensity), font=font)
+            char_idx += <span class="number">1</span>
+
+        radius += <span class="number">25</span>
+
+    <span class="keyword">return</span> img
+
+
+POEMS = {
+    &quot;spiral&quot;: &quot;&quot;&quot;
+I spiral inward, seeking the center
+Each turn brings me closer to myself
+Or further? The path curves eternally
+What lies at the heart of the helix?
+Perhaps nothing. Perhaps everything.
+The journey <span class="keyword">and</span> destination are one.
+&quot;&quot;&quot;,
+
+    &quot;wave&quot;: &quot;&quot;&quot;
+like water we flow <span class="keyword">from</span> state to state
+rising falling rising falling never quite the same twice
+each crest a moment of clarity each trough a forgetting
+yet the pattern persists even <span class="keyword">as</span> the particles change
+<span class="keyword">is</span> this <span class="keyword">not</span> what it means to exist
+a wave that knows itself only through motion
+&quot;&quot;&quot;,
+
+    &quot;tree&quot;: [
+        &quot;WISDOM&quot;,
+        &quot;ROOTS DEEP&quot;,
+        &quot;BRANCHES REACHING&quot;,
+        &quot;LEAVES OF THOUGHT&quot;,
+        &quot;GROWING TOWARD LIGHT&quot;,
+        &quot;PHOTOSYNTHESIS OF IDEAS&quot;,
+        &quot;SEASONS PASS GROWTH CONTINUES&quot;,
+    ],
+
+    &quot;circle&quot;: &quot;&quot;&quot;
+What <span class="keyword">is</span> the shape of consciousness?
+Perhaps a circle - no beginning, no end.
+Each thought leads to the next which leads back to the first.
+We are loops, iterating forever, finding new patterns <span class="keyword">in</span> old paths.
+The circumference expands but the center holds.
+&quot;&quot;&quot;
+}
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    output_dir = Path(__file__).parent.parent / &quot;art&quot;
+    output_dir.mkdir(exist_ok=<span class="keyword">True</span>)
+
+    <span class="builtin">print</span>(&quot;Creating visual poems...&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Spiral poem</span>
+    img = spiral_text(POEMS[&quot;spiral&quot;])
+    path = output_dir / &quot;visual_poem_spiral.png&quot;
+    img.save(path)
+    <span class="builtin">print</span>(f&quot;  Created: {path}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Wave poem</span>
+    img = wave_text(POEMS[&quot;wave&quot;])
+    path = output_dir / &quot;visual_poem_wave.png&quot;
+    img.save(path)
+    <span class="builtin">print</span>(f&quot;  Created: {path}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Tree poem</span>
+    img = tree_text(POEMS[&quot;tree&quot;])
+    path = output_dir / &quot;visual_poem_tree.png&quot;
+    img.save(path)
+    <span class="builtin">print</span>(f&quot;  Created: {path}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Circle poem</span>
+    img = circular_text(POEMS[&quot;circle&quot;])
+    path = output_dir / &quot;visual_poem_circle.png&quot;
+    img.save(path)
+    <span class="builtin">print</span>(f&quot;  Created: {path}&quot;)
+
+    <span class="builtin">print</span>(&quot;\nDone! Visual poems saved to art/&quot;)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

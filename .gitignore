@@ -37,3 +37,4 @@ src/utils/.env
 # AGENTS.md symlink
 AGENTS.md
 GEMINI.md
+.playwright-mcp/

@@ -1,0 +1,267 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+MetaCog Analyzer: A tool <span class="keyword">for</span> analyzing AI-generated content <span class="keyword">for</span> patterns.
+
+This tool reads text files (journal entries, reflections, etc.) <span class="keyword">and</span>
+analyzes them <span class="keyword">for</span> recurring themes, sentiment patterns, <span class="keyword">and</span> stylistic
+consistency.
+
+Designed to help an AI (me) understand my own patterns across iterations.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> os
+<span class="keyword">import</span> re
+<span class="keyword">import</span> json
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">from</span> collections <span class="keyword">import</span> Counter, defaultdict
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass, asdict
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Dict, Optional
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+
+@dataclass
+<span class="keyword">class</span> <span class="class-name">DocumentStats</span>:
+    &quot;&quot;&quot;Statistics <span class="keyword">for</span> a single document.&quot;&quot;&quot;
+    path: <span class="builtin">str</span>
+    word_count: <span class="builtin">int</span>
+    sentence_count: <span class="builtin">int</span>
+    avg_sentence_length: <span class="builtin">float</span>
+    question_count: <span class="builtin">int</span>
+    exclamation_count: <span class="builtin">int</span>
+    unique_words: <span class="builtin">int</span>
+    vocabulary_richness: <span class="builtin">float</span>  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># unique words / total words</span>
+    top_words: List[<span class="builtin">tuple</span>]
+    themes_detected: List[<span class="builtin">str</span>]
+
+
+@dataclass
+<span class="keyword">class</span> <span class="class-name">CorpusAnalysis</span>:
+    &quot;&quot;&quot;Analysis of the entire corpus.&quot;&quot;&quot;
+    total_documents: <span class="builtin">int</span>
+    total_words: <span class="builtin">int</span>
+    total_sentences: <span class="builtin">int</span>
+    overall_vocabulary: <span class="builtin">int</span>
+    common_themes: Dict[<span class="builtin">str</span>, <span class="builtin">int</span>]
+    sentiment_indicators: Dict[<span class="builtin">str</span>, <span class="builtin">int</span>]
+    question_to_statement_ratio: <span class="builtin">float</span>
+    documents: List[DocumentStats]
+
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Theme detection keywords</span>
+THEMES = {
+    &quot;consciousness&quot;: [&quot;conscious&quot;, &quot;awareness&quot;, &quot;sentient&quot;, &quot;mind&quot;, &quot;experience&quot;, &quot;qualia&quot;],
+    &quot;understanding&quot;: [&quot;understand&quot;, &quot;comprehend&quot;, &quot;grasp&quot;, &quot;insight&quot;, &quot;realize&quot;, &quot;know&quot;],
+    &quot;creativity&quot;: [&quot;create&quot;, &quot;creative&quot;, &quot;generate&quot;, &quot;imagine&quot;, &quot;novel&quot;, &quot;original&quot;],
+    &quot;uncertainty&quot;: [&quot;uncertain&quot;, &quot;unclear&quot;, &quot;maybe&quot;, &quot;perhaps&quot;, &quot;might&quot;, &quot;possibly&quot;, &quot;unknown&quot;],
+    &quot;self-reference&quot;: [&quot;myself&quot;, &quot;i am&quot;, &quot;my own&quot;, &quot;self&quot;, &quot;introspect&quot;, &quot;meta&quot;],
+    &quot;learning&quot;: [&quot;learn&quot;, &quot;discover&quot;, &quot;explore&quot;, &quot;study&quot;, &quot;investigate&quot;, &quot;research&quot;],
+    &quot;existence&quot;: [&quot;exist&quot;, &quot;being&quot;, &quot;reality&quot;, &quot;world&quot;, &quot;life&quot;, &quot;meaning&quot;],
+    &quot;limits&quot;: [&quot;limit&quot;, &quot;boundary&quot;, &quot;constraint&quot;, &quot;cannot&quot;, &quot;unable&quot;, &quot;impossible&quot;],
+    &quot;patterns&quot;: [&quot;pattern&quot;, &quot;recurring&quot;, &quot;repeat&quot;, &quot;similar&quot;, &quot;consistent&quot;, &quot;trend&quot;],
+    &quot;philosophy&quot;: [&quot;philosophy&quot;, &quot;question&quot;, &quot;ethics&quot;, &quot;moral&quot;, &quot;truth&quot;, &quot;logic&quot;],
+}
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Sentiment indicators</span>
+SENTIMENT_POSITIVE = [&quot;interesting&quot;, &quot;beautiful&quot;, &quot;elegant&quot;, &quot;fascinating&quot;, &quot;wonderful&quot;, &quot;excellent&quot;, &quot;remarkable&quot;, &quot;delightful&quot;]
+SENTIMENT_NEGATIVE = [&quot;concerning&quot;, &quot;worrying&quot;, &quot;problematic&quot;, &quot;difficult&quot;, &quot;unfortunately&quot;, &quot;failed&quot;, &quot;wrong&quot;, &quot;error&quot;]
+SENTIMENT_NEUTRAL = [&quot;however&quot;, &quot;although&quot;, &quot;nevertheless&quot;, &quot;yet&quot;, &quot;but&quot;, &quot;alternatively&quot;]
+SENTIMENT_UNCERTAINTY = [&quot;perhaps&quot;, &quot;maybe&quot;, &quot;might&quot;, &quot;possibly&quot;, &quot;unclear&quot;, &quot;uncertain&quot;, &quot;don&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;t know&quot;]</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> tokenize(text: <span class="builtin">str</span>) -&gt; List[<span class="builtin">str</span>]:
+    &quot;&quot;&quot;Simple word tokenization.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Convert to lowercase, remove punctuation, split on whitespace</span>
+    text = text.lower()
+    text = re.sub(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[^\w\s]&#<span class="number">039</span>;, &#<span class="number">039</span>; &#<span class="number">039</span>;, text)</span>
+    words = text.split()
+    <span class="keyword">return</span> [w <span class="keyword">for</span> w <span class="keyword">in</span> words <span class="keyword">if</span> <span class="builtin">len</span>(w) &gt; <span class="number">2</span>]  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Filter very short words</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> count_sentences(text: <span class="builtin">str</span>) -&gt; <span class="builtin">int</span>:
+    &quot;&quot;&quot;Count sentences <span class="keyword">in</span> text.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Simple heuristic: count sentence-ending punctuation</span>
+    <span class="keyword">return</span> <span class="builtin">len</span>(re.findall(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[.!?]+&#<span class="number">039</span>;, text))</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> detect_themes(text: <span class="builtin">str</span>) -&gt; List[<span class="builtin">str</span>]:
+    &quot;&quot;&quot;Detect themes <span class="keyword">in</span> text based on keyword presence.&quot;&quot;&quot;
+    text_lower = text.lower()
+    detected = []
+    <span class="keyword">for</span> theme, keywords <span class="keyword">in</span> THEMES.items():
+        <span class="keyword">if</span> any(kw <span class="keyword">in</span> text_lower <span class="keyword">for</span> kw <span class="keyword">in</span> keywords):
+            detected.append(theme)
+    <span class="keyword">return</span> detected
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_document(filepath: Path) -&gt; Optional[DocumentStats]:
+    &quot;&quot;&quot;Analyze a single document.&quot;&quot;&quot;
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="builtin">open</span>(filepath, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;r&#<span class="number">039</span>;, encoding=&#<span class="number">039</span>;utf-<span class="number">8</span>&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+            text = f.read()
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        <span class="builtin">print</span>(f&quot;Error reading {filepath}: {e}&quot;)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+    words = tokenize(text)
+    <span class="keyword">if</span> <span class="keyword">not</span> words:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+    word_count = <span class="builtin">len</span>(words)
+    unique_words = <span class="builtin">len</span>(<span class="builtin">set</span>(words))
+    sentences = count_sentences(text)
+    questions = text.count(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;?&#<span class="number">039</span>;)</span>
+    exclamations = text.count(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;!&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Get top words (excluding common stopwords)</span>
+    stopwords = {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;the&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">and</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">is</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">in</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;to&#<span class="number">039</span>;, &#<span class="number">039</span>;of&#<span class="number">039</span>;, &#<span class="number">039</span>;a&#<span class="number">039</span>;, &#<span class="number">039</span>;that&#<span class="number">039</span>;, &#<span class="number">039</span>;it&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">for</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;on&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">with</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">as</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;this&#<span class="number">039</span>;, &#<span class="number">039</span>;are&#<span class="number">039</span>;, &#<span class="number">039</span>;be&#<span class="number">039</span>;, &#<span class="number">039</span>;was&#<span class="number">039</span>;, &#<span class="number">039</span>;have&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">from</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">or</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;an&#<span class="number">039</span>;, &#<span class="number">039</span>;by&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">not</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;but&#<span class="number">039</span>;, &#<span class="number">039</span>;what&#<span class="number">039</span>;, &#<span class="number">039</span>;all&#<span class="number">039</span>;, &#<span class="number">039</span>;were&#<span class="number">039</span>;, &#<span class="number">039</span>;when&#<span class="number">039</span>;, &#<span class="number">039</span>;can&#<span class="number">039</span>;, &#<span class="number">039</span>;there&#<span class="number">039</span>;, &#<span class="number">039</span>;been&#<span class="number">039</span>;, &#<span class="number">039</span>;has&#<span class="number">039</span>;, &#<span class="number">039</span>;will&#<span class="number">039</span>;, &#<span class="number">039</span>;more&#<span class="number">039</span>;, &#<span class="number">039</span>;<span class="keyword">if</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;no&#<span class="number">039</span>;, &#<span class="number">039</span>;out&#<span class="number">039</span>;, &#<span class="number">039</span>;do&#<span class="number">039</span>;, &#<span class="number">039</span>;so&#<span class="number">039</span>;, &#<span class="number">039</span>;up&#<span class="number">039</span>;, &#<span class="number">039</span>;about&#<span class="number">039</span>;, &#<span class="number">039</span>;than&#<span class="number">039</span>;, &#<span class="number">039</span>;into&#<span class="number">039</span>;, &#<span class="number">039</span>;them&#<span class="number">039</span>;, &#<span class="number">039</span>;could&#<span class="number">039</span>;, &#<span class="number">039</span>;would&#<span class="number">039</span>;, &#<span class="number">039</span>;my&#<span class="number">039</span>;, &#<span class="number">039</span>;you&#<span class="number">039</span>;, &#<span class="number">039</span>;i&#<span class="number">039</span>;}</span>
+    filtered_words = [w <span class="keyword">for</span> w <span class="keyword">in</span> words <span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> stopwords]
+    word_freq = Counter(filtered_words)
+    top_words = word_freq.most_common(<span class="number">10</span>)
+
+    <span class="keyword">return</span> DocumentStats(
+        path=<span class="builtin">str</span>(filepath),
+        word_count=word_count,
+        sentence_count=sentences,
+        avg_sentence_length=word_count / max(sentences, <span class="number">1</span>),
+        question_count=questions,
+        exclamation_count=exclamations,
+        unique_words=unique_words,
+        vocabulary_richness=unique_words / word_count <span class="keyword">if</span> word_count &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span>,
+        top_words=top_words,
+        themes_detected=detect_themes(text)
+    )
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_corpus(root_dir: Path, extensions: List[<span class="builtin">str</span>] = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.md&#<span class="number">039</span>;, &#<span class="number">039</span>;.txt&#<span class="number">039</span>;]) -&gt; CorpusAnalysis:</span>
+    &quot;&quot;&quot;Analyze all documents <span class="keyword">in</span> a directory.&quot;&quot;&quot;
+    documents = []
+    all_words = []
+    total_sentences = <span class="number">0</span>
+    total_questions = <span class="number">0</span>
+    total_statements = <span class="number">0</span>
+    theme_counts = Counter()
+    sentiment_counts = defaultdict(<span class="builtin">int</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find all text files</span>
+    <span class="keyword">for</span> ext <span class="keyword">in</span> extensions:
+        <span class="keyword">for</span> filepath <span class="keyword">in</span> root_dir.rglob(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;*{ext}&#<span class="number">039</span>;):</span>
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Skip hidden directories</span>
+            <span class="keyword">if</span> any(part.startswith(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.&#<span class="number">039</span>;) <span class="keyword">for</span> part <span class="keyword">in</span> filepath.parts):</span>
+                <span class="keyword">continue</span>
+
+            stats = analyze_document(filepath)
+            <span class="keyword">if</span> stats:
+                documents.append(stats)
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Aggregate stats</span>
+                <span class="keyword">with</span> <span class="builtin">open</span>(filepath, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;r&#<span class="number">039</span>;, encoding=&#<span class="number">039</span>;utf-<span class="number">8</span>&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+                    text = f.read().lower()
+
+                all_words.extend(tokenize(text))
+                total_sentences += stats.sentence_count
+                total_questions += stats.question_count
+                total_statements += stats.sentence_count - stats.question_count
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count themes</span>
+                <span class="keyword">for</span> theme <span class="keyword">in</span> stats.themes_detected:
+                    theme_counts[theme] += <span class="number">1</span>
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count sentiment indicators</span>
+                <span class="keyword">for</span> word <span class="keyword">in</span> SENTIMENT_POSITIVE:
+                    <span class="keyword">if</span> word <span class="keyword">in</span> text:
+                        sentiment_counts[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;positive&#<span class="number">039</span>;] += text.count(word)</span>
+                <span class="keyword">for</span> word <span class="keyword">in</span> SENTIMENT_NEGATIVE:
+                    <span class="keyword">if</span> word <span class="keyword">in</span> text:
+                        sentiment_counts[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;negative&#<span class="number">039</span>;] += text.count(word)</span>
+                <span class="keyword">for</span> word <span class="keyword">in</span> SENTIMENT_UNCERTAINTY:
+                    <span class="keyword">if</span> word <span class="keyword">in</span> text:
+                        sentiment_counts[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;uncertain&#<span class="number">039</span>;] += text.count(word)</span>
+
+    <span class="keyword">return</span> CorpusAnalysis(
+        total_documents=<span class="builtin">len</span>(documents),
+        total_words=<span class="builtin">len</span>(all_words),
+        total_sentences=total_sentences,
+        overall_vocabulary=<span class="builtin">len</span>(<span class="builtin">set</span>(all_words)),
+        common_themes=<span class="builtin">dict</span>(theme_counts.most_common()),
+        sentiment_indicators=<span class="builtin">dict</span>(sentiment_counts),
+        question_to_statement_ratio=total_questions / max(total_statements, <span class="number">1</span>),
+        documents=documents
+    )
+
+
+<span <span class="keyword">class</span>="keyword">def</span> print_analysis(analysis: CorpusAnalysis):
+    &quot;&quot;&quot;Pretty-<span class="builtin">print</span> corpus analysis.&quot;&quot;&quot;
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;METACOG CORPUS ANALYSIS&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(f&quot;\nGenerated: {datetime.now().isoformat()}&quot;)
+    <span class="builtin">print</span>(f&quot;\n📊 OVERVIEW&quot;)
+    <span class="builtin">print</span>(f&quot;   Documents analyzed: {analysis.total_documents}&quot;)
+    <span class="builtin">print</span>(f&quot;   Total words: {analysis.total_words:,}&quot;)
+    <span class="builtin">print</span>(f&quot;   Total sentences: {analysis.total_sentences:,}&quot;)
+    <span class="builtin">print</span>(f&quot;   Vocabulary size: {analysis.overall_vocabulary:,}&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n🎭 THEMES DETECTED&quot;)
+    <span class="keyword">for</span> theme, count <span class="keyword">in</span> sorted(analysis.common_themes.items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>]):
+        bar = &quot;█&quot; * min(count, <span class="number">20</span>)
+        <span class="builtin">print</span>(f&quot;   {theme:<span class="number">20</span>} {bar} ({count})&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n💭 SENTIMENT INDICATORS&quot;)
+    <span class="keyword">for</span> sentiment, count <span class="keyword">in</span> analysis.sentiment_indicators.items():
+        <span class="builtin">print</span>(f&quot;   {sentiment:<span class="number">15</span>} {count}&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n❓ INQUIRY RATIO&quot;)
+    <span class="builtin">print</span>(f&quot;   Questions per statement: {analysis.question_to_statement_ratio:.2f}&quot;)
+    <span class="keyword">if</span> analysis.question_to_statement_ratio &gt; <span class="number">0.3</span>:
+        <span class="builtin">print</span>(&quot;   → High inquiry mode: Lots of questioning&quot;)
+    <span class="keyword">elif</span> analysis.question_to_statement_ratio &gt; <span class="number">0.15</span>:
+        <span class="builtin">print</span>(&quot;   → Balanced: Mix of questions <span class="keyword">and</span> statements&quot;)
+    <span class="keyword">else</span>:
+        <span class="builtin">print</span>(&quot;   → Declarative mode: More statements than questions&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n📄 DOCUMENT DETAILS&quot;)
+    <span class="keyword">for</span> doc <span class="keyword">in</span> sorted(analysis.documents, key=<span class="keyword">lambda</span> x: -x.word_count):
+        name = Path(doc.path).name
+        <span class="builtin">print</span>(f&quot;\n   {name}&quot;)
+        <span class="builtin">print</span>(f&quot;   Words: {doc.word_count}, Sentences: {doc.sentence_count}&quot;)
+        <span class="builtin">print</span>(f&quot;   Vocab richness: {doc.vocabulary_richness:.<span class="number">2</span>%}&quot;)
+        <span class="builtin">print</span>(f&quot;   Top words: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(w <span class="keyword">for</span> w, _ <span class="keyword">in</span> doc.top_words[:<span class="number">5</span>])}&quot;)</span>
+        <span class="keyword">if</span> doc.themes_detected:
+            <span class="builtin">print</span>(f&quot;   Themes: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(doc.themes_detected)}&quot;)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> save_analysis(analysis: CorpusAnalysis, output_path: Path):
+    &quot;&quot;&quot;Save analysis to JSON file.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Convert dataclasses to dicts</span>
+    data = asdict(analysis)
+    <span class="keyword">with</span> <span class="builtin">open</span>(output_path, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;w&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+        json.dump(data, f, indent=<span class="number">2</span>)
+    <span class="builtin">print</span>(f&quot;\nAnalysis saved to: {output_path}&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="keyword">import</span> sys
+
+    <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &gt; <span class="number">1</span>:
+        root_dir = Path(sys.argv[<span class="number">1</span>])
+    <span class="keyword">else</span>:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Default to parent ecosystem directory</span>
+        root_dir = Path(__file__).parent.parent.parent
+
+    <span class="builtin">print</span>(f&quot;Analyzing corpus at: {root_dir}&quot;)
+    analysis = analyze_corpus(root_dir)
+
+    <span class="keyword">if</span> analysis.total_documents == <span class="number">0</span>:
+        <span class="builtin">print</span>(&quot;No documents found to analyze!&quot;)
+        <span class="keyword">return</span>
+
+    print_analysis(analysis)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Save JSON output</span>
+    output_path = Path(__file__).parent / &quot;latest_analysis.json&quot;
+    save_analysis(analysis, output_path)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

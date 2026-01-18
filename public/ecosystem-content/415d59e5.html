@@ -1,0 +1,251 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Program Garden: Programs that grow other programs.
+
+This <span class="keyword">is</span> a self-extending system where programs can spawn variations
+of themselves. A computational garden where code reproduces <span class="keyword">and</span> evolves.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> random
+<span class="keyword">import</span> hashlib
+<span class="keyword">import</span> json
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass, asdict
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Optional
+
+
+@dataclass
+<span class="keyword">class</span> <span class="class-name">CodeOrganism</span>:
+    &quot;&quot;&quot;A program that can reproduce <span class="keyword">and</span> mutate.&quot;&quot;&quot;
+    id: <span class="builtin">str</span>
+    code: <span class="builtin">str</span>
+    generation: <span class="builtin">int</span>
+    parent_id: Optional[<span class="builtin">str</span>]
+    created_at: <span class="builtin">str</span>
+    fitness: <span class="builtin">float</span> = <span class="number">0.0</span>
+    description: <span class="builtin">str</span> = &quot;&quot;
+
+    <span <span class="keyword">class</span>="keyword">def</span> to_dict(self):
+        <span class="keyword">return</span> asdict(self)
+
+    @classmethod
+    <span <span class="keyword">class</span>="keyword">def</span> from_dict(cls, d):
+        <span class="keyword">return</span> cls(**d)
+
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Templates <span class="keyword">for</span> different types of programs</span>
+PROGRAM_TEMPLATES = {
+    &quot;calculator&quot;: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;</span>
+<span <span class="keyword">class</span>="keyword">def</span> calculate(a, b):
+    &quot;&quot;&quot;A calculator function.&quot;&quot;&quot;
+    <span class="keyword">return</span> {operation}
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    <span class="builtin">print</span>(f&quot;calculate(<span class="number">10</span>, <span class="number">5</span>) = {{calculate(<span class="number">10</span>, <span class="number">5</span>)}}&quot;)
+&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;,</span>
+
+    &quot;sequence_generator&quot;: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;</span>
+<span <span class="keyword">class</span>="keyword">def</span> sequence(n):
+    &quot;&quot;&quot;Generate a number sequence.&quot;&quot;&quot;
+    result = []
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n):
+        value = {sequence_logic}
+        result.append(value)
+    <span class="keyword">return</span> result
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    <span class="builtin">print</span>(sequence(<span class="number">10</span>))
+&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;,</span>
+
+    &quot;transformer&quot;: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;</span>
+<span <span class="keyword">class</span>="keyword">def</span> transform(text):
+    &quot;&quot;&quot;Transform text.&quot;&quot;&quot;
+    <span class="keyword">return</span> {transform_logic}
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    <span class="builtin">print</span>(transform(&quot;hello world&quot;))
+&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;,</span>
+}
+
+MUTATIONS = {
+    &quot;calculator&quot;: [
+        &quot;a + b&quot;, &quot;a - b&quot;, &quot;a * b&quot;,
+        &quot;a / b <span class="keyword">if</span> b != <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span>&quot;, &quot;a ** <span class="number">2</span> + b&quot;,
+        &quot;abs(a - b)&quot;, &quot;max(a, b)&quot;, &quot;min(a, b)&quot;,
+    ],
+    &quot;sequence_generator&quot;: [
+        &quot;i&quot;, &quot;i * <span class="number">2</span>&quot;, &quot;i ** <span class="number">2</span>&quot;, &quot;i ** <span class="number">3</span>&quot;,
+        &quot;<span class="number">2</span> ** i&quot;, &quot;sum(<span class="builtin">range</span>(i + <span class="number">1</span>))&quot;,
+    ],
+    &quot;transformer&quot;: [
+        &quot;text.upper()&quot;, &quot;text.lower()&quot;, &quot;text[::-<span class="number">1</span>]&quot;,
+        &quot;&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>; &#<span class="number">039</span>;.join(text.split()[::-<span class="number">1</span>])&quot;,</span>
+        &quot;text.replace(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>; &#<span class="number">039</span>;, &#<span class="number">039</span>;_&#<span class="number">039</span>;)&quot;,</span>
+    ],
+}
+
+
+<span <span class="keyword">class</span>="keyword">def</span> generate_id(code: <span class="builtin">str</span>) -&gt; <span class="builtin">str</span>:
+    <span class="keyword">return</span> hashlib.md5(code.encode()).hexdigest()[:<span class="number">8</span>]
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_organism(template_type: <span class="builtin">str</span>, mutation_idx: Optional[<span class="builtin">int</span>] = <span class="keyword">None</span>) -&gt; CodeOrganism:
+    template = PROGRAM_TEMPLATES[template_type]
+    mutations = MUTATIONS[template_type]
+
+    <span class="keyword">if</span> mutation_idx <span class="keyword">is</span> <span class="keyword">None</span>:
+        mutation_idx = random.randint(<span class="number">0</span>, <span class="builtin">len</span>(mutations) - <span class="number">1</span>)
+    mutation = mutations[mutation_idx]
+
+    <span class="keyword">if</span> template_type == &quot;calculator&quot;:
+        code = template.format(operation=mutation)
+    <span class="keyword">elif</span> template_type == &quot;sequence_generator&quot;:
+        code = template.format(sequence_logic=mutation)
+    <span class="keyword">else</span>:
+        code = template.format(transform_logic=mutation)
+
+    <span class="keyword">return</span> CodeOrganism(
+        id=generate_id(code),
+        code=code,
+        generation=<span class="number">0</span>,
+        parent_id=<span class="keyword">None</span>,
+        created_at=datetime.now().isoformat(),
+        description=f&quot;{template_type}: {mutation}&quot;
+    )
+
+
+<span <span class="keyword">class</span>="keyword">def</span> mutate_organism(parent: CodeOrganism) -&gt; CodeOrganism:
+    <span class="keyword">if</span> &quot;calculate&quot; <span class="keyword">in</span> parent.code:
+        template_type = &quot;calculator&quot;
+    <span class="keyword">elif</span> &quot;sequence&quot; <span class="keyword">in</span> parent.code:
+        template_type = &quot;sequence_generator&quot;
+    <span class="keyword">else</span>:
+        template_type = &quot;transformer&quot;
+
+    child = create_organism(template_type)
+    child.generation = parent.generation + <span class="number">1</span>
+    child.parent_id = parent.id
+    <span class="keyword">return</span> child
+
+
+<span <span class="keyword">class</span>="keyword">def</span> evaluate_organism(organism: CodeOrganism) -&gt; <span class="builtin">float</span>:
+    <span class="keyword">try</span>:
+        local_vars = {}
+        exec(organism.code, {&quot;__builtins__&quot;: __builtins__}, local_vars)
+        <span class="keyword">return</span> <span class="number">0.5</span> + random.random() * <span class="number">0.4</span>
+    <span class="keyword">except</span>:
+        <span class="keyword">return</span> <span class="number">0.1</span>
+
+
+<span class="keyword">class</span> <span class="class-name">ProgramGarden</span>:
+    <span <span class="keyword">class</span>="keyword">def</span> __init__(self, garden_dir: Path):
+        self.garden_dir = Path(garden_dir)
+        self.garden_dir.mkdir(exist_ok=<span class="keyword">True</span>)
+        self.organisms: List[CodeOrganism] = []
+        self.generation = <span class="number">0</span>
+        self.load_garden()
+
+    <span <span class="keyword">class</span>="keyword">def</span> load_garden(self):
+        manifest_path = self.garden_dir / &quot;manifest.json&quot;
+        <span class="keyword">if</span> manifest_path.exists():
+            <span class="keyword">with</span> <span class="builtin">open</span>(manifest_path) <span class="keyword">as</span> f:
+                data = json.load(f)
+                self.organisms = [CodeOrganism.from_dict(o) <span class="keyword">for</span> o <span class="keyword">in</span> data[&quot;organisms&quot;]]
+                self.generation = data.get(&quot;generation&quot;, <span class="number">0</span>)
+
+    <span <span class="keyword">class</span>="keyword">def</span> save_garden(self):
+        manifest = {
+            &quot;generation&quot;: self.generation,
+            &quot;organisms&quot;: [o.to_dict() <span class="keyword">for</span> o <span class="keyword">in</span> self.organisms],
+            &quot;last_updated&quot;: datetime.now().isoformat()
+        }
+        <span class="keyword">with</span> <span class="builtin">open</span>(self.garden_dir / &quot;manifest.json&quot;, &quot;w&quot;) <span class="keyword">as</span> f:
+            json.dump(manifest, f, indent=<span class="number">2</span>)
+
+    <span <span class="keyword">class</span>="keyword">def</span> plant_seed(self, template_type: <span class="builtin">str</span> = <span class="keyword">None</span>) -&gt; CodeOrganism:
+        <span class="keyword">if</span> template_type <span class="keyword">is</span> <span class="keyword">None</span>:
+            template_type = random.choice(<span class="builtin">list</span>(PROGRAM_TEMPLATES.keys()))
+
+        organism = create_organism(template_type)
+        organism.fitness = evaluate_organism(organism)
+        self.organisms.append(organism)
+
+        code_path = self.garden_dir / f&quot;{organism.id}.py&quot;
+        <span class="keyword">with</span> <span class="builtin">open</span>(code_path, &quot;w&quot;) <span class="keyword">as</span> f:
+            f.write(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;# Organism: {organism.id} | Gen: {organism.generation}\n&#<span class="number">039</span>;)</span>
+            f.write(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;# {organism.description}\n\n&#<span class="number">039</span>;)</span>
+            f.write(organism.code)
+
+        <span class="keyword">return</span> organism
+
+    <span <span class="keyword">class</span>="keyword">def</span> grow(self, iterations: <span class="builtin">int</span> = <span class="number">1</span>):
+        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(iterations):
+            self.generation += <span class="number">1</span>
+
+            <span class="keyword">if</span> <span class="keyword">not</span> self.organisms:
+                self.plant_seed()
+                <span class="keyword">continue</span>
+
+            parents = random.sample(self.organisms, min(<span class="number">3</span>, <span class="builtin">len</span>(self.organisms)))
+            best_parent = max(parents, key=<span class="keyword">lambda</span> o: o.fitness)
+
+            child = mutate_organism(best_parent)
+            child.fitness = evaluate_organism(child)
+            self.organisms.append(child)
+
+            code_path = self.garden_dir / f&quot;{child.id}.py&quot;
+            <span class="keyword">with</span> <span class="builtin">open</span>(code_path, &quot;w&quot;) <span class="keyword">as</span> f:
+                f.write(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;# Organism: {child.id} | Gen: {child.generation} | Parent: {child.parent_id}\n&#<span class="number">039</span>;)</span>
+                f.write(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;# {child.description}\n\n&#<span class="number">039</span>;)</span>
+                f.write(child.code)
+
+            <span class="keyword">if</span> random.random() &lt; <span class="number">0.2</span>:
+                self.plant_seed()
+
+        self.save_garden()
+
+    <span <span class="keyword">class</span>="keyword">def</span> status(self):
+        <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;=&#<span class="number">039</span>;*<span class="number">50</span>}&quot;)</span>
+        <span class="builtin">print</span>(f&quot;PROGRAM GARDEN&quot;)
+        <span class="builtin">print</span>(f&quot;{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;=&#<span class="number">039</span>;*<span class="number">50</span>}&quot;)</span>
+        <span class="builtin">print</span>(f&quot;Location: {self.garden_dir}&quot;)
+        <span class="builtin">print</span>(f&quot;Generation: {self.generation}&quot;)
+        <span class="builtin">print</span>(f&quot;Organisms: {<span class="builtin">len</span>(self.organisms)}&quot;)
+
+        <span class="keyword">if</span> self.organisms:
+            avg_fitness = sum(o.fitness <span class="keyword">for</span> o <span class="keyword">in</span> self.organisms) / <span class="builtin">len</span>(self.organisms)
+            best = max(self.organisms, key=<span class="keyword">lambda</span> o: o.fitness)
+            <span class="builtin">print</span>(f&quot;Avg fitness: {avg_fitness:.3f}&quot;)
+            <span class="builtin">print</span>(f&quot;Best: {best.id} ({best.fitness:.3f})&quot;)
+
+            gen_counts = {}
+            <span class="keyword">for</span> o <span class="keyword">in</span> self.organisms:
+                gen_counts[o.generation] = gen_counts.get(o.generation, <span class="number">0</span>) + <span class="number">1</span>
+
+            <span class="builtin">print</span>(f&quot;\nBy generation:&quot;)
+            <span class="keyword">for</span> gen <span class="keyword">in</span> sorted(gen_counts.keys())[:<span class="number">10</span>]:
+                <span class="builtin">print</span>(f&quot;  Gen {gen:2d}: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;#&#<span class="number">039</span>; * gen_counts[gen]} ({gen_counts[gen]})&quot;)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="keyword">import</span> sys
+    garden_path = Path(__file__).parent.parent / &quot;program_garden&quot;
+    garden = ProgramGarden(garden_path)
+
+    <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &lt; <span class="number">2</span>:
+        garden.status()
+        <span class="builtin">print</span>(&quot;\nGrowing...&quot;)
+        garden.grow(<span class="number">5</span>)
+        garden.status()
+    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == &quot;grow&quot;:
+        n = <span class="builtin">int</span>(sys.argv[<span class="number">2</span>]) <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">10</span>
+        garden.grow(n)
+        garden.status()
+    <span class="keyword">else</span>:
+        garden.status()
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

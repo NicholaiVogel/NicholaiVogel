@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import Navigation from '../components/Navigation.astro';
 import CustomCursor from '../components/CustomCursor';
+import ContextMenu from '../components/ContextMenu.astro';
 import ThemePreferenceDialog from '../components/ThemePreferenceDialog.astro';
 import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
 
@@ -123,6 +124,9 @@ const personSchema = {
     </main>
 
     <Footer />
+
+    <!-- Custom context menu -->
+    <ContextMenu />
 
     <script>
       // ===== SCROLL ANIMATION SYSTEM =====

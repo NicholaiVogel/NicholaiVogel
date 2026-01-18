@@ -3,7 +3,8 @@ import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	// Exclude ecosystem/ subdirectory which contains raw source files for the Ecosystem Timeline component
+	loader: glob({ base: './src/content/blog', pattern: ['**/*.{md,mdx}', '!ecosystem/**'] }),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({

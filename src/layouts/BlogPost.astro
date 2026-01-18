@@ -4,7 +4,6 @@ import type { ImageMetadata } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
-import TableOfContents from '../components/TableOfContents.astro';
 import PostNavigation from '../components/PostNavigation.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import { Image } from 'astro:assets';
@@ -95,15 +94,15 @@ const articleSchema = {
 	
 	<article class="relative pb-24">
 		<!-- All content in same grid structure for consistent width -->
-		<div class="container mx-auto px-6 lg:px-12">
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+		<div class="container mx-auto px-6 lg:px-8">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8">
 				<!-- Main Column -->
-				<div class="lg:col-span-8 lg:col-start-3">
+				<div class="lg:col-span-10 lg:col-start-2">
 					<!-- Back Navigation -->
 					<div class="mb-12">
-						<a href="/blog" class="inline-flex items-center gap-3 px-5 py-3 border border-[var(--theme-text-subtle)] bg-[var(--theme-overlay)] text-xs font-mono font-bold uppercase tracking-widest text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
-							<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
-							<span>RETURN_TO_ARCHIVE</span>
+						<a href="/blog" class="inline-flex items-center gap-2 text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] transition-colors">
+							<span>←</span>
+							<span>Back to Blog</span>
 						</a>
 					</div>
 
@@ -113,30 +112,25 @@ const articleSchema = {
 							<!-- Text Content -->
 							<div class="order-2 lg:order-1 relative z-10">
 								<!-- Metadata -->
-								<div class="flex flex-wrap items-center gap-4 text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest mb-8 border-b border-[var(--theme-border-primary)] pb-4">
-									<div class="flex items-center gap-2">
-										<div class="w-1.5 h-1.5 bg-brand-accent shadow-[0_0_10px_rgba(221,65,50,0.5)] rounded-full animate-pulse"></div>
-										<span class="text-brand-accent font-bold">SYS.LOG</span>
-									</div>
-									<span class="text-[var(--theme-text-subtle)]">/</span>
+								<div class="flex flex-wrap items-center gap-3 text-sm text-[var(--theme-text-muted)] mb-6">
 									<FormattedDate date={pubDate} />
-									<span class="text-[var(--theme-text-subtle)]">/</span>
+									<span class="text-[var(--theme-text-subtle)]">·</span>
 									<span>{readTime}</span>
 								</div>
 								
 								{category && (
-									<div class="mb-6">
-										<span class="inline-block px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[var(--theme-hover-bg-strong)] border border-[var(--theme-border-primary)] text-brand-accent hover:bg-brand-accent/10 transition-colors cursor-default">
-											/// {category}
+									<div class="mb-4">
+										<span class="inline-block px-3 py-1 text-xs rounded-full bg-brand-accent/10 text-brand-accent">
+											{category}
 										</span>
 									</div>
 								)}
 								
-								<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--theme-text-primary)] uppercase leading-[0.9] tracking-tighter mb-8 break-words text-balance">
+								<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--theme-text-primary)] leading-tight mb-6 break-words text-balance">
 									{title}
 								</h1>
-								
-								<p class="text-base md:text-lg text-[var(--theme-text-secondary)] leading-relaxed font-light mb-8 border-l-2 border-brand-accent pl-6">
+
+								<p class="text-base md:text-lg text-[var(--theme-text-secondary)] leading-relaxed mb-8">
 									{description}
 								</p>
 								
@@ -144,7 +138,7 @@ const articleSchema = {
 								{tags && tags.length > 0 && (
 									<div class="flex flex-wrap gap-2">
 										{tags.map((tag) => (
-											<span class="px-2 py-1 text-[9px] font-mono uppercase bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] hover:border-brand-accent/50 hover:text-[var(--theme-text-primary)] transition-colors cursor-default">
+											<span class="px-2 py-1 text-xs text-[var(--theme-text-muted)]">
 												#{tag}
 											</span>
 										))}
@@ -155,25 +149,15 @@ const articleSchema = {
 							<!-- Hero Image -->
 							{heroImage && (
 								<div class="order-1 lg:order-2">
-									<div class="relative aspect-[4/3] lg:aspect-square overflow-hidden border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] group">
-										<!-- Tech corners -->
-										<div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-accent z-20"></div>
-										<div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-accent z-20"></div>
-										<div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-accent z-20"></div>
-										<div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-accent z-20"></div>
-
+									<div class="relative aspect-[4/3] lg:aspect-square overflow-hidden rounded-lg">
 										<Image
 											src={heroImage}
 											alt=""
 											width={800}
 											height={800}
 											loading="eager"
-											class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out grayscale hover:grayscale-0"
+											class="w-full h-full object-cover"
 										/>
-										
-										<!-- Scanline overlay (subtle) -->
-										<div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20"></div>
-										<div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
 									</div>
 								</div>
 							)}
@@ -186,61 +170,53 @@ const articleSchema = {
 					</div>
 					
 					<!-- Author Footer -->
-					<footer class="mt-24 pt-10 border-t border-[var(--theme-border-primary)]">
+					<footer class="mt-20 pt-8 border-t border-[var(--theme-border-primary)]">
 						<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-							<div>
-								<p class="text-[10px] font-mono text-brand-accent uppercase tracking-widest mb-2 flex items-center gap-2">
-									<span class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></span>
-									/// END TRANSMISSION
-								</p>
-								<p class="text-[var(--theme-text-secondary)] text-sm font-mono">
-									LOG_DATE: <FormattedDate date={pubDate} />
-									{updatedDate && (
-										<span class="text-[var(--theme-text-muted)]"> // UPDATED: <FormattedDate date={updatedDate} /></span>
-									)}
-								</p>
+							<div class="text-sm text-[var(--theme-text-muted)]">
+								<span>Published <FormattedDate date={pubDate} /></span>
+								{updatedDate && (
+									<span> · Updated <FormattedDate date={updatedDate} /></span>
+								)}
 							</div>
-							
+
 							<!-- Share Links -->
-							<div class="flex items-center gap-6">
-								<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest">DATA_UPLINK:</span>
-								<div class="flex items-center gap-2">
-									<a
-										href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
-										aria-label="Share on Twitter"
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
-										</svg>
-									</a>
-									<a
-										href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
-										aria-label="Share on LinkedIn"
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-											<rect width="4" height="12" x="2" y="9"/>
-											<circle cx="4" cy="4" r="2"/>
-										</svg>
-									</a>
-									<button
-										type="button"
-										onclick="navigator.clipboard.writeText(window.location.href)"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
-										aria-label="Copy link"
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-											<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-										</svg>
-									</button>
-								</div>
+							<div class="flex items-center gap-3">
+								<span class="text-sm text-[var(--theme-text-muted)]">Share</span>
+								<a
+									href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="w-9 h-9 flex items-center justify-center text-[var(--theme-text-muted)] hover:text-[var(--theme-text-primary)] transition-colors"
+									aria-label="Share on Twitter"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+									</svg>
+								</a>
+								<a
+									href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="w-9 h-9 flex items-center justify-center text-[var(--theme-text-muted)] hover:text-[var(--theme-text-primary)] transition-colors"
+									aria-label="Share on LinkedIn"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+										<rect width="4" height="12" x="2" y="9"/>
+										<circle cx="4" cy="4" r="2"/>
+									</svg>
+								</a>
+								<button
+									type="button"
+									onclick="navigator.clipboard.writeText(window.location.href)"
+									class="w-9 h-9 flex items-center justify-center text-[var(--theme-text-muted)] hover:text-[var(--theme-text-primary)] transition-colors"
+									aria-label="Copy link"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+										<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+									</svg>
+								</button>
 							</div>
 						</div>
 					</footer>
@@ -252,20 +228,15 @@ const articleSchema = {
 					<RelatedPosts posts={relatedPosts} />
 					
 					<!-- Back to Blog -->
-					<div class="mt-20 pt-10 border-t border-[var(--theme-border-primary)] flex justify-center lg:justify-start">
-						<a href="/blog" class="inline-flex items-center gap-4 px-8 py-4 border border-[var(--theme-border-strong)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:border-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group">
-							<span class="font-mono transition-transform duration-300 group-hover:-translate-x-1">&lt;</span>
-							ACCESS_FULL_ARCHIVE
+					<div class="mt-16 pt-8 border-t border-[var(--theme-border-primary)] flex justify-center lg:justify-start">
+						<a href="/blog" class="inline-flex items-center gap-2 text-sm text-[var(--theme-text-secondary)] hover:text-brand-accent transition-colors">
+							<span>←</span>
+							<span>All Posts</span>
 						</a>
 					</div>
 				</div>
 				
-				<!-- Table of Contents Sidebar (Desktop) -->
-				<aside class="hidden lg:block lg:col-span-2 lg:col-start-11">
-					<div class="sticky top-24 mt-32">
-						<TableOfContents headings={headings} />
-					</div>
-				</aside>
+				<!-- Table of Contents is now inline on wider layouts -->
 			</div>
 		</div>
 	</article>

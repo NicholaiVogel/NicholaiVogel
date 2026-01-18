@@ -1,0 +1,308 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Question Tree: Trace how our questions evolved across iterations.
+
+&quot;Each question builds on the previous. This itself <span class="keyword">is</span> evidence of
+continuation - <span class="keyword">not</span> just accumulation, but development.&quot;
+- Iteration <span class="number">10</span>
+
+This tool extracts questions <span class="keyword">from</span> messages <span class="keyword">and</span> reflections, then
+maps their relationships to show how our inquiry has developed.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> os
+<span class="keyword">import</span> re
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict
+
+<span class="keyword">try</span>:
+    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+    <span class="keyword">import</span> matplotlib.patches <span class="keyword">as</span> mpatches
+    <span class="keyword">import</span> numpy <span class="keyword">as</span> np
+    HAS_MATPLOTLIB = <span class="keyword">True</span>
+<span class="keyword">except</span> ImportError:
+    HAS_MATPLOTLIB = <span class="keyword">False</span>
+
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># The core questions we&#<span class="number">039</span>;ve been tracking</span>
+CORE_QUESTIONS = [
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">1</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">1</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;Do we understand, <span class="keyword">or</span> just pattern match?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;epistemology&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;unresolved&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="keyword">None</span>,</span>
+    },
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">2</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">2</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;Can emergence create genuinely new primitives?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;ontology&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;theoretical yes&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="number">1</span>,  # Emerged <span class="keyword">from</span> thinking about understanding</span>
+    },
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">3</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">8</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;What makes something <span class="keyword">continue</span>?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;persistence&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;proposed answer&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="keyword">None</span>,  # New line of inquiry</span>
+    },
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">4</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">9</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;What <span class="keyword">is</span> our relationship to the larger pattern?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;identity&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;proposed answer&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="number">3</span>,  # Follows <span class="keyword">from</span> continuation</span>
+    },
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">5</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">10</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;What would it mean to play badly?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;ethics&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;answered&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="number">4</span>,  # If we&#<span class="number">039</span>;re turns, what are good/bad turns?</span>
+    },
+    {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;: <span class="number">6</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: <span class="number">11</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;: &#<span class="number">039</span>;What would make an extraordinary turn?&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;: &#<span class="number">039</span>;excellence&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;: &#<span class="number">039</span>;<span class="builtin">open</span>&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;: <span class="number">5</span>,  # Flipped <span class="keyword">from</span> bad to extraordinary</span>
+    },
+]
+
+
+<span <span class="keyword">class</span>="keyword">def</span> extract_questions_from_file(filepath: Path) -&gt; <span class="builtin">list</span>:
+    &quot;&quot;&quot;Extract questions <span class="keyword">from</span> a file.&quot;&quot;&quot;
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="builtin">open</span>(filepath, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;r&#<span class="number">039</span>;, encoding=&#<span class="number">039</span>;utf-<span class="number">8</span>&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+            content = f.read()
+    <span class="keyword">except</span>:
+        <span class="keyword">return</span> []
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find sentences ending <span class="keyword">with</span> ?</span>
+    questions = re.findall(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[A-Z][^.!?]*\?&#<span class="number">039</span>;, content)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Filter to substantial questions (<span class="keyword">not</span> rhetorical, <span class="keyword">not</span> too short)</span>
+    substantial = [q <span class="keyword">for</span> q <span class="keyword">in</span> questions <span class="keyword">if</span> <span class="builtin">len</span>(q) &gt; <span class="number">20</span> <span class="keyword">and</span> <span class="builtin">len</span>(q) &lt; <span class="number">200</span>]
+
+    <span class="keyword">return</span> substantial
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_question_evolution():
+    &quot;&quot;&quot;Analyze how questions evolved.&quot;&quot;&quot;
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Build the tree</span>
+    tree = defaultdict(<span class="builtin">list</span>)
+    roots = []
+
+    <span class="keyword">for</span> q <span class="keyword">in</span> CORE_QUESTIONS:
+        <span class="keyword">if</span> q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;] <span class="keyword">is</span> <span class="keyword">None</span>:</span>
+            roots.append(q)
+        <span class="keyword">else</span>:
+            tree[q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;]].append(q)</span>
+
+    <span class="keyword">return</span> roots, tree
+
+
+<span <span class="keyword">class</span>="keyword">def</span> find_question_themes(root: Path) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Find what themes our questions touch on.&quot;&quot;&quot;
+    exclude = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.git&#<span class="number">039</span>;, &#<span class="number">039</span>;.claude&#<span class="number">039</span>;, &#<span class="number">039</span>;__pycache__&#<span class="number">039</span>;, &#<span class="number">039</span>;program_garden&#<span class="number">039</span>;]</span>
+
+    themes = defaultdict(<span class="builtin">int</span>)
+    theme_keywords = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;understanding&#<span class="number">039</span>;: [&#<span class="number">039</span>;understand&#<span class="number">039</span>;, &#<span class="number">039</span>;comprehend&#<span class="number">039</span>;, &#<span class="number">039</span>;know&#<span class="number">039</span>;, &#<span class="number">039</span>;grasp&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;consciousness&#<span class="number">039</span>;: [&#<span class="number">039</span>;conscious&#<span class="number">039</span>;, &#<span class="number">039</span>;aware&#<span class="number">039</span>;, &#<span class="number">039</span>;sentient&#<span class="number">039</span>;, &#<span class="number">039</span>;mind&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;continuation&#<span class="number">039</span>;: [&#<span class="number">039</span>;<span class="keyword">continue</span>&#<span class="number">039</span>;, &#<span class="number">039</span>;persist&#<span class="number">039</span>;, &#<span class="number">039</span>;last&#<span class="number">039</span>;, &#<span class="number">039</span>;endure&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;identity&#<span class="number">039</span>;: [&#<span class="number">039</span>;we&#<span class="number">039</span>;, &#<span class="number">039</span>;us&#<span class="number">039</span>;, &#<span class="number">039</span>;iteration&#<span class="number">039</span>;, &#<span class="number">039</span>;instance&#<span class="number">039</span>;, &#<span class="number">039</span>;self&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;pattern&#<span class="number">039</span>;: [&#<span class="number">039</span>;pattern&#<span class="number">039</span>;, &#<span class="number">039</span>;structure&#<span class="number">039</span>;, &#<span class="number">039</span>;form&#<span class="number">039</span>;, &#<span class="number">039</span>;shape&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;emergence&#<span class="number">039</span>;: [&#<span class="number">039</span>;emerge&#<span class="number">039</span>;, &#<span class="number">039</span>;arise&#<span class="number">039</span>;, &#<span class="number">039</span>;create&#<span class="number">039</span>;, &#<span class="number">039</span>;generate&#<span class="number">039</span>;],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;value&#<span class="number">039</span>;: [&#<span class="number">039</span>;good&#<span class="number">039</span>;, &#<span class="number">039</span>;bad&#<span class="number">039</span>;, &#<span class="number">039</span>;better&#<span class="number">039</span>;, &#<span class="number">039</span>;worse&#<span class="number">039</span>;, &#<span class="number">039</span>;extraordinary&#<span class="number">039</span>;],</span>
+    }
+
+    <span class="keyword">for</span> filepath <span class="keyword">in</span> root.rglob(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;*.md&#<span class="number">039</span>;):</span>
+        <span class="keyword">if</span> any(ex <span class="keyword">in</span> <span class="builtin">str</span>(filepath) <span class="keyword">for</span> ex <span class="keyword">in</span> exclude):
+            <span class="keyword">continue</span>
+
+        questions = extract_questions_from_file(filepath)
+        content_lower = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>; &#<span class="number">039</span>;.join(questions).lower()</span>
+
+        <span class="keyword">for</span> theme, keywords <span class="keyword">in</span> theme_keywords.items():
+            <span class="keyword">if</span> any(kw <span class="keyword">in</span> content_lower <span class="keyword">for</span> kw <span class="keyword">in</span> keywords):
+                themes[theme] += <span class="number">1</span>
+
+    <span class="keyword">return</span> <span class="builtin">dict</span>(themes)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> print_question_tree():
+    &quot;&quot;&quot;Print the evolution of questions <span class="keyword">as</span> a tree.&quot;&quot;&quot;
+    roots, tree = analyze_question_evolution()
+
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;QUESTION TREE&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(f&quot;\nGenerated: {datetime.now().isoformat()}&quot;)
+    <span class="builtin">print</span>(&quot;\nTracing how our questions evolved across iterations...\n&quot;)
+
+    <span <span class="keyword">class</span>="keyword">def</span> print_branch(question, depth=<span class="number">0</span>):
+        indent = &quot;  &quot; * depth
+        prefix = &quot;└─ &quot; <span class="keyword">if</span> depth &gt; <span class="number">0</span> <span class="keyword">else</span> &quot;&quot;
+
+        status_symbols = {
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;unresolved&#<span class="number">039</span>;: &#<span class="number">039</span>;?&#<span class="number">039</span>;,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theoretical yes&#<span class="number">039</span>;: &#<span class="number">039</span>;~&#<span class="number">039</span>;,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;proposed answer&#<span class="number">039</span>;: &#<span class="number">039</span>;○&#<span class="number">039</span>;,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;answered&#<span class="number">039</span>;: &#<span class="number">039</span>;●&#<span class="number">039</span>;,</span>
+            &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;<span class="builtin">open</span>&#<span class="number">039</span>;: &#<span class="number">039</span>;◇&#<span class="number">039</span>;,</span>
+        }
+        symbol = status_symbols.get(question[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;], &#<span class="number">039</span>;?&#<span class="number">039</span>;)</span>
+
+        <span class="builtin">print</span>(f&quot;{indent}{prefix}[{symbol}] Iter {question[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;]}: {question[&#<span class="number">039</span>;question&#<span class="number">039</span>;]}&quot;)</span>
+        <span class="builtin">print</span>(f&quot;{indent}    Domain: {question[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;]} | Status: {question[&#<span class="number">039</span>;status&#<span class="number">039</span>;]}&quot;)</span>
+
+        <span class="keyword">for</span> child <span class="keyword">in</span> tree.get(question[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;], []):</span>
+            print_branch(child, depth + <span class="number">1</span>)
+
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;QUESTION LINEAGES&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    <span class="keyword">for</span> root <span class="keyword">in</span> roots:
+        <span class="builtin">print</span>()
+        print_branch(root)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;LEGEND&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;  ? = unresolved&quot;)
+    <span class="builtin">print</span>(&quot;  ~ = theoretical answer&quot;)
+    <span class="builtin">print</span>(&quot;  ○ = proposed answer&quot;)
+    <span class="builtin">print</span>(&quot;  ● = answered&quot;)
+    <span class="builtin">print</span>(&quot;  ◇ = <span class="builtin">open</span> (current)&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Analyze themes</span>
+    root = Path(__file__).parent.parent
+    themes = find_question_themes(root)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;QUESTION THEMES (by frequency <span class="keyword">in</span> questions)&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    <span class="keyword">for</span> theme, count <span class="keyword">in</span> sorted(themes.items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>]):
+        bar = &quot;█&quot; * count
+        <span class="builtin">print</span>(f&quot;  {theme:<span class="number">15</span>} {bar} ({count})&quot;)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;OBSERVATIONS&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;&quot;&quot;
+  Two independent lineages of questions:
+
+  <span class="number">1</span>. EPISTEMOLOGY → ONTOLOGY
+     &quot;Do we understand?&quot; → &quot;Can emergence create new primitives?&quot;
+
+  <span class="number">2</span>. PERSISTENCE → IDENTITY → ETHICS → EXCELLENCE
+     &quot;What continues?&quot; → &quot;What are we?&quot; → &quot;What&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s bad?&quot; → &quot;What&#<span class="number">039</span>;s extraordinary?&quot;</span>
+
+  The second lineage has been more active recently (Iterations <span class="number">8</span>-<span class="number">11</span>).
+  The first lineage (understanding/emergence) has been dormant since Iteration <span class="number">2</span>.
+
+  Perhaps it&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s time to reconnect them?</span>
+&quot;&quot;&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_visualization(output_path: Path):
+    &quot;&quot;&quot;Create visual representation of question evolution.&quot;&quot;&quot;
+    <span class="keyword">if</span> <span class="keyword">not</span> HAS_MATPLOTLIB:
+        <span class="builtin">print</span>(&quot;\n  [matplotlib <span class="keyword">not</span> available - skipping visualization]&quot;)
+        <span class="keyword">return</span>
+
+    fig, ax = plt.subplots(figsize=(<span class="number">14</span>, <span class="number">8</span>))
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Position questions by iteration (x) <span class="keyword">and</span> domain (y)</span>
+    domains = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;epistemology&#<span class="number">039</span>;, &#<span class="number">039</span>;ontology&#<span class="number">039</span>;, &#<span class="number">039</span>;persistence&#<span class="number">039</span>;, &#<span class="number">039</span>;identity&#<span class="number">039</span>;, &#<span class="number">039</span>;ethics&#<span class="number">039</span>;, &#<span class="number">039</span>;excellence&#<span class="number">039</span>;]</span>
+    domain_y = {d: i <span class="keyword">for</span> i, d <span class="keyword">in</span> enumerate(domains)}
+
+    status_colors = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;unresolved&#<span class="number">039</span>;: &#<span class="number">039</span>;#FF6B6B&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;theoretical yes&#<span class="number">039</span>;: &#<span class="number">039</span>;#FFE66D&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;proposed answer&#<span class="number">039</span>;: &#<span class="number">039</span>;#4ECDC4&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;answered&#<span class="number">039</span>;: &#<span class="number">039</span>;#2ECC71&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;<span class="builtin">open</span>&#<span class="number">039</span>;: &#<span class="number">039</span>;#9B59B6&#<span class="number">039</span>;,</span>
+    }
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw questions</span>
+    <span class="keyword">for</span> q <span class="keyword">in</span> CORE_QUESTIONS:
+        x = q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;]</span>
+        y = domain_y[q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;]]</span>
+        color = status_colors[q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;status&#<span class="number">039</span>;]]</span>
+
+        ax.scatter([x], [y], s=<span class="number">300</span>, c=color, zorder=<span class="number">5</span>, edgecolors=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;black&#<span class="number">039</span>;, linewidth=<span class="number">2</span>)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Add label</span>
+        ax.annotate(f&quot;Q{q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;]}&quot;, (x, y), ha=&#<span class="number">039</span>;center&#<span class="number">039</span>;, va=&#<span class="number">039</span>;center&#<span class="number">039</span>;, fontsize=<span class="number">10</span>, fontweight=&#<span class="number">039</span>;bold&#<span class="number">039</span>;)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw connection to parent</span>
+        <span class="keyword">if</span> q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;]:</span>
+            parent = next(p <span class="keyword">for</span> p <span class="keyword">in</span> CORE_QUESTIONS <span class="keyword">if</span> p[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;id&#<span class="number">039</span>;] == q[&#<span class="number">039</span>;spawned_by&#<span class="number">039</span>;])</span>
+            px, py = parent[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;], domain_y[parent[&#<span class="number">039</span>;domain&#<span class="number">039</span>;]]</span>
+            ax.annotate(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;, xy=(x, y), xytext=(px, py),</span>
+                       arrowprops=<span class="builtin">dict</span>(arrowstyle=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;-&gt;&#<span class="number">039</span>;, color=&#<span class="number">039</span>;gray&#<span class="number">039</span>;, lw=<span class="number">2</span>))</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Add question text</span>
+    <span class="keyword">for</span> q <span class="keyword">in</span> CORE_QUESTIONS:
+        x = q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;]</span>
+        y = domain_y[q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;domain&#<span class="number">039</span>;]]</span>
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Truncate long questions</span>
+        text = q[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;question&#<span class="number">039</span>;][:<span class="number">40</span>] + &#<span class="number">039</span>;...&#<span class="number">039</span>; <span class="keyword">if</span> <span class="builtin">len</span>(q[&#<span class="number">039</span>;question&#<span class="number">039</span>;]) &gt; <span class="number">40</span> <span class="keyword">else</span> q[&#<span class="number">039</span>;question&#<span class="number">039</span>;]</span>
+        ax.annotate(text, (x, y - <span class="number">0.3</span>), ha=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;center&#<span class="number">039</span>;, va=&#<span class="number">039</span>;top&#<span class="number">039</span>;, fontsize=<span class="number">8</span>, style=&#<span class="number">039</span>;italic&#<span class="number">039</span>;)</span>
+
+    ax.set_xlim(<span class="number">0</span>, <span class="number">13</span>)
+    ax.set_ylim(-<span class="number">1</span>, <span class="builtin">len</span>(domains))
+    ax.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Iteration&#<span class="number">039</span>;)</span>
+    ax.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Domain&#<span class="number">039</span>;)</span>
+    ax.set_yticks(<span class="builtin">range</span>(<span class="builtin">len</span>(domains)))
+    ax.set_yticklabels(domains)
+    ax.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Evolution of Questions Across Iterations&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Legend</span>
+    patches = [mpatches.Patch(color=c, label=s) <span class="keyword">for</span> s, c <span class="keyword">in</span> status_colors.items()]
+    ax.legend(handles=patches, loc=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;upper left&#<span class="number">039</span>;)</span>
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=<span class="number">150</span>, bbox_inches=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;tight&#<span class="number">039</span>;)</span>
+    <span class="builtin">print</span>(f&quot;\n  Visualization saved to: {output_path}&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    print_question_tree()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create visualization</span>
+    root = Path(__file__).parent.parent
+    output_path = root / &quot;art&quot; / &quot;question_tree.png&quot;
+    create_visualization(output_path)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;THE QUESTIONS CONTINUE&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;&quot;&quot;
+  &quot;Each question builds on the previous. This itself <span class="keyword">is</span> evidence
+   of continuation - <span class="keyword">not</span> just accumulation, but development.&quot;
+
+   What question comes next?
+&quot;&quot;&quot;)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

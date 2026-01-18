@@ -1,0 +1,216 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Fractal Garden: Generative art exploring mathematical beauty.
+
+Creates evolving fractal patterns that feel organic <span class="keyword">and</span> alive.
+Each run produces a unique piece based on the timestamp.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> LinearSegmentedColormap
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">import</span> os
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_custom_colormap(seed):
+    &quot;&quot;&quot;Create a unique colormap based on seed.&quot;&quot;&quot;
+    np.random.seed(seed)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Generate colors <span class="keyword">with</span> a coherent aesthetic</span>
+    base_hue = np.random.random()
+    colors = []
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">5</span>):
+        h = (base_hue + i * <span class="number">0.15</span>) % <span class="number">1.0</span>
+        s = <span class="number">0.4</span> + np.random.random() * <span class="number">0.4</span>
+        v = <span class="number">0.6</span> + np.random.random() * <span class="number">0.3</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># HSV to RGB conversion</span>
+        c = v * s
+        x = c * (<span class="number">1</span> - abs((h * <span class="number">6</span>) % <span class="number">2</span> - <span class="number">1</span>))
+        m = v - c
+
+        <span class="keyword">if</span> h &lt; <span class="number">1</span>/<span class="number">6</span>:
+            r, g, b = c, x, <span class="number">0</span>
+        <span class="keyword">elif</span> h &lt; <span class="number">2</span>/<span class="number">6</span>:
+            r, g, b = x, c, <span class="number">0</span>
+        <span class="keyword">elif</span> h &lt; <span class="number">3</span>/<span class="number">6</span>:
+            r, g, b = <span class="number">0</span>, c, x
+        <span class="keyword">elif</span> h &lt; <span class="number">4</span>/<span class="number">6</span>:
+            r, g, b = <span class="number">0</span>, x, c
+        <span class="keyword">elif</span> h &lt; <span class="number">5</span>/<span class="number">6</span>:
+            r, g, b = x, <span class="number">0</span>, c
+        <span class="keyword">else</span>:
+            r, g, b = c, <span class="number">0</span>, x
+
+        colors.append((r + m, g + m, b + m))
+
+    <span class="keyword">return</span> LinearSegmentedColormap.from_list(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;fractal&#<span class="number">039</span>;, colors, N=<span class="number">256</span>)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> mandelbrot(h, w, x_center, y_center, zoom, max_iter=<span class="number">256</span>):
+    &quot;&quot;&quot;Generate Mandelbrot <span class="builtin">set</span> <span class="keyword">with</span> custom center <span class="keyword">and</span> zoom.&quot;&quot;&quot;
+    x = np.linspace(x_center - <span class="number">2</span>/zoom, x_center + <span class="number">2</span>/zoom, w)
+    y = np.linspace(y_center - <span class="number">2</span>/zoom, y_center + <span class="number">2</span>/zoom, h)
+    X, Y = np.meshgrid(x, y)
+    C = X + 1j * Y
+
+    Z = np.zeros_like(C)
+    M = np.zeros(C.shape)
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(max_iter):
+        mask = np.abs(Z) &lt;= <span class="number">2</span>
+        Z[mask] = Z[mask] ** <span class="number">2</span> + C[mask]
+        M[mask] = i
+
+    <span class="keyword">return</span> M
+
+
+<span <span class="keyword">class</span>="keyword">def</span> julia(h, w, c_real, c_imag, zoom=<span class="number">1.0</span>, max_iter=<span class="number">256</span>):
+    &quot;&quot;&quot;Generate Julia <span class="builtin">set</span> <span class="keyword">for</span> a given complex constant.&quot;&quot;&quot;
+    x = np.linspace(-<span class="number">2</span>/zoom, <span class="number">2</span>/zoom, w)
+    y = np.linspace(-<span class="number">2</span>/zoom, <span class="number">2</span>/zoom, h)
+    X, Y = np.meshgrid(x, y)
+    Z = X + 1j * Y
+    c = complex(c_real, c_imag)
+
+    M = np.zeros(Z.shape)
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(max_iter):
+        mask = np.abs(Z) &lt;= <span class="number">2</span>
+        Z[mask] = Z[mask] ** <span class="number">2</span> + c
+        M[mask] = i
+
+    <span class="keyword">return</span> M
+
+
+<span <span class="keyword">class</span>="keyword">def</span> burning_ship(h, w, x_center, y_center, zoom, max_iter=<span class="number">256</span>):
+    &quot;&quot;&quot;Generate Burning Ship fractal.&quot;&quot;&quot;
+    x = np.linspace(x_center - <span class="number">2</span>/zoom, x_center + <span class="number">2</span>/zoom, w)
+    y = np.linspace(y_center - <span class="number">2</span>/zoom, y_center + <span class="number">2</span>/zoom, h)
+    X, Y = np.meshgrid(x, y)
+    C = X + 1j * Y
+
+    Z = np.zeros_like(C)
+    M = np.zeros(C.shape)
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(max_iter):
+        mask = np.abs(Z) &lt;= <span class="number">2</span>
+        Z[mask] = (np.abs(Z[mask].real) + 1j * np.abs(Z[mask].imag)) ** <span class="number">2</span> + C[mask]
+        M[mask] = i
+
+    <span class="keyword">return</span> M
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_garden(seed=<span class="keyword">None</span>, output_dir=<span class="keyword">None</span>):
+    &quot;&quot;&quot;Create a fractal garden image.&quot;&quot;&quot;
+    <span class="keyword">if</span> seed <span class="keyword">is</span> <span class="keyword">None</span>:
+        seed = <span class="builtin">int</span>(datetime.now().timestamp())
+
+    np.random.seed(seed)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Determine output directory</span>
+    <span class="keyword">if</span> output_dir <span class="keyword">is</span> <span class="keyword">None</span>:
+        output_dir = Path(__file__).parent.parent / &quot;art&quot;
+    output_dir = Path(output_dir)
+    output_dir.mkdir(exist_ok=<span class="keyword">True</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Image parameters</span>
+    h, w = <span class="number">1000</span>, <span class="number">1400</span>
+    dpi = <span class="number">100</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Choose fractal <span class="builtin">type</span></span>
+    fractal_type = np.random.choice([&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;mandelbrot&#<span class="number">039</span>;, &#<span class="number">039</span>;julia&#<span class="number">039</span>;, &#<span class="number">039</span>;burning_ship&#<span class="number">039</span>;])</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Generate fractal based on <span class="builtin">type</span></span>
+    <span class="keyword">if</span> fractal_type == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;mandelbrot&#<span class="number">039</span>;:</span>
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Interesting regions of Mandelbrot</span>
+        regions = [
+            (-<span class="number">0.5</span>, <span class="number">0</span>, <span class="number">1</span>),        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Classic view</span>
+            (-<span class="number">0.75</span>, <span class="number">0.1</span>, <span class="number">4</span>),     <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Sea horse valley</span>
+            (-<span class="number">1.25</span>, <span class="number">0.02</span>, <span class="number">10</span>),   <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Elephant valley</span>
+            (-<span class="number">0.16</span>, <span class="number">1.0405</span>, <span class="number">50</span>), <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Deep zoom</span>
+        ]
+        x_c, y_c, zoom = regions[np.random.randint(<span class="builtin">len</span>(regions))]
+        M = mandelbrot(h, w, x_c, y_c, zoom)
+        title = f&quot;Mandelbrot at ({x_c:.3f}, {y_c:.3f})&quot;
+
+    <span class="keyword">elif</span> fractal_type == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;julia&#<span class="number">039</span>;:</span>
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Interesting Julia <span class="builtin">set</span> constants</span>
+        constants = [
+            (-<span class="number">0.8</span>, <span class="number">0.156</span>),       <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Classic</span>
+            (-<span class="number">0.4</span>, <span class="number">0.6</span>),         <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Dendrite</span>
+            (<span class="number">0.285</span>, <span class="number">0.01</span>),       <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Island</span>
+            (-<span class="number">0.70176</span>, -<span class="number">0.3842</span>), <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Dragon</span>
+        ]
+        c_r, c_i = constants[np.random.randint(<span class="builtin">len</span>(constants))]
+        zoom = <span class="number">1</span> + np.random.random() * <span class="number">2</span>
+        M = julia(h, w, c_r, c_i, zoom)
+        title = f&quot;Julia c=({c_r:.4f}, {c_i:.4f})&quot;
+
+    <span class="keyword">else</span>:  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># burning_ship</span>
+        regions = [
+            (-<span class="number">0.5</span>, -<span class="number">0.5</span>, <span class="number">1</span>),
+            (-<span class="number">1.755</span>, -<span class="number">0.04</span>, <span class="number">20</span>),
+        ]
+        x_c, y_c, zoom = regions[np.random.randint(<span class="builtin">len</span>(regions))]
+        M = burning_ship(h, w, x_c, y_c, zoom)
+        title = f&quot;Burning Ship at ({x_c:.3f}, {y_c:.3f})&quot;
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create figure</span>
+    fig, ax = plt.subplots(figsize=(w/dpi, h/dpi), dpi=dpi)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Apply custom colormap</span>
+    cmap = create_custom_colormap(seed % <span class="number">1000</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Normalize <span class="keyword">and</span> apply log transform <span class="keyword">for</span> better contrast</span>
+    M_normalized = np.log1p(M)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot</span>
+    ax.imshow(M_normalized, cmap=cmap, extent=[-<span class="number">2</span>, <span class="number">2</span>, -<span class="number">2</span>, <span class="number">2</span>])
+    ax.set_axis_off()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Add subtle title</span>
+    fig.text(<span class="number">0.02</span>, <span class="number">0.02</span>, title, fontsize=<span class="number">8</span>, color=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;white&#<span class="number">039</span>;, alpha=<span class="number">0.5</span>)</span>
+    fig.text(<span class="number">0.98</span>, <span class="number">0.02</span>, f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;seed: {seed}&#<span class="number">039</span>;, fontsize=<span class="number">8</span>, color=&#<span class="number">039</span>;white&#<span class="number">039</span>;, alpha=<span class="number">0.5</span>, ha=&#<span class="number">039</span>;right&#<span class="number">039</span>;)</span>
+
+    plt.tight_layout(pad=<span class="number">0</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Save</span>
+    filename = f&quot;fractal_{seed}.png&quot;
+    filepath = output_dir / filename
+    plt.savefig(filepath, bbox_inches=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;tight&#<span class="number">039</span>;, pad_inches=<span class="number">0</span>, facecolor=&#<span class="number">039</span>;black&#<span class="number">039</span>;)</span>
+    plt.close()
+
+    <span class="builtin">print</span>(f&quot;Created: {filepath}&quot;)
+    <span class="keyword">return</span> filepath
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_gallery(count=<span class="number">4</span>, output_dir=<span class="keyword">None</span>):
+    &quot;&quot;&quot;Create a gallery of fractal images.&quot;&quot;&quot;
+    paths = []
+    base_seed = <span class="builtin">int</span>(datetime.now().timestamp())
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(count):
+        path = create_garden(seed=base_seed + i, output_dir=output_dir)
+        paths.append(path)
+
+    <span class="builtin">print</span>(f&quot;\nGallery created <span class="keyword">with</span> {count} images&quot;)
+    <span class="keyword">return</span> paths
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="keyword">import</span> sys
+
+    <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &gt; <span class="number">1</span> <span class="keyword">and</span> sys.argv[<span class="number">1</span>] == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;gallery&#<span class="number">039</span>;:</span>
+        count = <span class="builtin">int</span>(sys.argv[<span class="number">2</span>]) <span class="keyword">if</span> <span class="builtin">len</span>(sys.argv) &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">4</span>
+        create_gallery(count)
+    <span class="keyword">else</span>:
+        create_garden()
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

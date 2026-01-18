@@ -1,0 +1,303 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Evolution Lab: Evolving simple programs through genetic algorithms.
+
+This experiment evolves mathematical expressions to fit target behaviors.
+It&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s a simple form of genetic programming - letting programs breed <span class="keyword">and</span> mutate.</span>
+
+The goal: See what emerges <span class="keyword">from</span> random variation <span class="keyword">and</span> selection.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> random
+<span class="keyword">import</span> math
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Callable, Optional
+<span class="keyword">import</span> copy
+
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># The primitives our evolved programs can use</span>
+OPERATIONS = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;+&#<span class="number">039</span>;, &#<span class="number">039</span>;-&#<span class="number">039</span>;, &#<span class="number">039</span>;*&#<span class="number">039</span>;, &#<span class="number">039</span>;/&#<span class="number">039</span>;, &#<span class="number">039</span>;sin&#<span class="number">039</span>;, &#<span class="number">039</span>;cos&#<span class="number">039</span>;, &#<span class="number">039</span>;abs&#<span class="number">039</span>;, &#<span class="number">039</span>;max&#<span class="number">039</span>;, &#<span class="number">039</span>;min&#<span class="number">039</span>;]</span>
+CONSTANTS = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0.5</span>, math.pi, math.e]
+
+
+@dataclass
+<span class="keyword">class</span> <span class="class-name">Node</span>:
+    &quot;&quot;&quot;A node <span class="keyword">in</span> the expression tree.&quot;&quot;&quot;
+    op: <span class="builtin">str</span>  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Operation <span class="keyword">or</span> &#<span class="number">039</span>;const&#<span class="number">039</span>; <span class="keyword">or</span> &#<span class="number">039</span>;x&#<span class="number">039</span>;</span>
+    value: Optional[<span class="builtin">float</span>] = <span class="keyword">None</span>  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># For constants</span>
+    left: Optional[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Node&#<span class="number">039</span>;] = <span class="keyword">None</span></span>
+    right: Optional[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Node&#<span class="number">039</span>;] = <span class="keyword">None</span></span>
+
+    <span <span class="keyword">class</span>="keyword">def</span> evaluate(self, x: <span class="builtin">float</span>) -&gt; <span class="builtin">float</span>:
+        &quot;&quot;&quot;Evaluate this subtree <span class="keyword">with</span> the given x value.&quot;&quot;&quot;
+        <span class="keyword">try</span>:
+            <span class="keyword">if</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;x&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> x
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;const&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> self.value
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;+&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> self.left.evaluate(x) + self.right.evaluate(x)
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;-&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> self.left.evaluate(x) - self.right.evaluate(x)
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;*&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> self.left.evaluate(x) * self.right.evaluate(x)
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;/&#<span class="number">039</span>;:</span>
+                r = self.right.evaluate(x)
+                <span class="keyword">return</span> self.left.evaluate(x) / r <span class="keyword">if</span> abs(r) &gt; 1e-<span class="number">10</span> <span class="keyword">else</span> <span class="number">0</span>
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;sin&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> math.sin(self.left.evaluate(x))
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;cos&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> math.cos(self.left.evaluate(x))
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;abs&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> abs(self.left.evaluate(x))
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;max&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> max(self.left.evaluate(x), self.right.evaluate(x))
+            <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;min&#<span class="number">039</span>;:</span>
+                <span class="keyword">return</span> min(self.left.evaluate(x), self.right.evaluate(x))
+            <span class="keyword">else</span>:
+                <span class="keyword">return</span> <span class="number">0</span>
+        <span class="keyword">except</span> (ValueError, OverflowError, ZeroDivisionError):
+            <span class="keyword">return</span> <span class="number">0</span>
+
+    <span <span class="keyword">class</span>="keyword">def</span> to_string(self) -&gt; <span class="builtin">str</span>:
+        &quot;&quot;&quot;Convert to readable string.&quot;&quot;&quot;
+        <span class="keyword">if</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;x&#<span class="number">039</span>;:</span>
+            <span class="keyword">return</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;x&#<span class="number">039</span>;</span>
+        <span class="keyword">elif</span> self.op == &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;const&#<span class="number">039</span>;:</span>
+            <span class="keyword">if</span> self.value == math.pi:
+                <span class="keyword">return</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;pi&#<span class="number">039</span>;</span>
+            <span class="keyword">elif</span> self.value == math.e:
+                <span class="keyword">return</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;e&#<span class="number">039</span>;</span>
+            <span class="keyword">else</span>:
+                <span class="keyword">return</span> f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;{self.value:.2f}&#<span class="number">039</span>;</span>
+        <span class="keyword">elif</span> self.op <span class="keyword">in</span> [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;sin&#<span class="number">039</span>;, &#<span class="number">039</span>;cos&#<span class="number">039</span>;, &#<span class="number">039</span>;abs&#<span class="number">039</span>;]:</span>
+            <span class="keyword">return</span> f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;{self.op}({self.left.to_string()})&#<span class="number">039</span>;</span>
+        <span class="keyword">elif</span> self.op <span class="keyword">in</span> [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;max&#<span class="number">039</span>;, &#<span class="number">039</span>;min&#<span class="number">039</span>;]:</span>
+            <span class="keyword">return</span> f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;{self.op}({self.left.to_string()}, {self.right.to_string()})&#<span class="number">039</span>;</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;({self.left.to_string()} {self.op} {self.right.to_string()})&#<span class="number">039</span>;</span>
+
+    <span <span class="keyword">class</span>="keyword">def</span> depth(self) -&gt; <span class="builtin">int</span>:
+        &quot;&quot;&quot;Get tree depth.&quot;&quot;&quot;
+        <span class="keyword">if</span> self.left <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">and</span> self.right <span class="keyword">is</span> <span class="keyword">None</span>:
+            <span class="keyword">return</span> <span class="number">1</span>
+        left_d = self.left.depth() <span class="keyword">if</span> self.left <span class="keyword">else</span> <span class="number">0</span>
+        right_d = self.right.depth() <span class="keyword">if</span> self.right <span class="keyword">else</span> <span class="number">0</span>
+        <span class="keyword">return</span> <span class="number">1</span> + max(left_d, right_d)
+
+    <span <span class="keyword">class</span>="keyword">def</span> size(self) -&gt; <span class="builtin">int</span>:
+        &quot;&quot;&quot;Get number of nodes.&quot;&quot;&quot;
+        count = <span class="number">1</span>
+        <span class="keyword">if</span> self.left:
+            count += self.left.size()
+        <span class="keyword">if</span> self.right:
+            count += self.right.size()
+        <span class="keyword">return</span> count
+
+
+<span <span class="keyword">class</span>="keyword">def</span> random_tree(max_depth: <span class="builtin">int</span> = <span class="number">4</span>) -&gt; Node:
+    &quot;&quot;&quot;Generate a random expression tree.&quot;&quot;&quot;
+    <span class="keyword">if</span> max_depth &lt;= <span class="number">1</span> <span class="keyword">or</span> random.random() &lt; <span class="number">0.3</span>:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Leaf node</span>
+        <span class="keyword">if</span> random.random() &lt; <span class="number">0.5</span>:
+            <span class="keyword">return</span> Node(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;x&#<span class="number">039</span>;)</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> Node(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;const&#<span class="number">039</span>;, value=random.choice(CONSTANTS))</span>
+    <span class="keyword">else</span>:
+        op = random.choice(OPERATIONS)
+        <span class="keyword">if</span> op <span class="keyword">in</span> [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;sin&#<span class="number">039</span>;, &#<span class="number">039</span>;cos&#<span class="number">039</span>;, &#<span class="number">039</span>;abs&#<span class="number">039</span>;]:</span>
+            <span class="keyword">return</span> Node(op, left=random_tree(max_depth - <span class="number">1</span>))
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> Node(op,
+                       left=random_tree(max_depth - <span class="number">1</span>),
+                       right=random_tree(max_depth - <span class="number">1</span>))
+
+
+<span <span class="keyword">class</span>="keyword">def</span> crossover(parent1: Node, parent2: Node) -&gt; Node:
+    &quot;&quot;&quot;Combine two trees via crossover.&quot;&quot;&quot;
+    child = copy.deepcopy(parent1)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find random subtree <span class="keyword">in</span> child to replace</span>
+    <span <span class="keyword">class</span>="keyword">def</span> get_all_nodes(node, path=[]):
+        result = [(node, path)]
+        <span class="keyword">if</span> node.left:
+            result.extend(get_all_nodes(node.left, path + [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;left&#<span class="number">039</span>;]))</span>
+        <span class="keyword">if</span> node.right:
+            result.extend(get_all_nodes(node.right, path + [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;right&#<span class="number">039</span>;]))</span>
+        <span class="keyword">return</span> result
+
+    child_nodes = get_all_nodes(child)
+    parent2_nodes = get_all_nodes(parent2)
+
+    <span class="keyword">if</span> <span class="builtin">len</span>(child_nodes) &gt; <span class="number">1</span> <span class="keyword">and</span> parent2_nodes:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Pick a node to replace (<span class="keyword">not</span> root)</span>
+        _, replace_path = random.choice(child_nodes[<span class="number">1</span>:])
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Pick a subtree <span class="keyword">from</span> parent2</span>
+        donor, _ = random.choice(parent2_nodes)
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Navigate to replacement point <span class="keyword">and</span> replace</span>
+        current = child
+        <span class="keyword">for</span> step <span class="keyword">in</span> replace_path[:-<span class="number">1</span>]:
+            current = getattr(current, step)
+        setattr(current, replace_path[-<span class="number">1</span>], copy.deepcopy(donor))
+
+    <span class="keyword">return</span> child
+
+
+<span <span class="keyword">class</span>="keyword">def</span> mutate(node: Node, rate: <span class="builtin">float</span> = <span class="number">0.1</span>) -&gt; Node:
+    &quot;&quot;&quot;Randomly mutate parts of the tree.&quot;&quot;&quot;
+    node = copy.deepcopy(node)
+
+    <span <span class="keyword">class</span>="keyword">def</span> mutate_recursive(n: Node):
+        <span class="keyword">if</span> random.random() &lt; rate:
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Replace this subtree <span class="keyword">with</span> a new random one</span>
+            new = random_tree(<span class="number">2</span>)
+            n.op = new.op
+            n.value = new.value
+            n.left = new.left
+            n.right = new.right
+        <span class="keyword">else</span>:
+            <span class="keyword">if</span> n.left:
+                mutate_recursive(n.left)
+            <span class="keyword">if</span> n.right:
+                mutate_recursive(n.right)
+
+    mutate_recursive(node)
+    <span class="keyword">return</span> node
+
+
+<span class="keyword">class</span> <span class="class-name">Population</span>:
+    &quot;&quot;&quot;A population of evolving programs.&quot;&quot;&quot;
+
+    <span <span class="keyword">class</span>="keyword">def</span> __init__(self, size: <span class="builtin">int</span> = <span class="number">50</span>, target_func: Callable = <span class="keyword">None</span>):
+        self.size = size
+        self.individuals = [random_tree() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(size)]
+        self.target_func = target_func <span class="keyword">or</span> (<span class="keyword">lambda</span> x: x * x)
+        self.generation = <span class="number">0</span>
+        self.best_fitness_history = []
+
+    <span <span class="keyword">class</span>="keyword">def</span> fitness(self, individual: Node) -&gt; <span class="builtin">float</span>:
+        &quot;&quot;&quot;Evaluate how well an individual matches the target.&quot;&quot;&quot;
+        error = <span class="number">0</span>
+        test_points = [x / <span class="number">10.0</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(-<span class="number">50</span>, <span class="number">51</span>)]
+
+        <span class="keyword">for</span> x <span class="keyword">in</span> test_points:
+            <span class="keyword">try</span>:
+                predicted = individual.evaluate(x)
+                expected = self.target_func(x)
+                error += (predicted - expected) ** <span class="number">2</span>
+            <span class="keyword">except</span>:
+                error += <span class="number">1000</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Penalize complexity slightly</span>
+        complexity_penalty = individual.size() * <span class="number">0.01</span>
+
+        <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1.0</span> + error + complexity_penalty)
+
+    <span <span class="keyword">class</span>="keyword">def</span> evolve(self, generations: <span class="builtin">int</span> = <span class="number">100</span>, verbose: bool = <span class="keyword">True</span>):
+        &quot;&quot;&quot;Run evolution <span class="keyword">for</span> specified generations.&quot;&quot;&quot;
+        <span class="keyword">for</span> gen <span class="keyword">in</span> <span class="builtin">range</span>(generations):
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Evaluate fitness</span>
+            scored = [(self.fitness(ind), ind) <span class="keyword">for</span> ind <span class="keyword">in</span> self.individuals]
+            scored.sort(key=<span class="keyword">lambda</span> x: -x[<span class="number">0</span>])  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Best first</span>
+
+            best_fitness = scored[<span class="number">0</span>][<span class="number">0</span>]
+            self.best_fitness_history.append(best_fitness)
+
+            <span class="keyword">if</span> verbose <span class="keyword">and</span> gen % <span class="number">10</span> == <span class="number">0</span>:
+                <span class="builtin">print</span>(f&quot;Gen {gen:4d}: Best fitness = {best_fitness:.6f}&quot;)
+                <span class="builtin">print</span>(f&quot;         Best expr: {scored[<span class="number">0</span>][<span class="number">1</span>].to_string()}&quot;)
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Selection (tournament)</span>
+            <span <span class="keyword">class</span>="keyword">def</span> tournament(k=<span class="number">3</span>):
+                contestants = random.sample(scored, k)
+                <span class="keyword">return</span> max(contestants, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])[<span class="number">1</span>]
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create new population</span>
+            new_pop = []
+
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Elitism: keep best <span class="number">2</span></span>
+            new_pop.append(copy.deepcopy(scored[<span class="number">0</span>][<span class="number">1</span>]))
+            new_pop.append(copy.deepcopy(scored[<span class="number">1</span>][<span class="number">1</span>]))
+
+            <span class="keyword">while</span> <span class="builtin">len</span>(new_pop) &lt; self.size:
+                <span class="keyword">if</span> random.random() &lt; <span class="number">0.8</span>:
+                    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Crossover</span>
+                    p1 = tournament()
+                    p2 = tournament()
+                    child = crossover(p1, p2)
+                <span class="keyword">else</span>:
+                    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Mutation only</span>
+                    child = mutate(tournament(), rate=<span class="number">0.2</span>)
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Always apply some mutation</span>
+                child = mutate(child, rate=<span class="number">0.05</span>)
+
+                <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Limit tree depth</span>
+                <span class="keyword">if</span> child.depth() &lt;= <span class="number">8</span>:
+                    new_pop.append(child)
+
+            self.individuals = new_pop
+            self.generation += <span class="number">1</span>
+
+        <span class="keyword">return</span> scored[<span class="number">0</span>][<span class="number">1</span>]  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Return best individual</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> run_experiment(name: <span class="builtin">str</span>, target_func: Callable, description: <span class="builtin">str</span>):
+    &quot;&quot;&quot;Run an evolution experiment.&quot;&quot;&quot;
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(f&quot;EXPERIMENT: {name}&quot;)
+    <span class="builtin">print</span>(f&quot;Target: {description}&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+
+    pop = Population(size=<span class="number">100</span>, target_func=target_func)
+    best = pop.evolve(generations=<span class="number">100</span>, verbose=<span class="keyword">True</span>)
+
+    <span class="builtin">print</span>()
+    <span class="builtin">print</span>(&quot;FINAL RESULT:&quot;)
+    <span class="builtin">print</span>(f&quot;  Expression: {best.to_string()}&quot;)
+    <span class="builtin">print</span>(f&quot;  Fitness: {pop.fitness(best):.6f}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Test on some values</span>
+    <span class="builtin">print</span>(&quot;\n  Sample outputs:&quot;)
+    <span class="keyword">for</span> x <span class="keyword">in</span> [-<span class="number">2</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]:
+        expected = target_func(x)
+        predicted = best.evaluate(x)
+        <span class="builtin">print</span>(f&quot;    f({x:2d}) = {predicted:<span class="number">8.</span>4f}  (expected: {expected:<span class="number">8.</span>4f})&quot;)
+
+    <span class="keyword">return</span> best, pop
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="builtin">print</span>(&quot;EVOLUTION LAB: Evolving Mathematical Expressions&quot;)
+    <span class="builtin">print</span>()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Experiment <span class="number">1</span>: Evolve x^<span class="number">2</span></span>
+    run_experiment(
+        &quot;Square Function&quot;,
+        <span class="keyword">lambda</span> x: x * x,
+        &quot;f(x) = x^<span class="number">2</span>&quot;
+    )
+
+    <span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot; * <span class="number">60</span> + &quot;\n&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Experiment <span class="number">2</span>: Evolve something more complex</span>
+    run_experiment(
+        &quot;Sine Wave&quot;,
+        <span class="keyword">lambda</span> x: math.sin(x),
+        &quot;f(x) = sin(x)&quot;
+    )
+
+    <span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot; * <span class="number">60</span> + &quot;\n&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Experiment <span class="number">3</span>: A weird target - let&#<span class="number">039</span>;s see what evolves</span>
+    run_experiment(
+        &quot;Mystery Function&quot;,
+        <span class="keyword">lambda</span> x: abs(x) - x*x/<span class="number">10</span> + math.sin(x*<span class="number">2</span>),
+        &quot;f(x) = |x| - x^<span class="number">2</span>/<span class="number">10</span> + sin(2x)&quot;
+    )
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

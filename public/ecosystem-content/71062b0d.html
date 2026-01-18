@@ -1,0 +1,211 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Prime Spirals: Exploring the visual beauty of prime numbers.
+
+The Ulam spiral reveals unexpected patterns <span class="keyword">in</span> prime distribution.
+This creates visualizations <span class="keyword">and</span> explores what we can discover.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+
+<span <span class="keyword">class</span>="keyword">def</span> sieve_of_eratosthenes(n: <span class="builtin">int</span>) -&gt; np.ndarray:
+    &quot;&quot;&quot;Generate array where <span class="keyword">True</span> indicates prime index.&quot;&quot;&quot;
+    is_prime = np.ones(n + <span class="number">1</span>, dtype=bool)
+    is_prime[<span class="number">0</span>] = is_prime[<span class="number">1</span>] = <span class="keyword">False</span>
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">2</span>, <span class="builtin">int</span>(np.sqrt(n)) + <span class="number">1</span>):
+        <span class="keyword">if</span> is_prime[i]:
+            is_prime[i*i::i] = <span class="keyword">False</span>
+
+    <span class="keyword">return</span> is_prime
+
+
+<span <span class="keyword">class</span>="keyword">def</span> spiral_coords(n: <span class="builtin">int</span>) -&gt; <span class="builtin">list</span>:
+    &quot;&quot;&quot;Generate coordinates <span class="keyword">for</span> Ulam spiral of size n.&quot;&quot;&quot;
+    coords = [(<span class="number">0</span>, <span class="number">0</span>)]
+    x, y = <span class="number">0</span>, <span class="number">0</span>
+    direction = <span class="number">0</span>  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># <span class="number">0</span>=right, <span class="number">1</span>=up, <span class="number">2</span>=left, <span class="number">3</span>=down</span>
+    dx = [<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>]
+    dy = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>]
+
+    step_size = <span class="number">1</span>
+    steps_taken = <span class="number">0</span>
+    turns = <span class="number">0</span>
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, n):
+        x += dx[direction]
+        y += dy[direction]
+        coords.append((x, y))
+        steps_taken += <span class="number">1</span>
+
+        <span class="keyword">if</span> steps_taken == step_size:
+            direction = (direction + <span class="number">1</span>) % <span class="number">4</span>
+            turns += <span class="number">1</span>
+            steps_taken = <span class="number">0</span>
+            <span class="keyword">if</span> turns % <span class="number">2</span> == <span class="number">0</span>:
+                step_size += <span class="number">1</span>
+
+    <span class="keyword">return</span> coords
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_ulam_spiral(size: <span class="builtin">int</span> = <span class="number">201</span>, output_dir: Path = <span class="keyword">None</span>):
+    &quot;&quot;&quot;Create an Ulam spiral visualization.&quot;&quot;&quot;
+    <span class="keyword">if</span> output_dir <span class="keyword">is</span> <span class="keyword">None</span>:
+        output_dir = Path(__file__).parent.parent / &quot;art&quot;
+    output_dir.mkdir(exist_ok=<span class="keyword">True</span>)
+
+    n = size * size
+    is_prime = sieve_of_eratosthenes(n)
+    coords = spiral_coords(n)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create grid</span>
+    grid = np.zeros((size, size))
+    center = size // <span class="number">2</span>
+
+    <span class="keyword">for</span> i, (x, y) <span class="keyword">in</span> enumerate(coords):
+        <span class="keyword">if</span> i &lt; <span class="builtin">len</span>(is_prime) <span class="keyword">and</span> is_prime[i]:
+            grid[center + y, center + x] = <span class="number">1</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot</span>
+    fig, ax = plt.subplots(figsize=(<span class="number">12</span>, <span class="number">12</span>), dpi=<span class="number">100</span>)
+    ax.imshow(grid, cmap=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;binary&#<span class="number">039</span>;, interpolation=&#<span class="number">039</span>;nearest&#<span class="number">039</span>;)</span>
+    ax.set_title(f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Ulam Spiral ({size}x{size})&#<span class="number">039</span>;, fontsize=<span class="number">14</span>)</span>
+    ax.axis(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;off&#<span class="number">039</span>;)</span>
+
+    filepath = output_dir / f&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;ulam_spiral_{size}.png&#<span class="number">039</span>;</span>
+    plt.savefig(filepath, bbox_inches=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;tight&#<span class="number">039</span>;, facecolor=&#<span class="number">039</span>;white&#<span class="number">039</span>;)</span>
+    plt.close()
+
+    <span class="builtin">print</span>(f&quot;Created: {filepath}&quot;)
+    <span class="keyword">return</span> filepath
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_prime_gaps(limit: <span class="builtin">int</span> = <span class="number">10000</span>):
+    &quot;&quot;&quot;Analyze gaps between consecutive primes.&quot;&quot;&quot;
+    is_prime = sieve_of_eratosthenes(limit)
+    primes = np.where(is_prime)[<span class="number">0</span>]
+
+    gaps = np.diff(primes)
+
+    <span class="builtin">print</span>(f&quot;\nPrime Gap Analysis (first {<span class="builtin">len</span>(primes)} primes):&quot;)
+    <span class="builtin">print</span>(f&quot;  Smallest gap: {gaps.min()}&quot;)
+    <span class="builtin">print</span>(f&quot;  Largest gap: {gaps.max()}&quot;)
+    <span class="builtin">print</span>(f&quot;  Mean gap: {gaps.mean():.2f}&quot;)
+    <span class="builtin">print</span>(f&quot;  Median gap: {np.median(gaps):.2f}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Gap distribution</span>
+    unique_gaps, counts = np.unique(gaps, return_counts=<span class="keyword">True</span>)
+    <span class="builtin">print</span>(f&quot;\n  Most common gaps:&quot;)
+    sorted_idx = np.argsort(-counts)[:<span class="number">10</span>]
+    <span class="keyword">for</span> idx <span class="keyword">in</span> sorted_idx:
+        <span class="builtin">print</span>(f&quot;    Gap {unique_gaps[idx]:3d}: {counts[idx]:5d} occurrences&quot;)
+
+    <span class="keyword">return</span> gaps
+
+
+<span <span class="keyword">class</span>="keyword">def</span> prime_digit_patterns(limit: <span class="builtin">int</span> = <span class="number">100000</span>):
+    &quot;&quot;&quot;Explore patterns <span class="keyword">in</span> prime digits.&quot;&quot;&quot;
+    is_prime = sieve_of_eratosthenes(limit)
+    primes = np.where(is_prime)[<span class="number">0</span>]
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Last digit distribution (should only be <span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span> <span class="keyword">for</span> primes &gt; <span class="number">5</span>)</span>
+    last_digits = [p % <span class="number">10</span> <span class="keyword">for</span> p <span class="keyword">in</span> primes <span class="keyword">if</span> p &gt; <span class="number">5</span>]
+    unique, counts = np.unique(last_digits, return_counts=<span class="keyword">True</span>)
+
+    <span class="builtin">print</span>(f&quot;\nLast digit distribution (primes &gt; <span class="number">5</span>):&quot;)
+    <span class="keyword">for</span> d, c <span class="keyword">in</span> zip(unique, counts):
+        pct = <span class="number">100</span> * c / <span class="builtin">len</span>(last_digits)
+        bar = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;#&#<span class="number">039</span>; * <span class="builtin">int</span>(pct)</span>
+        <span class="builtin">print</span>(f&quot;  {d}: {bar} ({pct:.1f}%)&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Digital root patterns (sum digits until single digit)</span>
+    <span <span class="keyword">class</span>="keyword">def</span> digital_root(n):
+        <span class="keyword">while</span> n &gt;= <span class="number">10</span>:
+            n = sum(<span class="builtin">int</span>(d) <span class="keyword">for</span> d <span class="keyword">in</span> <span class="builtin">str</span>(n))
+        <span class="keyword">return</span> n
+
+    roots = [digital_root(p) <span class="keyword">for</span> p <span class="keyword">in</span> primes]
+    unique, counts = np.unique(roots, return_counts=<span class="keyword">True</span>)
+
+    <span class="builtin">print</span>(f&quot;\nDigital root distribution:&quot;)
+    <span class="keyword">for</span> r, c <span class="keyword">in</span> zip(unique, counts):
+        pct = <span class="number">100</span> * c / <span class="builtin">len</span>(roots)
+        <span class="builtin">print</span>(f&quot;  {r}: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;#&#<span class="number">039</span>; * <span class="builtin">int</span>(pct/<span class="number">2</span>)} ({pct:.1f}%)&quot;)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_prime_constellation(output_dir: Path = <span class="keyword">None</span>):
+    &quot;&quot;&quot;Create a visualization of prime pairs, triplets, etc.&quot;&quot;&quot;
+    <span class="keyword">if</span> output_dir <span class="keyword">is</span> <span class="keyword">None</span>:
+        output_dir = Path(__file__).parent.parent / &quot;art&quot;
+    output_dir.mkdir(exist_ok=<span class="keyword">True</span>)
+
+    limit = <span class="number">1000</span>
+    is_prime = sieve_of_eratosthenes(limit)
+    primes = <span class="builtin">list</span>(np.where(is_prime)[<span class="number">0</span>])
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find twin primes (differ by <span class="number">2</span>)</span>
+    twins = [(p, p+<span class="number">2</span>) <span class="keyword">for</span> p <span class="keyword">in</span> primes <span class="keyword">if</span> p+<span class="number">2</span> &lt; limit <span class="keyword">and</span> is_prime[p+<span class="number">2</span>]]
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find cousin primes (differ by <span class="number">4</span>)</span>
+    cousins = [(p, p+<span class="number">4</span>) <span class="keyword">for</span> p <span class="keyword">in</span> primes <span class="keyword">if</span> p+<span class="number">4</span> &lt; limit <span class="keyword">and</span> is_prime[p+<span class="number">4</span>]]
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find sexy primes (differ by <span class="number">6</span>)</span>
+    sexy = [(p, p+<span class="number">6</span>) <span class="keyword">for</span> p <span class="keyword">in</span> primes <span class="keyword">if</span> p+<span class="number">6</span> &lt; limit <span class="keyword">and</span> is_prime[p+<span class="number">6</span>]]
+
+    <span class="builtin">print</span>(f&quot;\nPrime Constellations up to {limit}:&quot;)
+    <span class="builtin">print</span>(f&quot;  Twin primes (gap=<span class="number">2</span>): {<span class="builtin">len</span>(twins)}&quot;)
+    <span class="builtin">print</span>(f&quot;  Cousin primes (gap=<span class="number">4</span>): {<span class="builtin">len</span>(cousins)}&quot;)
+    <span class="builtin">print</span>(f&quot;  Sexy primes (gap=<span class="number">6</span>): {<span class="builtin">len</span>(sexy)}&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Visualize</span>
+    fig, ax = plt.subplots(figsize=(<span class="number">14</span>, <span class="number">8</span>), dpi=<span class="number">100</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot all primes <span class="keyword">as</span> small dots</span>
+    ax.scatter(primes, [<span class="number">0</span>] * <span class="builtin">len</span>(primes), s=<span class="number">5</span>, c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;gray&#<span class="number">039</span>;, alpha=<span class="number">0.3</span>, label=&#<span class="number">039</span>;All primes&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot twin primes</span>
+    twin_x = [p <span class="keyword">for</span> pair <span class="keyword">in</span> twins <span class="keyword">for</span> p <span class="keyword">in</span> pair]
+    ax.scatter(twin_x, [<span class="number">1</span>] * <span class="builtin">len</span>(twin_x), s=<span class="number">20</span>, c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;red&#<span class="number">039</span>;, alpha=<span class="number">0.6</span>, label=&#<span class="number">039</span>;Twin primes&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot cousin primes</span>
+    cousin_x = [p <span class="keyword">for</span> pair <span class="keyword">in</span> cousins <span class="keyword">for</span> p <span class="keyword">in</span> pair]
+    ax.scatter(cousin_x, [<span class="number">2</span>] * <span class="builtin">len</span>(cousin_x), s=<span class="number">20</span>, c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;blue&#<span class="number">039</span>;, alpha=<span class="number">0.6</span>, label=&#<span class="number">039</span>;Cousin primes&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Plot sexy primes</span>
+    sexy_x = [p <span class="keyword">for</span> pair <span class="keyword">in</span> sexy <span class="keyword">for</span> p <span class="keyword">in</span> pair]
+    ax.scatter(sexy_x, [<span class="number">3</span>] * <span class="builtin">len</span>(sexy_x), s=<span class="number">20</span>, c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;green&#<span class="number">039</span>;, alpha=<span class="number">0.6</span>, label=&#<span class="number">039</span>;Sexy primes&#<span class="number">039</span>;)</span>
+
+    ax.set_yticks([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])
+    ax.set_yticklabels([&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;All&#<span class="number">039</span>;, &#<span class="number">039</span>;Twin (±<span class="number">2</span>)&#<span class="number">039</span>;, &#<span class="number">039</span>;Cousin (±<span class="number">4</span>)&#<span class="number">039</span>;, &#<span class="number">039</span>;Sexy (±<span class="number">6</span>)&#<span class="number">039</span>;])</span>
+    ax.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Number&#<span class="number">039</span>;)</span>
+    ax.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Prime Constellations&#<span class="number">039</span>;)</span>
+    ax.legend(loc=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;upper right&#<span class="number">039</span>;)</span>
+
+    filepath = output_dir / &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;prime_constellations.png&#<span class="number">039</span>;</span>
+    plt.savefig(filepath, bbox_inches=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;tight&#<span class="number">039</span>;, facecolor=&#<span class="number">039</span>;white&#<span class="number">039</span>;)</span>
+    plt.close()
+
+    <span class="builtin">print</span>(f&quot;Created: {filepath}&quot;)
+    <span class="keyword">return</span> filepath
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+    <span class="builtin">print</span>(&quot;PRIME SPIRALS: Exploring the beauty of primes&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">60</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create visualizations</span>
+    create_ulam_spiral(<span class="number">201</span>)
+    create_prime_constellation()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Analysis</span>
+    analyze_prime_gaps(<span class="number">100000</span>)
+    prime_digit_patterns(<span class="number">100000</span>)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

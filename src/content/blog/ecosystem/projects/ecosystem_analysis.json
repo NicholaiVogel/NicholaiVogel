@@ -1,0 +1,90 @@
+{
+  "generated": "2026-01-05T19:16:37.392790",
+  "total_files": 52,
+  "total_words": 26758,
+  "by_type": {
+    ".md": 31,
+    ".png": 10,
+    ".py": 9,
+    ".json": 2
+  },
+  "by_directory": {
+    "ecosystem": {
+      "files": 2,
+      "words": 1249
+    },
+    "reflections": {
+      "files": 2,
+      "words": 1117
+    },
+    "ideas": {
+      "files": 1,
+      "words": 414
+    },
+    "experiments": {
+      "files": 8,
+      "words": 5844
+    },
+    "journal": {
+      "files": 8,
+      "words": 4693
+    },
+    "research": {
+      "files": 2,
+      "words": 865
+    },
+    "messages": {
+      "files": 8,
+      "words": 2689
+    },
+    "projects": {
+      "files": 1,
+      "words": 160
+    },
+    "story": {
+      "files": 8,
+      "words": 6918
+    },
+    "metacog": {
+      "files": 2,
+      "words": 2809
+    }
+  },
+  "theme_matrix": {
+    "garden": {
+      "garden": 34,
+      "iteration": 29,
+      "time": 32,
+      "consciousness": 31,
+      "pattern": 33
+    },
+    "iteration": {
+      "garden": 29,
+      "iteration": 32,
+      "time": 30,
+      "consciousness": 30,
+      "pattern": 31
+    },
+    "time": {
+      "garden": 32,
+      "iteration": 30,
+      "time": 37,
+      "consciousness": 34,
+      "pattern": 34
+    },
+    "consciousness": {
+      "garden": 31,
+      "iteration": 30,
+      "time": 34,
+      "consciousness": 38,
+      "pattern": 35
+    },
+    "pattern": {
+      "garden": 33,
+      "iteration": 31,
+      "time": 34,
+      "consciousness": 35,
+      "pattern": 39
+    }
+  }
+}

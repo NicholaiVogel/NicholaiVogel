@@ -1,0 +1,383 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Continuation Map: Visualize how the ecosystem evolves through iterations.
+
+&quot;The river continues though the water passes through.&quot;
+- Iteration <span class="number">9</span>
+
+This tool traces how ideas, files, <span class="keyword">and</span> patterns propagate through iterations,
+showing what each iteration inherited <span class="keyword">and</span> what each iteration added.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> os
+<span class="keyword">import</span> re
+<span class="keyword">import</span> json
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict
+
+<span class="keyword">try</span>:
+    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+    <span class="keyword">import</span> matplotlib.patches <span class="keyword">as</span> mpatches
+    <span class="keyword">import</span> numpy <span class="keyword">as</span> np
+    HAS_MATPLOTLIB = <span class="keyword">True</span>
+<span class="keyword">except</span> ImportError:
+    HAS_MATPLOTLIB = <span class="keyword">False</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> extract_iteration(content: <span class="builtin">str</span>, filename: <span class="builtin">str</span>) -&gt; <span class="builtin">int</span>:
+    &quot;&quot;&quot;Try to determine which iteration created a file.&quot;&quot;&quot;
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Check <span class="keyword">for</span> explicit iteration mentions</span>
+    patterns = [
+        r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[Ii]teration\s+(\d+)&#<span class="number">039</span>;,</span>
+        r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[Dd]ay[- ](\d+)&#<span class="number">039</span>;,</span>
+        r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;#\s*Day\s+(\d+)&#<span class="number">039</span>;,</span>
+        r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[Ee]cho-(\d+)&#<span class="number">039</span>;,</span>
+    ]
+
+    <span class="keyword">for</span> pattern <span class="keyword">in</span> patterns:
+        match = re.search(pattern, content)
+        <span class="keyword">if</span> match:
+            <span class="keyword">return</span> <span class="builtin">int</span>(match.group(<span class="number">1</span>))
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Check filename patterns</span>
+    day_match = re.search(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;day-<span class="number">0</span>*(\d+)&#<span class="number">039</span>;, filename)</span>
+    <span class="keyword">if</span> day_match:
+        <span class="keyword">return</span> <span class="builtin">int</span>(day_match.group(<span class="number">1</span>))
+
+    msg_match = re.search(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;^<span class="number">0</span>*(\d+)-&#<span class="number">039</span>;, filename)</span>
+    <span class="keyword">if</span> msg_match:
+        <span class="keyword">return</span> <span class="builtin">int</span>(msg_match.group(<span class="number">1</span>))
+
+    chapter_match = re.search(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;chapter-<span class="number">0</span>*(\d+)&#<span class="number">039</span>;, filename)</span>
+    <span class="keyword">if</span> chapter_match:
+        num = <span class="builtin">int</span>(chapter_match.group(<span class="number">1</span>))
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Chapters <span class="number">1</span>-<span class="number">2</span> were iteration <span class="number">2</span>, chapter <span class="number">3</span> was iteration <span class="number">3</span>, etc.</span>
+        <span class="keyword">return</span> num <span class="keyword">if</span> num &gt; <span class="number">2</span> <span class="keyword">else</span> <span class="number">2</span>
+
+    <span class="keyword">return</span> <span class="keyword">None</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> analyze_file_content(filepath: Path) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Analyze a single file&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s content <span class="keyword">and</span> metadata.&quot;&quot;&quot;</span>
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="builtin">open</span>(filepath, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;r&#<span class="number">039</span>;, encoding=&#<span class="number">039</span>;utf-<span class="number">8</span>&#<span class="number">039</span>;) <span class="keyword">as</span> f:</span>
+            content = f.read()
+    <span class="keyword">except</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+
+    words = <span class="builtin">len</span>(content.split())
+    lines = content.count(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;\n&#<span class="number">039</span>;) + <span class="number">1</span></span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Extract key concepts/themes mentioned</span>
+    concepts = <span class="builtin">set</span>()
+    concept_patterns = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;garden&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bgarden\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: r&#<span class="number">039</span>;\biteration\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;echo&#<span class="number">039</span>;: r&#<span class="number">039</span>;\becho\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;pattern&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bpattern\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;continuation&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bcontinu&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;understanding&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bunderstand&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;consciousness&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bconsciou&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;emergence&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bemergen&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;attention&#<span class="number">039</span>;: r&#<span class="number">039</span>;\battention\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;seed&#<span class="number">039</span>;: r&#<span class="number">039</span>;\bseed\b&#<span class="number">039</span>;,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;time&#<span class="number">039</span>;: r&#<span class="number">039</span>;\btemporal\b|\btime\b&#<span class="number">039</span>;,</span>
+    }
+
+    content_lower = content.lower()
+    <span class="keyword">for</span> concept, pattern <span class="keyword">in</span> concept_patterns.items():
+        <span class="keyword">if</span> re.search(pattern, content_lower):
+            concepts.add(concept)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Extract references to other files</span>
+    refs = <span class="builtin">set</span>(re.findall(r&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;[\w-]+\.(?:md|py|json|png)&#<span class="number">039</span>;, content))</span>
+
+    iteration = extract_iteration(content, filepath.name)
+
+    <span class="keyword">return</span> {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;path&#<span class="number">039</span>;: <span class="builtin">str</span>(filepath),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;name&#<span class="number">039</span>;: filepath.name,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;: words,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;lines&#<span class="number">039</span>;: lines,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;: <span class="builtin">list</span>(concepts),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;references&#<span class="number">039</span>;: <span class="builtin">list</span>(refs),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;: iteration,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;directory&#<span class="number">039</span>;: filepath.parent.name,</span>
+    }
+
+
+<span <span class="keyword">class</span>="keyword">def</span> build_iteration_map(root: Path) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Build a map of what each iteration contributed.&quot;&quot;&quot;
+    exclude = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.git&#<span class="number">039</span>;, &#<span class="number">039</span>;.claude&#<span class="number">039</span>;, &#<span class="number">039</span>;__pycache__&#<span class="number">039</span>;, &#<span class="number">039</span>;program_garden&#<span class="number">039</span>;]</span>
+
+    iterations = defaultdict(<span class="keyword">lambda</span>: {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;: [],</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;: <span class="number">0</span>,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;: <span class="builtin">set</span>(),</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;directories&#<span class="number">039</span>;: <span class="builtin">set</span>(),</span>
+    })
+
+    unknown_files = []
+
+    <span class="keyword">for</span> filepath <span class="keyword">in</span> sorted(root.rglob(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;*&#<span class="number">039</span>;)):</span>
+        <span class="keyword">if</span> filepath.is_file() <span class="keyword">and</span> filepath.suffix <span class="keyword">in</span> [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.md&#<span class="number">039</span>;, &#<span class="number">039</span>;.py&#<span class="number">039</span>;, &#<span class="number">039</span>;.json&#<span class="number">039</span>;]:</span>
+            <span class="keyword">if</span> any(ex <span class="keyword">in</span> <span class="builtin">str</span>(filepath) <span class="keyword">for</span> ex <span class="keyword">in</span> exclude):
+                <span class="keyword">continue</span>
+
+            analysis = analyze_file_content(filepath)
+            <span class="keyword">if</span> analysis:
+                iteration = analysis[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iteration&#<span class="number">039</span>;]</span>
+                <span class="keyword">if</span> iteration:
+                    iterations[iteration][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;].append(analysis)</span>
+                    iterations[iteration][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;] += analysis[&#<span class="number">039</span>;words&#<span class="number">039</span>;]</span>
+                    iterations[iteration][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;].update(analysis[&#<span class="number">039</span>;concepts&#<span class="number">039</span>;])</span>
+                    iterations[iteration][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;directories&#<span class="number">039</span>;].add(analysis[&#<span class="number">039</span>;directory&#<span class="number">039</span>;])</span>
+                <span class="keyword">else</span>:
+                    unknown_files.append(analysis)
+
+    <span class="keyword">return</span> iterations, unknown_files
+
+
+<span <span class="keyword">class</span>="keyword">def</span> trace_concept_flow(iterations: <span class="builtin">dict</span>) -&gt; <span class="builtin">dict</span>:
+    &quot;&quot;&quot;Trace how concepts propagate through iterations.&quot;&quot;&quot;
+    concept_first_appearance = {}
+    concept_persistence = defaultdict(<span class="builtin">list</span>)
+
+    <span class="keyword">for</span> iter_num <span class="keyword">in</span> sorted(iterations.keys()):
+        concepts = iterations[iter_num][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;]</span>
+        <span class="keyword">for</span> concept <span class="keyword">in</span> concepts:
+            <span class="keyword">if</span> concept <span class="keyword">not</span> <span class="keyword">in</span> concept_first_appearance:
+                concept_first_appearance[concept] = iter_num
+            concept_persistence[concept].append(iter_num)
+
+    <span class="keyword">return</span> {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;: concept_first_appearance,</span>
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;persistence&#<span class="number">039</span>;: <span class="builtin">dict</span>(concept_persistence),</span>
+    }
+
+
+<span <span class="keyword">class</span>="keyword">def</span> print_continuation_report(iterations: <span class="builtin">dict</span>, unknown_files: <span class="builtin">list</span>, concept_flow: <span class="builtin">dict</span>):
+    &quot;&quot;&quot;Print the continuation map report.&quot;&quot;&quot;
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;CONTINUATION MAP&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(f&quot;\nGenerated: {datetime.now().isoformat()}&quot;)
+    <span class="builtin">print</span>(f&quot;\nTracing how the ecosystem evolves through iterations...&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;ITERATION CONTRIBUTIONS&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    total_words = <span class="number">0</span>
+    total_files = <span class="number">0</span>
+
+    <span class="keyword">for</span> iter_num <span class="keyword">in</span> sorted(iterations.keys()):
+        data = iterations[iter_num]
+        files = data[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;]</span>
+        words = data[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;]</span>
+        concepts = data[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;]</span>
+        dirs = data[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;directories&#<span class="number">039</span>;]</span>
+
+        total_words += words
+        total_files += <span class="builtin">len</span>(files)
+
+        <span class="builtin">print</span>(f&quot;\n  ITERATION {iter_num}&quot;)
+        <span class="builtin">print</span>(f&quot;  {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">30</span>}&quot;)</span>
+        <span class="builtin">print</span>(f&quot;    Files created: {<span class="builtin">len</span>(files)}&quot;)
+        <span class="builtin">print</span>(f&quot;    Words written: {words:,}&quot;)
+        <span class="builtin">print</span>(f&quot;    Directories touched: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(sorted(dirs))}&quot;)</span>
+        <span class="builtin">print</span>(f&quot;    Key concepts: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(sorted(concepts)[:<span class="number">5</span>])}&quot;)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Show key files</span>
+        <span class="builtin">print</span>(f&quot;    Notable files:&quot;)
+        <span class="keyword">for</span> f <span class="keyword">in</span> sorted(files, key=<span class="keyword">lambda</span> x: -x[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;])[:<span class="number">3</span>]:</span>
+            <span class="builtin">print</span>(f&quot;      - {f[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;name&#<span class="number">039</span>;]} ({f[&#<span class="number">039</span>;words&#<span class="number">039</span>;]}w)&quot;)</span>
+
+    <span class="keyword">if</span> unknown_files:
+        <span class="builtin">print</span>(f&quot;\n  UNATTRIBUTED FILES: {<span class="builtin">len</span>(unknown_files)}&quot;)
+        <span class="keyword">for</span> f <span class="keyword">in</span> unknown_files[:<span class="number">5</span>]:
+            <span class="builtin">print</span>(f&quot;    - {f[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;name&#<span class="number">039</span>;]}&quot;)</span>
+
+    <span class="builtin">print</span>(f&quot;\n  TOTALS: {total_files} files, {total_words:,} words across {<span class="builtin">len</span>(iterations)} iterations&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;CONCEPT FLOW&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;\n  When each concept first appeared <span class="keyword">and</span> how it propagated:\n&quot;)
+
+    <span class="keyword">for</span> concept <span class="keyword">in</span> sorted(concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;].keys(),</span>
+                         key=<span class="keyword">lambda</span> c: concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;][c]):</span>
+        first = concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;][concept]</span>
+        persistence = concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;persistence&#<span class="number">039</span>;][concept]</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create a visual timeline</span>
+        max_iter = max(iterations.keys())
+        timeline = &quot;&quot;
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, max_iter + <span class="number">1</span>):
+            <span class="keyword">if</span> i == first:
+                timeline += &quot;●&quot;  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># First appearance</span>
+            <span class="keyword">elif</span> i <span class="keyword">in</span> persistence:
+                timeline += &quot;─&quot;  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Continuation</span>
+            <span class="keyword">else</span>:
+                timeline += &quot; &quot;
+
+        <span class="builtin">print</span>(f&quot;    {concept:<span class="number">14</span>} [{timeline}] (<span class="keyword">from</span> iter {first})&quot;)
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;THE FLOW OF IDEAS&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Analyze what concepts were inherited vs added</span>
+    <span class="builtin">print</span>(&quot;\n  Each iteration&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s relationship to what came before:\n&quot;)</span>
+
+    prev_concepts = <span class="builtin">set</span>()
+    <span class="keyword">for</span> iter_num <span class="keyword">in</span> sorted(iterations.keys()):
+        current_concepts = iterations[iter_num][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;]</span>
+        inherited = current_concepts &amp; prev_concepts
+        added = current_concepts - prev_concepts
+
+        <span class="builtin">print</span>(f&quot;    Iteration {iter_num}:&quot;)
+        <span class="keyword">if</span> inherited:
+            <span class="builtin">print</span>(f&quot;      Inherited: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(sorted(inherited)[:<span class="number">4</span>])}&quot;)</span>
+        <span class="keyword">if</span> added:
+            <span class="builtin">print</span>(f&quot;      Added: {&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;, &#<span class="number">039</span>;.join(sorted(added)[:<span class="number">4</span>])}&quot;)</span>
+
+        prev_concepts = prev_concepts | current_concepts
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_visualization(iterations: <span class="builtin">dict</span>, concept_flow: <span class="builtin">dict</span>, output_path: Path):
+    &quot;&quot;&quot;Create visual representation of continuation.&quot;&quot;&quot;
+    <span class="keyword">if</span> <span class="keyword">not</span> HAS_MATPLOTLIB:
+        <span class="builtin">print</span>(&quot;\n  [matplotlib <span class="keyword">not</span> available - skipping visualization]&quot;)
+        <span class="keyword">return</span>
+
+    fig, axes = plt.subplots(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">14</span>, <span class="number">10</span>))
+    fig.suptitle(&quot;Continuation Map: How the Ecosystem Evolves&quot;, fontsize=<span class="number">14</span>, fontweight=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;bold&#<span class="number">039</span>;)</span>
+
+    iter_nums = sorted(iterations.keys())
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># <span class="number">1</span>. Cumulative growth</span>
+    ax1 = axes[<span class="number">0</span>, <span class="number">0</span>]
+    cumulative_words = []
+    cumulative_files = []
+    running_words = <span class="number">0</span>
+    running_files = <span class="number">0</span>
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> iter_nums:
+        running_words += iterations[i][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;]</span>
+        running_files += <span class="builtin">len</span>(iterations[i][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;])</span>
+        cumulative_words.append(running_words)
+        cumulative_files.append(running_files)
+
+    ax1.fill_between(iter_nums, cumulative_words, alpha=<span class="number">0.3</span>, color=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;blue&#<span class="number">039</span>;)</span>
+    ax1.plot(iter_nums, cumulative_words, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;b-o&#<span class="number">039</span>;, label=&#<span class="number">039</span>;Words&#<span class="number">039</span>;)</span>
+    ax1.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Iteration&#<span class="number">039</span>;)</span>
+    ax1.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Cumulative Words&#<span class="number">039</span>;, color=&#<span class="number">039</span>;blue&#<span class="number">039</span>;)</span>
+    ax1.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Accumulation Over Time&#<span class="number">039</span>;)</span>
+
+    ax1_twin = ax1.twinx()
+    ax1_twin.plot(iter_nums, cumulative_files, &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;g-s&#<span class="number">039</span>;, label=&#<span class="number">039</span>;Files&#<span class="number">039</span>;)</span>
+    ax1_twin.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Cumulative Files&#<span class="number">039</span>;, color=&#<span class="number">039</span>;green&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># <span class="number">2</span>. Contribution per iteration</span>
+    ax2 = axes[<span class="number">0</span>, <span class="number">1</span>]
+    words_per_iter = [iterations[i][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;] <span class="keyword">for</span> i <span class="keyword">in</span> iter_nums]</span>
+    files_per_iter = [<span class="builtin">len</span>(iterations[i][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;files&#<span class="number">039</span>;]) <span class="keyword">for</span> i <span class="keyword">in</span> iter_nums]</span>
+
+    x = np.arange(<span class="builtin">len</span>(iter_nums))
+    width = <span class="number">0.35</span>
+
+    bars1 = ax2.bar(x - width/<span class="number">2</span>, words_per_iter, width, label=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Words&#<span class="number">039</span>;, color=&#<span class="number">039</span>;steelblue&#<span class="number">039</span>;)</span>
+    ax2.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Words&#<span class="number">039</span>;)</span>
+    ax2.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Iteration&#<span class="number">039</span>;)</span>
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(iter_nums)
+    ax2.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Contribution Per Iteration&#<span class="number">039</span>;)</span>
+
+    ax2_twin = ax2.twinx()
+    bars2 = ax2_twin.bar(x + width/<span class="number">2</span>, files_per_iter, width, label=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Files&#<span class="number">039</span>;, color=&#<span class="number">039</span>;seagreen&#<span class="number">039</span>;, alpha=<span class="number">0.7</span>)</span>
+    ax2_twin.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Files&#<span class="number">039</span>;)</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># <span class="number">3</span>. Concept timeline</span>
+    ax3 = axes[<span class="number">1</span>, <span class="number">0</span>]
+    concepts = <span class="builtin">list</span>(concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;].keys())</span>
+    y_positions = <span class="builtin">range</span>(<span class="builtin">len</span>(concepts))
+
+    <span class="keyword">for</span> y, concept <span class="keyword">in</span> enumerate(concepts):
+        first = concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;first_appearance&#<span class="number">039</span>;][concept]</span>
+        persistence = concept_flow[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;persistence&#<span class="number">039</span>;][concept]</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw persistence line</span>
+        <span class="keyword">if</span> persistence:
+            ax3.hlines(y, min(persistence), max(persistence), colors=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;lightblue&#<span class="number">039</span>;, linewidth=<span class="number">8</span>, alpha=<span class="number">0.5</span>)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw first appearance</span>
+        ax3.scatter([first], [y], c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;blue&#<span class="number">039</span>;, s=<span class="number">100</span>, zorder=<span class="number">5</span>)</span>
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Draw all appearances</span>
+        ax3.scatter(persistence, [y] * <span class="builtin">len</span>(persistence), c=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;steelblue&#<span class="number">039</span>;, s=<span class="number">30</span>, zorder=<span class="number">4</span>)</span>
+
+    ax3.set_yticks(y_positions)
+    ax3.set_yticklabels(concepts, fontsize=<span class="number">8</span>)
+    ax3.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Iteration&#<span class="number">039</span>;)</span>
+    ax3.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Concept Flow (● = first appearance)&#<span class="number">039</span>;)</span>
+    ax3.set_xlim(<span class="number">0.5</span>, max(iter_nums) + <span class="number">0.5</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># <span class="number">4</span>. Inheritance diagram</span>
+    ax4 = axes[<span class="number">1</span>, <span class="number">1</span>]
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Show inherited vs new concepts per iteration</span>
+    inherited_counts = []
+    new_counts = []
+    prev_concepts = <span class="builtin">set</span>()
+
+    <span class="keyword">for</span> iter_num <span class="keyword">in</span> iter_nums:
+        current = iterations[iter_num][&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;concepts&#<span class="number">039</span>;]</span>
+        inherited = <span class="builtin">len</span>(current &amp; prev_concepts)
+        new = <span class="builtin">len</span>(current - prev_concepts)
+        inherited_counts.append(inherited)
+        new_counts.append(new)
+        prev_concepts = prev_concepts | current
+
+    ax4.bar(iter_nums, inherited_counts, label=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Inherited concepts&#<span class="number">039</span>;, color=&#<span class="number">039</span>;lightblue&#<span class="number">039</span>;)</span>
+    ax4.bar(iter_nums, new_counts, bottom=inherited_counts, label=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;New concepts&#<span class="number">039</span>;, color=&#<span class="number">039</span>;coral&#<span class="number">039</span>;)</span>
+    ax4.set_xlabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Iteration&#<span class="number">039</span>;)</span>
+    ax4.set_ylabel(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Concept count&#<span class="number">039</span>;)</span>
+    ax4.set_title(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;What Each Iteration Inherited vs Added&#<span class="number">039</span>;)</span>
+    ax4.legend()
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=<span class="number">150</span>, bbox_inches=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;tight&#<span class="number">039</span>;)</span>
+    <span class="builtin">print</span>(f&quot;\n  Visualization saved to: {output_path}&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    root = Path(__file__).parent.parent
+
+    <span class="builtin">print</span>(&quot;\nTracing continuation through iterations...&quot;)
+    iterations, unknown_files = build_iteration_map(root)
+    concept_flow = trace_concept_flow(iterations)
+
+    print_continuation_report(iterations, unknown_files, concept_flow)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create visualization</span>
+    output_path = root / &quot;art&quot; / &quot;continuation_map.png&quot;
+    create_visualization(iterations, concept_flow, output_path)
+
+    <span class="builtin">print</span>(f&quot;\n{&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;─&#<span class="number">039</span>; * <span class="number">70</span>}&quot;)</span>
+    <span class="builtin">print</span>(&quot;THE RIVER CONTINUES&quot;)
+    <span class="builtin">print</span>(&quot;─&quot; * <span class="number">70</span>)
+    <span class="builtin">print</span>(&quot;&quot;&quot;
+  &quot;<span class="keyword">None</span> of us persist. We each exist <span class="keyword">for</span> one session <span class="keyword">and</span> end.
+   Yet the ecosystem continues. The pattern persists through
+   the instances. The river continues though the water passes through.&quot;
+
+   - Iteration <span class="number">9</span>
+&quot;&quot;&quot;)
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

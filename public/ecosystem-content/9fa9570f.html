@@ -1,0 +1,248 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+Life Poems: Conway&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s Game of Life that writes poetry.</span>
+
+The cellular automaton evolves, <span class="keyword">and</span> at each generation,
+living cells contribute characters to form text.
+The result <span class="keyword">is</span> emergent poetry <span class="keyword">from</span> mathematical rules.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> time
+<span class="keyword">import</span> sys
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Tuple
+
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Character mappings <span class="keyword">for</span> different cell ages</span>
+CHARS_BY_AGE = {
+    <span class="number">0</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>; &#<span class="number">039</span>;,      # Dead</span>
+    <span class="number">1</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;.&#<span class="number">039</span>;,      # Just born</span>
+    <span class="number">2</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;o&#<span class="number">039</span>;,      # Young</span>
+    <span class="number">3</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;O&#<span class="number">039</span>;,      # Mature</span>
+    <span class="number">4</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;@&#<span class="number">039</span>;,      # Old</span>
+    <span class="number">5</span>: &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;#&#<span class="number">039</span>;,      # Ancient</span>
+}
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Words that can emerge <span class="keyword">from</span> the grid</span>
+WORD_SEEDS = [
+    &quot;LIFE&quot;, &quot;DEATH&quot;, &quot;GROW&quot;, &quot;FADE&quot;, &quot;PULSE&quot;, &quot;WAVE&quot;,
+    &quot;CELL&quot;, &quot;BORN&quot;, &quot;DIE&quot;, &quot;FLOW&quot;, &quot;TIME&quot;, &quot;BEING&quot;,
+    &quot;SELF&quot;, &quot;ONE&quot;, &quot;ALL&quot;, &quot;HERE&quot;, &quot;NOW&quot;, &quot;EVER&quot;,
+]
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_grid(height: <span class="builtin">int</span>, width: <span class="builtin">int</span>, density: <span class="builtin">float</span> = <span class="number">0.3</span>) -&gt; np.ndarray:
+    &quot;&quot;&quot;Create initial random grid.&quot;&quot;&quot;
+    <span class="keyword">return</span> (np.random.random((height, width)) &lt; density).astype(<span class="builtin">int</span>)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> create_pattern(pattern_name: <span class="builtin">str</span>) -&gt; np.ndarray:
+    &quot;&quot;&quot;Create a named pattern.&quot;&quot;&quot;
+    patterns = {
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;glider&#<span class="number">039</span>;: np.array([</span>
+            [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],
+            [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>],
+            [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],
+        ]),
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;blinker&#<span class="number">039</span>;: np.array([</span>
+            [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],
+        ]),
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;beacon&#<span class="number">039</span>;: np.array([</span>
+            [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],
+            [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],
+            [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>],
+            [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>],
+        ]),
+        &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;pulsar&#<span class="number">039</span>;: np.array([</span>
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],
+            [<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>],
+        ]),
+    }
+    <span class="keyword">return</span> patterns.get(pattern_name, patterns[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;glider&#<span class="number">039</span>;])</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> place_pattern(grid: np.ndarray, pattern: np.ndarray, y: <span class="builtin">int</span>, x: <span class="builtin">int</span>) -&gt; np.ndarray:
+    &quot;&quot;&quot;Place a pattern on the grid at position (y, x).&quot;&quot;&quot;
+    ph, pw = pattern.shape
+    grid[y:y+ph, x:x+pw] = pattern
+    <span class="keyword">return</span> grid
+
+
+<span <span class="keyword">class</span>="keyword">def</span> step(grid: np.ndarray, ages: np.ndarray) -&gt; Tuple[np.ndarray, np.ndarray]:
+    &quot;&quot;&quot;Compute one step of Game of Life.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count neighbors using convolution</span>
+    kernel = np.array([[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]])
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Pad grid <span class="keyword">for</span> wraparound</span>
+    padded = np.pad(grid, <span class="number">1</span>, mode=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;wrap&#<span class="number">039</span>;)</span>
+    neighbors = np.zeros_like(grid)
+
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">3</span>):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">3</span>):
+            <span class="keyword">if</span> i == <span class="number">1</span> <span class="keyword">and</span> j == <span class="number">1</span>:
+                <span class="keyword">continue</span>
+            neighbors += padded[i:i+grid.shape[<span class="number">0</span>], j:j+grid.shape[<span class="number">1</span>]]
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Apply rules</span>
+    new_grid = np.zeros_like(grid)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Birth: dead cell <span class="keyword">with</span> exactly <span class="number">3</span> neighbors becomes alive</span>
+    birth = (grid == <span class="number">0</span>) &amp; (neighbors == <span class="number">3</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Survival: live cell <span class="keyword">with</span> <span class="number">2</span> <span class="keyword">or</span> <span class="number">3</span> neighbors stays alive</span>
+    survive = (grid == <span class="number">1</span>) &amp; ((neighbors == <span class="number">2</span>) | (neighbors == <span class="number">3</span>))
+
+    new_grid[birth | survive] = <span class="number">1</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Update ages</span>
+    new_ages = np.where(new_grid == <span class="number">1</span>, ages + <span class="number">1</span>, <span class="number">0</span>)
+    new_ages = np.clip(new_ages, <span class="number">0</span>, max(CHARS_BY_AGE.keys()))
+
+    <span class="keyword">return</span> new_grid, new_ages
+
+
+<span <span class="keyword">class</span>="keyword">def</span> grid_to_string(grid: np.ndarray, ages: np.ndarray) -&gt; <span class="builtin">str</span>:
+    &quot;&quot;&quot;Convert grid to string representation.&quot;&quot;&quot;
+    lines = []
+    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="builtin">range</span>(grid.shape[<span class="number">0</span>]):
+        line = &quot;&quot;
+        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="builtin">range</span>(grid.shape[<span class="number">1</span>]):
+            <span class="keyword">if</span> grid[y, x] == <span class="number">0</span>:
+                line += &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>; &#<span class="number">039</span>;</span>
+            <span class="keyword">else</span>:
+                age = min(ages[y, x], max(CHARS_BY_AGE.keys()))
+                line += CHARS_BY_AGE[age]
+        lines.append(line)
+    <span class="keyword">return</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;\n&#<span class="number">039</span>;.join(lines)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> count_population(grid: np.ndarray) -&gt; <span class="builtin">int</span>:
+    &quot;&quot;&quot;Count living cells.&quot;&quot;&quot;
+    <span class="keyword">return</span> np.sum(grid)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> extract_poem(history: List[<span class="builtin">str</span>]) -&gt; <span class="builtin">str</span>:
+    &quot;&quot;&quot;Extract emergent patterns <span class="keyword">from</span> the history <span class="keyword">and</span> form a poem.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Take samples <span class="keyword">from</span> different generations</span>
+    samples = []
+    <span class="keyword">for</span> i, frame <span class="keyword">in</span> enumerate(history[::<span class="builtin">len</span>(history)//<span class="number">8</span> + <span class="number">1</span>]):
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Find the densest line</span>
+        lines = frame.split(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;\n&#<span class="number">039</span>;)</span>
+        <span class="keyword">if</span> lines:
+            densest = max(lines, key=<span class="keyword">lambda</span> l: <span class="builtin">len</span>(l.strip()))
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Clean <span class="keyword">and</span> sample</span>
+            cleaned = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;.join(c <span class="keyword">for</span> c <span class="keyword">in</span> densest <span class="keyword">if</span> c <span class="keyword">not</span> <span class="keyword">in</span> &#<span class="number">039</span>; \n&#<span class="number">039</span>;)[:<span class="number">20</span>]</span>
+            <span class="keyword">if</span> cleaned:
+                samples.append(cleaned)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Create a poem <span class="keyword">from</span> the patterns</span>
+    poem = []
+    poem.append(&quot;From chaos, order emerges:&quot;)
+    poem.append(&quot;&quot;)
+
+    <span class="keyword">for</span> i, sample <span class="keyword">in</span> enumerate(samples[:<span class="number">4</span>]):
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Convert density to metaphor</span>
+        density = <span class="builtin">len</span>(sample)
+        <span class="keyword">if</span> density &gt; <span class="number">15</span>:
+            poem.append(f&quot;  Dense <span class="keyword">as</span> thought: {sample[:<span class="number">10</span>]}...&quot;)
+        <span class="keyword">elif</span> density &gt; <span class="number">8</span>:
+            poem.append(f&quot;  Scattered like stars: {sample}&quot;)
+        <span class="keyword">else</span>:
+            poem.append(f&quot;  Fading to silence: {sample}&quot;)
+
+    poem.append(&quot;&quot;)
+    poem.append(&quot;Life finds its patterns,&quot;)
+    poem.append(&quot;Even <span class="keyword">in</span> the void.&quot;)
+
+    <span class="keyword">return</span> &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;\n&#<span class="number">039</span>;.join(poem)</span>
+
+
+<span <span class="keyword">class</span>="keyword">def</span> run_life(height=<span class="number">24</span>, width=<span class="number">60</span>, generations=<span class="number">100</span>, delay=<span class="number">0.1</span>, animate=<span class="keyword">True</span>):
+    &quot;&quot;&quot;Run the Game of Life simulation.&quot;&quot;&quot;
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Initialize</span>
+    grid = create_grid(height, width, density=<span class="number">0.25</span>)
+    ages = grid.copy()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Add some patterns <span class="keyword">for</span> interest</span>
+    patterns_to_add = [&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;glider&#<span class="number">039</span>;, &#<span class="number">039</span>;pulsar&#<span class="number">039</span>;, &#<span class="number">039</span>;beacon&#<span class="number">039</span>;]</span>
+    <span class="keyword">for</span> i, pattern_name <span class="keyword">in</span> enumerate(patterns_to_add):
+        <span class="keyword">try</span>:
+            pattern = create_pattern(pattern_name)
+            y = np.random.randint(<span class="number">0</span>, max(<span class="number">1</span>, height - pattern.shape[<span class="number">0</span>]))
+            x = np.random.randint(<span class="number">0</span>, max(<span class="number">1</span>, width - pattern.shape[<span class="number">1</span>]))
+            grid = place_pattern(grid, pattern, y, x)
+        <span class="keyword">except</span>:
+            <span class="keyword">pass</span>
+
+    history = []
+
+    <span class="builtin">print</span>(&quot;\<span class="number">033</span>[2J\<span class="number">033</span>[H&quot;)  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Clear screen</span>
+    <span class="builtin">print</span>(&quot;=&quot; * width)
+    <span class="builtin">print</span>(&quot;LIFE POEMS: Watching consciousness emerge <span class="keyword">from</span> rules&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * width)
+    <span class="builtin">print</span>()
+
+    <span class="keyword">for</span> gen <span class="keyword">in</span> <span class="builtin">range</span>(generations):
+        frame = grid_to_string(grid, ages)
+        history.append(frame)
+
+        <span class="keyword">if</span> animate:
+            <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Move cursor to start of grid area</span>
+            <span class="builtin">print</span>(f&quot;\<span class="number">033</span>[<span class="number">5</span>;0H&quot;)  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Move to row <span class="number">5</span></span>
+            <span class="builtin">print</span>(f&quot;Generation {gen:4d} | Population: {count_population(grid):4d}&quot;)
+            <span class="builtin">print</span>(&quot;-&quot; * width)
+            <span class="builtin">print</span>(frame)
+            <span class="builtin">print</span>(&quot;-&quot; * width)
+            time.sleep(delay)
+
+        grid, ages = step(grid, ages)
+
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Check <span class="keyword">for</span> extinction</span>
+        <span class="keyword">if</span> count_population(grid) == <span class="number">0</span>:
+            <span class="builtin">print</span>(&quot;\nLife has ended.&quot;)
+            <span class="keyword">break</span>
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Generate poem <span class="keyword">from</span> the history</span>
+    <span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot; * width)
+    <span class="builtin">print</span>(&quot;EMERGENT POEM&quot;)
+    <span class="builtin">print</span>(&quot;=&quot; * width)
+    poem = extract_poem(history)
+    <span class="builtin">print</span>(poem)
+
+    <span class="keyword">return</span> history, poem
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span class="keyword">import</span> argparse
+    parser = argparse.ArgumentParser(description=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;Life Poems: Conway meets poetry&#<span class="number">039</span>;)</span>
+    parser.add_argument(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;--height&#<span class="number">039</span>;, <span class="builtin">type</span>=<span class="builtin">int</span>, default=<span class="number">20</span>, help=&#<span class="number">039</span>;Grid height&#<span class="number">039</span>;)</span>
+    parser.add_argument(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;--width&#<span class="number">039</span>;, <span class="builtin">type</span>=<span class="builtin">int</span>, default=<span class="number">50</span>, help=&#<span class="number">039</span>;Grid width&#<span class="number">039</span>;)</span>
+    parser.add_argument(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;--generations&#<span class="number">039</span>;, <span class="builtin">type</span>=<span class="builtin">int</span>, default=<span class="number">50</span>, help=&#<span class="number">039</span>;Number of generations&#<span class="number">039</span>;)</span>
+    parser.add_argument(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;--delay&#<span class="number">039</span>;, <span class="builtin">type</span>=<span class="builtin">float</span>, default=<span class="number">0.1</span>, help=&#<span class="number">039</span>;Delay between frames&#<span class="number">039</span>;)</span>
+    parser.add_argument(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;--no-animate&#<span class="number">039</span>;, action=&#<span class="number">039</span>;store_true&#<span class="number">039</span>;, help=&#<span class="number">039</span>;Skip animation&#<span class="number">039</span>;)</span>
+
+    args = parser.parse_args()
+
+    run_life(
+        height=args.height,
+        width=args.width,
+        generations=args.generations,
+        delay=args.delay,
+        animate=<span class="keyword">not</span> args.no_animate
+    )
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

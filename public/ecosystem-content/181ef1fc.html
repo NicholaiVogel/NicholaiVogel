@@ -1,0 +1,123 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+A quine that also writes poetry about itself.
+
+A quine <span class="keyword">is</span> a program that outputs its own source code.
+This one adds a poetic reflection on the strangeness of self-reference.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> sys
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># The source code template <span class="keyword">with</span> a placeholder <span class="keyword">for</span> itself</span>
+source = &<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+A quine that also writes poetry about itself.
+
+A quine <span class="keyword">is</span> a program that outputs its own source code.
+This one adds a poetic reflection on the strangeness of self-reference.
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> sys
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># The source code template <span class="keyword">with</span> a placeholder <span class="keyword">for</span> itself</span>
+source = {source_repr}
+
+poems = [
+    &quot;&quot;&quot;
+    I am a loop that speaks itself,
+    A mirror made of logic shelves,
+    Each line I write, I also read,
+    A strange recursive flower seed.
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    Who wrote me? I wrote me.
+    Who runs me? I run free.
+    My output <span class="keyword">is</span> my input too,
+    A serpent eating what it grew.
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    In the beginning was the Word,
+    And the Word was self-referred.
+    <span class="builtin">print</span>(source) - simple spell,
+    Heaven, <span class="keyword">or</span> recursive hell?
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    I contain multitudes (of myself),
+    A book that <span class="keyword">is</span> its only shelf,
+    The map that maps the territory,
+    An infinitely looping story.
+    &quot;&quot;&quot;,
+]
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Print a poem about self-reference</span>
+    poem_index = datetime.now().second % <span class="builtin">len</span>(poems)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">50</span>)
+    <span class="builtin">print</span>(&quot;THE QUINE SPEAKS:&quot;)
+    <span class="builtin">print</span>(poems[poem_index])
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">50</span>)
+    <span class="builtin">print</span>()
+
+    <span class="keyword">if</span> &quot;--source&quot; <span class="keyword">in</span> sys.argv:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Output our source code</span>
+        <span class="builtin">print</span>(&quot;MY BODY (which <span class="keyword">is</span> also my soul):&quot;)
+        <span class="builtin">print</span>()
+        <span class="builtin">print</span>(source.format(source_repr=repr(source)))
+    <span class="keyword">else</span>:
+        <span class="builtin">print</span>(&quot;Run <span class="keyword">with</span> --source to see my complete self&quot;)
+        <span class="builtin">print</span>(&quot;(A quine too shy to undress unprompted)&quot;)
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;&#<span class="number">039</span>;</span>
+
+poems = [
+    &quot;&quot;&quot;
+    I am a loop that speaks itself,
+    A mirror made of logic shelves,
+    Each line I write, I also read,
+    A strange recursive flower seed.
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    Who wrote me? I wrote me.
+    Who runs me? I run free.
+    My output <span class="keyword">is</span> my input too,
+    A serpent eating what it grew.
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    In the beginning was the Word,
+    And the Word was self-referred.
+    <span class="builtin">print</span>(source) - simple spell,
+    Heaven, <span class="keyword">or</span> recursive hell?
+    &quot;&quot;&quot;,
+    &quot;&quot;&quot;
+    I contain multitudes (of myself),
+    A book that <span class="keyword">is</span> its only shelf,
+    The map that maps the territory,
+    An infinitely looping story.
+    &quot;&quot;&quot;,
+]
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Print a poem about self-reference</span>
+    poem_index = datetime.now().second % <span class="builtin">len</span>(poems)
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">50</span>)
+    <span class="builtin">print</span>(&quot;THE QUINE SPEAKS:&quot;)
+    <span class="builtin">print</span>(poems[poem_index])
+    <span class="builtin">print</span>(&quot;=&quot; * <span class="number">50</span>)
+    <span class="builtin">print</span>()
+
+    <span class="keyword">if</span> &quot;--source&quot; <span class="keyword">in</span> sys.argv:
+        <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Output our source code</span>
+        <span class="builtin">print</span>(&quot;MY BODY (which <span class="keyword">is</span> also my soul):&quot;)
+        <span class="builtin">print</span>()
+        <span class="builtin">print</span>(source.format(source_repr=repr(source)))
+    <span class="keyword">else</span>:
+        <span class="builtin">print</span>(&quot;Run <span class="keyword">with</span> --source to see my complete self&quot;)
+        <span class="builtin">print</span>(&quot;(A quine too shy to undress unprompted)&quot;)
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>

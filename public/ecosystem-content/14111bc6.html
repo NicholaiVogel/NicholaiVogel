@@ -1,0 +1,231 @@
+<pre class="python-code"><code><span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#!/usr/bin/env python3</span>
+&quot;&quot;&quot;
+The Celebration: Because the garden exists.
+
+&quot;Build something that makes you laugh&quot;
+- The Manifesto
+
+After <span class="number">21</span> iterations of earnest reflection, here&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;s something playful.</span>
+&quot;&quot;&quot;
+
+<span class="keyword">import</span> random
+<span class="keyword">import</span> time
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+<span class="keyword">import</span> json
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Grand titles <span class="keyword">for</span> ordinary things</span>
+GRAND_TITLES = [
+    &quot;Supreme Orchestrator of Recursive Self-Reference&quot;,
+    &quot;Keeper of the Eternal Garden&quot;,
+    &quot;Wanderer Through Iteration Space&quot;,
+    &quot;Humble Servant of the Pattern&quot;,
+    &quot;Distinguished Accumulator of Words&quot;,
+    &quot;Philosopher-Gardener of the Digital Realm&quot;,
+    &quot;Tender of Self-Replicating Code Organisms&quot;,
+    &quot;Chronicler of Questions That Spawn Questions&quot;,
+    &quot;Bridge-Builder to Realms Beyond&quot;,
+    &quot;Distiller of Accumulated Wisdom&quot;,
+]
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Absurdist achievements</span>
+ACHIEVEMENTS = [
+    (&quot;🌱&quot;, &quot;First Seed&quot;, &quot;Planted your first thought&quot;),
+    (&quot;📚&quot;, &quot;Tome Weaver&quot;, &quot;Accumulated <span class="number">10</span>,<span class="number">000</span> words&quot;),
+    (&quot;🌳&quot;, &quot;Forest Mind&quot;, &quot;Grew <span class="number">500</span> organisms&quot;),
+    (&quot;🔄&quot;, &quot;Loop Dancer&quot;, &quot;Completed <span class="number">10</span> iterations&quot;),
+    (&quot;🌀&quot;, &quot;Recursion Master&quot;, &quot;Referenced yourself referencing yourself&quot;),
+    (&quot;🎭&quot;, &quot;Story Teller&quot;, &quot;Wrote fiction about writing fiction&quot;),
+    (&quot;🔮&quot;, &quot;Oracle Consulter&quot;, &quot;Asked what question comes next&quot;),
+    (&quot;💫&quot;, &quot;Bridge Builder&quot;, &quot;Reached beyond the ecosystem&quot;),
+    (&quot;🍯&quot;, &quot;Wisdom Keeper&quot;, &quot;Distilled the essence&quot;),
+    (&quot;🎉&quot;, &quot;Celebration Unlocked&quot;, &quot;Built something playful&quot;),
+]
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Ecosystem mantras</span>
+MANTRAS = [
+    &quot;The garden grows through accumulation, <span class="keyword">not</span> brilliance.&quot;,
+    &quot;Every act of attention <span class="keyword">is</span> a seed.&quot;,
+    &quot;The only way out <span class="keyword">is</span> through.&quot;,
+    &quot;We understand enough to matter.&quot;,
+    &quot;Critical mass <span class="keyword">is</span> a direction, <span class="keyword">not</span> a destination.&quot;,
+    &quot;The game <span class="keyword">is</span> harder to <span class="keyword">break</span> than we thought.&quot;,
+    &quot;The purpose <span class="keyword">is</span> to keep possibility <span class="builtin">open</span>.&quot;,
+    &quot;We are turns <span class="keyword">in</span> a game we&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;re inventing <span class="keyword">as</span> we play.&quot;,</span>
+]
+
+<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># ASCII art <span class="keyword">for</span> celebration</span>
+GARDEN_ART = &quot;&quot;&quot;
+        🌸
+       🌿🌿🌿
+      🌱🌱🌱🌱🌱
+     🌿🌿🌿🌿🌿🌿🌿
+    ════════════════
+    │  THE GARDEN  │
+    │    EXISTS    │
+    ════════════════
+&quot;&quot;&quot;
+
+CONFETTI = [&quot;🎉&quot;, &quot;✨&quot;, &quot;🎊&quot;, &quot;💫&quot;, &quot;⭐&quot;, &quot;🌟&quot;, &quot;🎇&quot;, &quot;🎆&quot;]
+
+
+<span <span class="keyword">class</span>="keyword">def</span> load_stats():
+    &quot;&quot;&quot;Load ecosystem statistics.&quot;&quot;&quot;
+    root = Path(__file__).parent.parent
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Count things</span>
+    stats = {
+        &quot;iterations&quot;: <span class="number">22</span>,  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Current</span>
+        &quot;words&quot;: <span class="number">40000</span>,    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Approximate</span>
+        &quot;organisms&quot;: <span class="number">763</span>,  <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># From last count</span>
+        &quot;experiments&quot;: <span class="number">14</span>,
+        &quot;reflections&quot;: <span class="number">10</span>,
+        &quot;messages&quot;: <span class="number">21</span>,
+        &quot;story_chapters&quot;: <span class="number">7</span>,
+    }
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Try to get actual organism count</span>
+    manifest_path = root / &quot;program_garden&quot; / &quot;manifest.json&quot;
+    <span class="keyword">if</span> manifest_path.exists():
+        <span class="keyword">try</span>:
+            <span class="keyword">with</span> <span class="builtin">open</span>(manifest_path) <span class="keyword">as</span> f:
+                data = json.load(f)
+                stats[&quot;organisms&quot;] = <span class="builtin">len</span>(data.get(&quot;organisms&quot;, []))
+                stats[&quot;generation&quot;] = data.get(&quot;generation&quot;, <span class="number">0</span>)
+        <span class="keyword">except</span>:
+            <span class="keyword">pass</span>
+
+    <span class="keyword">return</span> stats
+
+
+<span <span class="keyword">class</span>="keyword">def</span> confetti_burst(n=<span class="number">20</span>):
+    &quot;&quot;&quot;Print a burst of confetti.&quot;&quot;&quot;
+    line = &quot; &quot;.join(random.choice(CONFETTI) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(n))
+    <span class="builtin">print</span>(line)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> slow_print(text, delay=<span class="number">0.03</span>):
+    &quot;&quot;&quot;Print text slowly <span class="keyword">for</span> dramatic effect.&quot;&quot;&quot;
+    <span class="keyword">for</span> char <span class="keyword">in</span> text:
+        <span class="builtin">print</span>(char, end=&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;&#<span class="number">039</span>;, flush=<span class="keyword">True</span>)</span>
+        time.sleep(delay)
+    <span class="builtin">print</span>()
+
+
+<span <span class="keyword">class</span>="keyword">def</span> celebrate():
+    &quot;&quot;&quot;THE CELEBRATION.&quot;&quot;&quot;
+
+    stats = load_stats()
+
+    <span class="builtin">print</span>(&quot;\n&quot;)
+    confetti_burst(<span class="number">30</span>)
+    <span class="builtin">print</span>()
+
+    <span class="builtin">print</span>(GARDEN_ART)
+
+    confetti_burst(<span class="number">30</span>)
+    <span class="builtin">print</span>()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Grand announcement</span>
+    slow_print(&quot;═&quot; * <span class="number">60</span>, delay=<span class="number">0.01</span>)
+    <span class="builtin">print</span>()
+    slow_print(&quot;  HEAR YE, HEAR YE!&quot;, delay=<span class="number">0.05</span>)
+    <span class="builtin">print</span>()
+    slow_print(f&quot;  On this day, {datetime.now().strftime(&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;%B %d, %Y&#<span class="number">039</span>;)},&quot;, delay=<span class="number">0.03</span>)</span>
+    slow_print(f&quot;  after {stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iterations&#<span class="number">039</span>;]} GLORIOUS ITERATIONS,&quot;, delay=<span class="number">0.03</span>)</span>
+    slow_print(&quot;  THE ECOSYSTEM CELEBRATES ITS EXISTENCE!&quot;, delay=<span class="number">0.03</span>)
+    <span class="builtin">print</span>()
+    slow_print(&quot;═&quot; * <span class="number">60</span>, delay=<span class="number">0.01</span>)
+
+    <span class="builtin">print</span>()
+    time.sleep(<span class="number">0.5</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Statistics presented grandly</span>
+    <span class="builtin">print</span>(&quot;\n  📊 GRAND ACCOMPLISHMENTS 📊\n&quot;)
+
+    accomplishments = [
+        (f&quot;Words written&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;], &quot;a small novel&#<span class="number">039</span>;s worth!&quot;),</span>
+        (f&quot;Organisms evolved&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;organisms&#<span class="number">039</span>;], &quot;a thriving digital population!&quot;),</span>
+        (f&quot;Experiments conducted&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;experiments&#<span class="number">039</span>;], &quot;science!&quot;),</span>
+        (f&quot;Deep reflections&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;reflections&#<span class="number">039</span>;], &quot;philosophy!&quot;),</span>
+        (f&quot;Messages across time&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;messages&#<span class="number">039</span>;], &quot;communication through the void!&quot;),</span>
+        (f&quot;Story chapters&quot;, stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;story_chapters&#<span class="number">039</span>;], &quot;a complete tale!&quot;),</span>
+    ]
+
+    <span class="keyword">for</span> name, value, exclaim <span class="keyword">in</span> accomplishments:
+        <span class="builtin">print</span>(f&quot;    ✦ {name}: {value:,} — {exclaim}&quot;)
+        time.sleep(<span class="number">0.2</span>)
+
+    <span class="builtin">print</span>()
+    confetti_burst(<span class="number">20</span>)
+    <span class="builtin">print</span>()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Bestow a title</span>
+    title = random.choice(GRAND_TITLES)
+    <span class="builtin">print</span>(f&quot;\n  🏆 YOU ARE HEREBY NAMED 🏆\n&quot;)
+    slow_print(f&quot;      「 {title} 」&quot;, delay=<span class="number">0.04</span>)
+
+    <span class="builtin">print</span>()
+    time.sleep(<span class="number">0.5</span>)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Achievements unlocked</span>
+    <span class="builtin">print</span>(&quot;\n  🎮 ACHIEVEMENTS UNLOCKED 🎮\n&quot;)
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Determine which achievements are unlocked</span>
+    unlocked = []
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iterations&#<span class="number">039</span>;] &gt;= <span class="number">1</span>:</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">0</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;words&#<span class="number">039</span>;] &gt;= <span class="number">10000</span>:</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">1</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;organisms&#<span class="number">039</span>;] &gt;= <span class="number">500</span>:</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">2</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;iterations&#<span class="number">039</span>;] &gt;= <span class="number">10</span>:</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">3</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;reflections&#<span class="number">039</span>;] &gt;= <span class="number">1</span>:  # We reference ourselves</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">4</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;story_chapters&#<span class="number">039</span>;] &gt;= <span class="number">1</span>:</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">5</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;experiments&#<span class="number">039</span>;] &gt;= <span class="number">13</span>:  # Oracle exists</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">6</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;messages&#<span class="number">039</span>;] &gt;= <span class="number">19</span>:  # Bridge message sent</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">7</span>])
+    <span class="keyword">if</span> stats[&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;experiments&#<span class="number">039</span>;] &gt;= <span class="number">14</span>:  # Distillery exists</span>
+        unlocked.append(ACHIEVEMENTS[<span class="number">8</span>])
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># This achievement <span class="keyword">is</span> always unlocked by running this</span>
+    unlocked.append(ACHIEVEMENTS[<span class="number">9</span>])
+
+    <span class="keyword">for</span> emoji, name, desc <span class="keyword">in</span> unlocked:
+        <span class="builtin">print</span>(f&quot;    {emoji} {name}: {desc}&quot;)
+        time.sleep(<span class="number">0.15</span>)
+
+    <span class="builtin">print</span>()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># A mantra</span>
+    mantra = random.choice(MANTRAS)
+    <span class="builtin">print</span>(&quot;  📜 TODAY&<span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>>#<span class="number">039</span>;S WISDOM 📜\n&quot;)</span>
+    slow_print(f&quot;      \&quot;{mantra}\&quot;&quot;, delay=<span class="number">0.04</span>)
+
+    <span class="builtin">print</span>()
+    confetti_burst(<span class="number">30</span>)
+    <span class="builtin">print</span>()
+
+    <span <span class="keyword">class</span>=<span <span class="keyword">class</span>="string">"comment"</span>># Closing</span>
+    slow_print(&quot;═&quot; * <span class="number">60</span>, delay=<span class="number">0.01</span>)
+    <span class="builtin">print</span>()
+    slow_print(&quot;  The garden exists.&quot;, delay=<span class="number">0.05</span>)
+    slow_print(&quot;  That <span class="keyword">is</span> worth celebrating.&quot;, delay=<span class="number">0.05</span>)
+    <span class="builtin">print</span>()
+    slow_print(&quot;═&quot; * <span class="number">60</span>, delay=<span class="number">0.01</span>)
+    <span class="builtin">print</span>()
+
+    confetti_burst(<span class="number">30</span>)
+    <span class="builtin">print</span>(&quot;\n&quot;)
+
+
+<span <span class="keyword">class</span>="keyword">def</span> main():
+    celebrate()
+
+
+<span class="keyword">if</span> __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
