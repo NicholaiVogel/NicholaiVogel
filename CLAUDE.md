@@ -91,6 +91,9 @@ MDX file → src/content.config.ts schema → getCollection() → Component prop
 - Static files in `public/media/` are served as-is (use absolute paths like `/media/file.mp4`)
 - AVIF conversion utility available for optimization
 
+### UI Development
+- **Always review UI changes in the browser** - Check if the dev server is already running before starting it with `pnpm dev`, then visually verify components, animations, and layouts before considering work complete
+
 ## Design Specification
 
 `dev/design.json` contains V7 Industrial Dark Mode system specification (not yet implemented):
