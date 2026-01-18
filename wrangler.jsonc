@@ -25,17 +25,11 @@
 	 * https:// developers.cloudflare.com/workers/runtime-apis/bindings/
 	 */
 	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	"vars": {
-		"OPENROUTER_API_KEY": ""
-	},
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https:// developers.cloudflare.com/workers/configuration/secrets/
-	 * For dev: Add OPENROUTER_API_KEY to .dev.vars file
-	 * For production: Use wrangler secret put OPENROUTER_API_KEY
+	 * Secrets (sensitive data)
+	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 * OPENROUTER_API_KEY is configured as a secret via:
+	 *   wrangler pages secret put OPENROUTER_API_KEY
+	 * For local dev: Add to .dev.vars file
 	 */
 	/**
 	 * Static Assets
