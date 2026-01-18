@@ -1,0 +1,452 @@
+---
+title: "Building a Personal Website with Astro: A Technical Deep Dive"
+description: "How I used Astro to build a fast, type-safe personal site as a testbed for experimentation. Coming from Next.js, here's what surprised me about Astro's architecture and why it's worth learning."
+pubDate: 2026-01-18
+heroImage: "../../assets/workbench.avif"
+featured: false
+category: "Development"
+tags: ["Astro", "Web Development", "Static Sites", "TypeScript"]
+---
+
+I watched a YouTube video about Astro and wanted to learn it, but didn't have a client project to test it on. So I built this site. I typically work with Next.js and Node.js, so Astro's approach was different enough to be interesting.
+
+Turns out, having a personal site as a testbed for random experiments is valuable. Not for portfolio reasons, but because you can ship half-baked ideas to production without asking anyone for permission. That freedom to experiment is rare in client work.
+
+Related: [Building Your Own Tools: From VFX Artist to Developer](/blog/coder-to-orchestrator)
+
+## Why Build Your Own Site
+
+You own the content, control the tech stack, and can deploy whatever you want without approval processes. More importantly, it's a testbed for learning new technologies without client constraints.
+
+This site has become my sandbox for random experiments. When I wanted to try building something with Cloudflare Workers and D1, I added a chat interface. When I wanted to test edge deployment patterns, I had a live site to deploy to. The benefit of a personal site isn't the portfolio—it's having a place where you can ship half-finished experiments and iterate on them over time.
+
+## Astro's Architecture: Islands and Partial Hydration
+
+Coming from Next.js, Astro's architecture is fundamentally different. Next.js hydrates your entire React tree on the client. Astro compiles everything to static HTML and only hydrates the components you explicitly mark as interactive.
+
+### Zero JS by Default
+
+Blog posts on this site are MDX files that get rendered to HTML at build time. No JavaScript ships to the browser for the content itself. The reading experience is just HTML and CSS.
+
+When I need client-side interactivity, I opt in with client directives:
+
+```astro
+<SearchDialog client:load />
+<ThemeToggle client:idle />
+<HubertChat client:visible />
+```
+
+Each directive controls when the component hydrates:
+- `client:load` - hydrates immediately
+- `client:idle` - waits for `requestIdleCallback`
+- `client:visible` - hydrates when scrolled into view
+
+This is Astro's "islands architecture." Interactive components are islands of JavaScript in a sea of static HTML.
+
+### Content Collections: Schema Validation with Zod
+
+Content Collections give you type-safe frontmatter validation. Instead of hoping your blog post frontmatter is correct, you define a Zod schema:
+
+```typescript
+// src/content.config.ts
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    heroImage: z.string().optional(),
+    featured: z.boolean().default(false),
+    category: z.string(),
+    tags: z.array(z.string()),
+  }),
+});
+
+export const collections = { blog };
+```
+
+Now your build fails if frontmatter is invalid. TypeScript knows the shape of your content data. Fetching posts is straightforward:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts
+  .sort((a, b) => b.data.pubDate - a.data.pubDate);
+---
+```
+
+This pattern scales well. I have four content collections on this site: blog, sections, pages, and projects. Each has its own schema.
+
+### MDX Integration
+
+Astro supports MDX out of the box. You write Markdown but can import and use components inline:
+
+```mdx
+---
+title: "My Post"
+pubDate: 2026-01-18
+---
+
+## Regular Markdown
+
+Standard markdown content here.
+
+<VideoPlayer url="/media/demo.mp4" />
+
+Back to markdown.
+```
+
+This means you can embed interactive components, custom layouts, or any JSX directly in your content files. The MDX gets compiled to HTML at build time unless you explicitly add client-side interactivity.
+
+## Tutorial: Building an Astro Blog from Scratch
+
+### Step 1: Initialize the Project
+
+```bash
+npm create astro@latest my-blog
+cd my-blog
+```
+
+The CLI prompts you to select a template. Choose "Empty" for a clean start, or "Blog" if you want a starter structure. Enable TypeScript for type safety.
+
+Add integrations as needed:
+
+```bash
+npx astro add mdx tailwind react
+```
+
+This installs and configures the MDX, Tailwind, and React integrations. Astro's integration system automatically updates your config file.
+
+### Step 2: Set Up Content Collections
+
+Create the content directory structure:
+
+```bash
+mkdir -p src/content/blog
+touch src/content.config.ts
+```
+
+Define your content schema in `src/content.config.ts`:
+
+```typescript
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    heroImage: z.string().optional(),
+    category: z.string(),
+    tags: z.array(z.string()),
+  }),
+});
+
+export const collections = { blog };
+```
+
+Create your first blog post at `src/content/blog/first-post.mdx`:
+
+```mdx
+---
+title: "First Post"
+description: "My first blog post"
+pubDate: 2026-01-18
+category: "General"
+tags: ["hello"]
+---
+
+## Hello World
+
+This is my first post.
+```
+
+The filename (`first-post.mdx`) becomes the URL slug (`/blog/first-post`).
+
+### Step 3: Create Dynamic Routes
+
+Create a dynamic route at `src/pages/blog/[...slug].astro`:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+};
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{post.data.title}</title>
+  <meta name="description" content={post.data.description}>
+</head>
+<body>
+  <article>
+    <h1>{post.data.title}</h1>
+    <time datetime={post.data.pubDate.toISOString()}>
+      {post.data.pubDate.toLocaleDateString()}
+    </time>
+    <Content />
+  </article>
+</body>
+</html>
+```
+
+The `getStaticPaths()` function runs at build time and generates a static HTML file for each blog post. The `[...slug]` syntax creates a catch-all route that matches any path depth.
+
+Create a blog index at `src/pages/blog/index.astro`:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog</title>
+</head>
+<body>
+  <h1>Blog Posts</h1>
+  <ul>
+    {sortedPosts.map(post => (
+      <li>
+        <a href={`/blog/${post.slug}`}>
+          {post.data.title}
+        </a>
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString()}
+        </time>
+      </li>
+    ))}
+  </ul>
+</body>
+</html>
+```
+
+### Step 4: Add Interactive Components
+
+Astro components are static by default. For client-side interactivity, use script tags or framework components with client directives.
+
+Here's a vanilla JavaScript approach using Web Components:
+
+```astro
+---
+// src/components/ThemeToggle.astro
+---
+
+<theme-toggle>
+  <button>Toggle Theme</button>
+</theme-toggle>
+
+<script>
+  class ThemeToggle extends HTMLElement {
+    constructor() {
+      super();
+
+      const button = this.querySelector('button');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.dataset.theme = savedTheme;
+
+      button?.addEventListener('click', () => {
+        const currentTheme = document.documentElement.dataset.theme;
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = newTheme;
+        localStorage.setItem('theme', newTheme);
+      });
+    }
+  }
+
+  customElements.define('theme-toggle', ThemeToggle);
+</script>
+
+<style>
+  theme-toggle button {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+  }
+</style>
+```
+
+Or use a React component when you need more complex state management:
+
+```tsx
+// src/components/SearchDialog.tsx
+import { useState } from 'react';
+
+export function SearchDialog() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+
+  const handleSearch = async (q: string) => {
+    const res = await fetch(`/search.json?q=${q}`);
+    const data = await res.json();
+    setResults(data);
+  };
+
+  return (
+    <dialog>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          handleSearch(e.target.value);
+        }}
+      />
+      <ul>
+        {results.map((result) => (
+          <li key={result.slug}>
+            <a href={result.url}>{result.title}</a>
+          </li>
+        ))}
+      </ul>
+    </dialog>
+  );
+}
+```
+
+Import it with a client directive in your Astro file:
+
+```astro
+---
+import { SearchDialog } from '../components/SearchDialog';
+---
+
+<SearchDialog client:load />
+```
+
+The `client:load` directive tells Astro to hydrate this component immediately on page load.
+
+### Step 5: Deploy to Cloudflare Pages
+
+Install the Cloudflare adapter:
+
+```bash
+npx astro add cloudflare
+```
+
+This updates your `astro.config.mjs` automatically:
+
+```javascript
+import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
+
+export default defineConfig({
+  output: 'static', // or 'hybrid' / 'server' for SSR
+  adapter: cloudflare(),
+});
+```
+
+Push your code to GitHub, then connect the repository in the Cloudflare Pages dashboard. Cloudflare automatically detects the Astro project and sets up the build configuration:
+
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Node version: 18+
+
+Deploy happens automatically on every push to your main branch.
+
+If you need server-side features, you can use Cloudflare's D1 database, KV storage, or Durable Objects. Add bindings to your `wrangler.toml`:
+
+```toml
+name = "my-blog"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "my-blog-db"
+database_id = "your-database-id"
+```
+
+Access them in your Astro endpoints:
+
+```typescript
+// src/pages/api/data.ts
+export async function GET({ locals }) {
+  const db = locals.runtime.env.DB;
+  const result = await db.prepare('SELECT * FROM posts').all();
+  return new Response(JSON.stringify(result));
+}
+```
+
+## Using Your Site as a Testbed
+
+Once deployed, your site becomes a sandbox for experiments you can't easily test in client projects.
+
+### Build Custom Tooling
+
+Since you control the entire stack, you can build utilities specific to your workflow. For example, I wrote a git commit message generator that analyzes diffs and generates descriptive commit messages. It's a Node script in `/src/utils` that I run via npm script.
+
+Similarly, I built an image converter that recursively processes JPEGs and PNGs into AVIF format. These aren't groundbreaking projects, but having a live site gave me a reason to actually finish and use them.
+
+This approach to building custom tools aligns with the philosophy I wrote about in [Building Your Own Tools: From VFX Artist to Developer](/blog/coder-to-orchestrator)—owning your infrastructure and workflows rather than relying on SaaS platforms.
+
+### Test Edge Computing Patterns
+
+Cloudflare Pages gives you access to Workers, D1 databases, and KV storage. This makes it easy to experiment with edge computing patterns without setting up separate infrastructure.
+
+Want to add an AI chat interface? Deploy a Worker that handles the LLM API calls. Want to track page views? Use a D1 database. Want to cache API responses? Use KV storage.
+
+These features are available on the free tier, so you can experiment without worrying about cost.
+
+### Iterate Without Constraints
+
+The key benefit is iteration speed. No pull requests, no code reviews, no stakeholder approvals. If you want to try a new animation pattern or test a different layout, just push the code and see how it works in production.
+
+This is valuable for learning because you complete projects instead of abandoning them when they get boring. Having real users (even if it's just you) creates accountability that local experiments don't have.
+
+For example, I used this site as the platform for [The Ecosystem Experiment](/blog/the-ecosystem-experiment), a 30-day AI research project. Having the infrastructure already in place meant I could focus on the experiment itself rather than setting up hosting and deployment.
+
+## Why Astro Works for Business Sites
+
+The same patterns that make Astro good for personal sites apply to business and professional sites:
+
+**Performance**: Static generation means fast load times. Content is pre-rendered at build time, so there's no server processing on each request. For content-heavy sites (marketing pages, documentation, blogs), this is faster than SSR.
+
+**Cost**: Static sites are cheap to host. Cloudflare Pages free tier includes unlimited bandwidth and 500 builds per month. For most sites, you'll never exceed the free tier.
+
+**Security**: No server means no server vulnerabilities. No database means no SQL injection vectors. Your attack surface is minimal.
+
+**Developer Experience**: Astro's component model is straightforward. If your team knows HTML and JavaScript, they can build Astro sites. The learning curve is gentler than framework-specific patterns like React Server Components or Vue's Composition API.
+
+Companies use Astro for marketing sites, documentation sites, and content-driven applications. It's not just for personal projects.
+
+## Getting Started
+
+If you're coming from Next.js or another framework, Astro will feel familiar but different. The component syntax is similar to JSX, but the mental model is more like PHP or traditional server-side rendering—each page is rendered once at build time, not on every request.
+
+Start with the official tutorial at [docs.astro.build](https://docs.astro.build) or clone the blog template:
+
+```bash
+npm create astro@latest -- --template blog
+```
+
+Deploy it to Cloudflare Pages or any static host. Then start experimenting.
+
+Your personal website is a place to try things without consequences. Use it to learn new technologies, test architectural patterns, and build features you wouldn't get approval for in client work. In a world where most developers only work in company codebases, having your own corner of the internet to experiment in is increasingly valuable.
