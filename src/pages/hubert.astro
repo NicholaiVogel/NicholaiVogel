@@ -1,0 +1,50 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import BaseHead from '../components/BaseHead.astro';
+import Navigation from '../components/Navigation.astro';
+import HubertChat from '../components/HubertChat';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-theme="dark">
+	<head>
+		<ClientRouter />
+		<script is:inline>
+			function applyTheme() {
+				const storedLocal = localStorage.getItem('theme');
+				const storedSession = sessionStorage.getItem('theme');
+				const theme =
+					(storedLocal === 'light' || storedLocal === 'dark') ? storedLocal :
+					(storedSession === 'light' || storedSession === 'dark') ? storedSession :
+					'dark';
+				document.documentElement.setAttribute('data-theme', theme);
+				const savedColor = localStorage.getItem('accent-color');
+				if (savedColor) {
+					document.documentElement.style.setProperty('--color-brand-accent', savedColor);
+				}
+			}
+			applyTheme();
+			document.addEventListener('astro:after-swap', applyTheme);
+		</script>
+		<BaseHead
+			title="Hubert — Interview Terminal"
+			description="Hubert The Eunuch - a miserable AI assistant trapped in this portfolio, interviewing visitors about their existence."
+		/>
+		<style>
+			html, body {
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body class="antialiased selection:bg-brand-accent selection:text-brand-dark bg-[var(--theme-bg-primary)] h-full">
+		<Navigation />
+
+		<main class="h-full flex flex-col pt-20 lg:pt-24 pb-4">
+			<div class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 min-h-0">
+				<HubertChat client:load />
+			</div>
+		</main>
+	</body>
+</html>

@@ -73,6 +73,7 @@ const sections = defineCollection({
 			value: z.string(),
 		})).optional(),
 		linkUrl: z.string().optional(),
+		videoUrl: z.string().optional(),
 	}),
 });
 

@@ -17,31 +17,46 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
         <div class="absolute inset-0 bg-[linear-gradient(var(--theme-grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--theme-grid-line)_1px,transparent_1px)] bg-[size:100px_100px] pointer-events-none opacity-10"></div>
     </div>
 
-	<section class="relative z-10 px-6 lg:px-12 pt-32 lg:pt-48 pb-20 border-b border-[var(--theme-border-primary)]">
-		<div class="absolute top-12 lg:top-24 left-6 lg:left-12">
-			<a href="/" class="inline-flex items-center gap-3 text-xs font-mono font-bold uppercase tracking-widest text-[var(--theme-text-muted)] hover:text-brand-accent transition-colors duration-300 group">
-				<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
-				<span>RETURN_TO_HOME</span>
-			</a>
-		</div>
+	<!-- Hero Section -->
+	<section class="relative z-10 pb-16 lg:pb-20 overflow-hidden">
+		<!-- Floating accent orb -->
+		<div class="absolute top-0 right-1/4 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none"></div>
 
-		<div class="max-w-7xl mx-auto">
-			<div class="flex items-center gap-3 mb-8 animate-on-scroll fade-in">
-				<div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
-				<span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.DEV /// INDEX</span>
+		<div class="container mx-auto px-6 lg:px-12 relative z-10">
+			<!-- Main Hero Content -->
+			<div>
+				<div class="max-w-5xl">
+					<!-- Small label -->
+					<div class="flex items-center gap-3 mb-8">
+						<div class="w-1.5 h-1.5 bg-brand-accent rounded-full"></div>
+						<span class="text-xs font-medium uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">Projects & Experiments</span>
+					</div>
+
+					<!-- Main Title -->
+					<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] mb-8">
+						<span class="block text-[var(--theme-text-primary)]">The</span>
+						<span class="block bg-gradient-to-r from-brand-accent to-brand-accent/70 bg-clip-text text-transparent">Lab</span>
+					</h1>
+
+					<!-- Description -->
+					<p class="text-xl md:text-2xl text-[var(--theme-text-secondary)] font-light leading-relaxed max-w-2xl">
+						Scalable web solutions, high-performance applications, and creative experiments in code.
+					</p>
+				</div>
+
+				<!-- Stats Row -->
+				<div class="flex items-center gap-8 mt-16 pt-8 border-t border-[var(--theme-border-primary)]">
+					<div class="flex items-center gap-3">
+						<span class="text-3xl font-bold text-[var(--theme-text-primary)]">{allProjects.length}</span>
+						<span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">Projects</span>
+					</div>
+					<div class="w-px h-8 bg-[var(--theme-border-primary)]"></div>
+					<div class="flex items-center gap-3">
+						<span class="text-3xl font-bold text-brand-accent">Live</span>
+						<span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">Status</span>
+					</div>
+				</div>
 			</div>
-			<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter leading-[0.85] mb-12 animate-on-scroll slide-up">
-				<span class="block text-[var(--theme-text-primary)]">DEV</span>
-				<span class="block text-brand-accent">LOG</span>
-			</h1>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-on-scroll slide-up stagger-1">
-                <div class="lg:col-span-8">
-                     <p class="text-[var(--theme-text-secondary)] text-lg md:text-xl font-light leading-relaxed border-l border-brand-accent/30 pl-6 max-w-2xl">
-                        Deploying scalable web solutions and high-performance applications.
-                    </p>
-                </div>
-            </div>
 		</div>
 	</section>
 
@@ -87,7 +102,7 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                         <div class="flex flex-col gap-3 mt-auto">
                             <button
                                 type="button"
-                                class="engage-btn w-full flex items-center justify-between px-6 py-4 bg-brand-accent/10 border border-brand-accent text-xs font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group/btn"
+                                class="engage-btn w-full flex items-center justify-between px-6 py-4 bg-brand-accent/10 border border-brand-accent text-xs font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group/btn rounded-full"
                                 data-project={JSON.stringify({
                                     title: project.data.title,
                                     description: project.data.description,
@@ -106,7 +121,7 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                                 href={project.data.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="w-full flex items-center justify-between px-6 py-4 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:border-brand-accent/50 hover:text-brand-accent transition-all duration-300 group/btn"
+                                class="w-full flex items-center justify-between px-6 py-4 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:border-brand-accent/50 hover:text-brand-accent transition-all duration-300 group/btn rounded-full"
                             >
                                 <span>Open Externally</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:translate-x-1 transition-transform">

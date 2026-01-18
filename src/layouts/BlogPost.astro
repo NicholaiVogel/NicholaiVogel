@@ -209,7 +209,7 @@ const articleSchema = {
 										href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
 										aria-label="Share on Twitter"
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -220,7 +220,7 @@ const articleSchema = {
 										href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
 										aria-label="Share on LinkedIn"
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -232,7 +232,7 @@ const articleSchema = {
 									<button
 										type="button"
 										onclick="navigator.clipboard.writeText(window.location.href)"
-										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300"
+										class="w-10 h-10 flex items-center justify-center border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 rounded-full"
 										aria-label="Copy link"
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

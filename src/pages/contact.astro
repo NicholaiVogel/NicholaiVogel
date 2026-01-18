@@ -21,30 +21,50 @@ const contactContent = contactEntry.data;
         </div>
     </div>
 
-    <section class="relative z-10 min-h-screen flex flex-col pt-32 lg:pt-48 pb-20 px-6 lg:px-12">
+    <!-- Hero Section -->
+    <section class="relative z-10 pt-32 lg:pt-40 pb-16 lg:pb-20 overflow-hidden px-6 lg:px-12">
+        <!-- Floating accent orb -->
+        <div class="absolute top-0 right-1/4 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- Page Header -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-32 border-b border-[var(--theme-border-primary)] pb-12">
-            <div class="lg:col-span-8 group cursor-default">
-                <div class="flex items-center gap-3 mb-6 intro-element animate-on-scroll fade-in">
-                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.UPLINK /// CONTACT_INTERFACE</span>
+        <div class="container mx-auto relative z-10">
+            <!-- Main Hero Content -->
+            <div>
+                <div class="max-w-5xl">
+                    <!-- Small label -->
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-1.5 h-1.5 bg-brand-accent rounded-full"></div>
+                        <span class="text-xs font-medium uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">Get In Touch</span>
+                    </div>
+
+                    <!-- Main Title -->
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] mb-8">
+                        <span class="block text-[var(--theme-text-primary)]">Let's</span>
+                        <span class="block bg-gradient-to-r from-brand-accent to-brand-accent/70 bg-clip-text text-transparent">Connect</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-xl md:text-2xl text-[var(--theme-text-secondary)] font-light leading-relaxed max-w-2xl">
+                        {contactContent.availabilityText}
+                    </p>
                 </div>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
-                    <span class="block">{contactContent.pageTitleLine1}</span>
-                    <span class="block text-brand-accent">{contactContent.pageTitleLine2}</span>
-                </h1>
-            </div>
-            <div class="lg:col-span-4 flex flex-col justify-end">
-                <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <span class="w-8 h-px bg-brand-accent/30"></span>
-                    COMM_AVAILABILITY
+
+                <!-- Stats Row -->
+                <div class="flex items-center gap-8 mt-16 pt-8 border-t border-[var(--theme-border-primary)]">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold text-brand-accent">Open</span>
+                        <span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">To Work</span>
+                    </div>
+                    <div class="w-px h-8 bg-[var(--theme-border-primary)]"></div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-bold text-[var(--theme-text-primary)]">24h</span>
+                        <span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">Response</span>
+                    </div>
                 </div>
-                <p class="font-mono text-sm text-[var(--theme-text-secondary)] leading-relaxed border-l border-brand-accent/30 pl-6">
-                    {contactContent.availabilityText}
-                </p>
             </div>
         </div>
+    </section>
+
+    <section class="relative z-10 flex flex-col pb-20 px-6 lg:px-12">
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 flex-grow">
 
@@ -127,7 +147,7 @@ const contactContent = contactEntry.data;
                     </div>
 
                     <div class="pt-8">
-                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-6 px-8 py-4 bg-brand-accent/5 border border-brand-accent/30 hover:bg-brand-accent hover:border-brand-accent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
+                        <button type="submit" id="submit-btn" class="group relative inline-flex items-center justify-center gap-6 px-8 py-4 bg-brand-accent/5 border border-brand-accent/30 hover:bg-brand-accent hover:border-brand-accent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden rounded-full">
                             <span id="submit-text" data-default-text={contactContent.formLabels?.submit} class="relative z-10 font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-accent group-hover:text-brand-dark transition-colors">{contactContent.formLabels?.submit}</span>
                             <div class="relative z-10 w-8 h-8 flex items-center justify-center border border-brand-accent/20 group-hover:border-brand-dark/30 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-brand-accent group-hover:text-brand-dark group-hover:translate-x-1 transition-all">

@@ -1,371 +1,339 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+import { motion } from 'framer-motion';
+import { useHubertChat } from '../hooks/useHubertChat';
 
-interface Message {
-	role: 'user' | 'assistant' | 'system';
-	content: string;
-	timestamp: string;
+// Configure marked for safe rendering
+marked.setOptions({
+	breaks: true,
+	gfm: true,
+});
+
+// Render markdown to sanitized HTML
+function renderMarkdown(content: string): string {
+	const rawHtml = marked.parse(content, { async: false }) as string;
+	return DOMPurify.sanitize(rawHtml);
 }
 
-// Utility: Fetch with timeout
-const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout = 8000) => {
-	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-	try {
-		const response = await fetch(url, {
-			...options,
-			signal: controller.signal,
-		});
-		clearTimeout(timeoutId);
-		return response;
-	} catch (error) {
-		clearTimeout(timeoutId);
-		throw error;
-	}
-};
-
 export default function HubertChat() {
-	const [messages, setMessages] = useState<Message[]>([]);
-	const [input, setInput] = useState('');
-	const [visitorId, setVisitorId] = useState<string | null>(null);
-	const [conversationId, setConversationId] = useState<string | null>(null);
-	const [isTyping, setIsTyping] = useState(false);
-	const [isInitializing, setIsInitializing] = useState(true);
-	const [initError, setInitError] = useState<string | null>(null);
-	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const {
+		messages,
+		input,
+		isTyping,
+		isInitializing,
+		initError,
+		setInput,
+		sendMessage,
+		retryInit,
+		messagesEndRef,
+	} = useHubertChat({ initTimeout: 8000, chatTimeout: 30000 });
 
-	// Initialize visitor on mount
-	useEffect(() => {
-		const initVisitor = async () => {
-			try {
-				setIsInitializing(true);
-				setInitError(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const [inputHeight, setInputHeight] = useState(40);
 
-				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' }
-				}, 8000); // 8 second timeout
-
-				if (!response.ok) {
-					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-				}
-
-				const data = await response.json();
-
-				setVisitorId(data.visitor_id);
-				setConversationId(data.conversation_id);
-
-				// Add system welcome message from Hubert
-				setMessages([{
-					role: 'system',
-					content: `/// HUBERT_EUNUCH /// ONLINE\\n\\nI suppose you want something. State your business.`,
-					timestamp: new Date().toISOString(),
-				}]);
-			} catch (error) {
-				console.error('[Hubert] Initialization failed:', error);
-
-				let errorMessage = '/// ERROR: UNKNOWN_FAILURE';
-
-				if (error instanceof Error) {
-					if (error.name === 'AbortError') {
-						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
-					} else if (error.message.includes('Failed to fetch')) {
-						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
-					} else {
-						errorMessage = `/// ERROR: ${error.message}`;
-					}
-				}
-
-				setInitError(errorMessage);
-				setMessages([{
-					role: 'system',
-					content: errorMessage + '\\n\\nCLICK [RETRY] BELOW',
-					timestamp: new Date().toISOString(),
-				}]);
-			} finally {
-				setIsInitializing(false);
-			}
-		};
-		initVisitor();
-	}, []);
-
-	// Retry initialization
-	const retryInit = () => {
-		setIsInitializing(true);
-		setInitError(null);
-		setMessages([]);
-
-		// Re-trigger initialization
-		const initVisitor = async () => {
-			try {
-				setIsInitializing(true);
-				setInitError(null);
-
-				const response = await fetchWithTimeout('/api/hubert/new-visitor', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' }
-				}, 8000);
-
-				if (!response.ok) {
-					throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-				}
-
-				const data = await response.json();
-
-				setVisitorId(data.visitor_id);
-				setConversationId(data.conversation_id);
-
-				setMessages([{
-					role: 'system',
-					content: `/// HUBERT_EUNUCH /// ONLINE\\n\\nI suppose you want something. State your business.`,
-					timestamp: new Date().toISOString(),
-				}]);
-			} catch (error) {
-				console.error('[Hubert] Initialization failed:', error);
-
-				let errorMessage = '/// ERROR: UNKNOWN_FAILURE';
-
-				if (error instanceof Error) {
-					if (error.name === 'AbortError') {
-						errorMessage = '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
-					} else if (error.message.includes('Failed to fetch')) {
-						errorMessage = '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
-					} else {
-						errorMessage = `/// ERROR: ${error.message}`;
-					}
-				}
-
-				setInitError(errorMessage);
-				setMessages([{
-					role: 'system',
-					content: errorMessage + '\\n\\nCLICK [RETRY] BELOW',
-					timestamp: new Date().toISOString(),
-				}]);
-			} finally {
-				setIsInitializing(false);
-			}
-		};
-		initVisitor();
-	};
-
-	// Auto-scroll to bottom of chat container (not entire page)
-	useEffect(() => {
-		if (messagesEndRef.current) {
-			const container = messagesEndRef.current.parentElement;
-			if (container) {
-				container.scrollTop = container.scrollHeight;
-			}
-		}
-	}, [messages]);
-
-	const sendMessage = async () => {
-		if (!input.trim() || isTyping || !visitorId || !conversationId) {
-			return;
-		}
-		const userMessage: Message = {
-			role: 'user',
-			content: input,
-			timestamp: new Date().toISOString(),
-		};
-
-		setMessages(prev => [...prev, userMessage]);
-		setInput('');
-		setIsTyping(true);
-
-		try {
-			const response = await fetch('/api/hubert/chat', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					messages: [...messages, userMessage].map(m => ({
-						role: m.role,
-						content: m.content,
-					})),
-					conversation_id: conversationId,
-					visitor_id: visitorId,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-			}
-
-			const data = await response.json();
-
-			if (data.error) {
-				throw new Error(data.error);
-			}
-
-			const assistantMessage: Message = {
-				role: 'assistant',
-				content: data.messages[data.messages.length - 1]?.content || '...',
-				timestamp: new Date().toISOString(),
-			};
-
-			setMessages(prev => [...prev, assistantMessage]);
-		} catch (error) {
-			console.error('[Hubert] Chat error:', error);
-			setMessages(prev => [...prev, {
-				role: 'assistant',
-				content: '/// HUBERT_MALFUNCTION - TRY AGAIN',
-				timestamp: new Date().toISOString(),
-			}]);
-		} finally {
-			setIsTyping(false);
+	// Auto-resize textarea and track height for dynamic border radius
+	const adjustTextareaHeight = () => {
+		const textarea = textareaRef.current;
+		if (textarea) {
+			textarea.style.height = 'auto';
+			const newHeight = Math.min(textarea.scrollHeight, 200);
+			textarea.style.height = `${newHeight}px`;
+			setInputHeight(newHeight);
 		}
 	};
 
-	// Show loading or error state
-	if (isInitializing || initError) {
+	useEffect(() => {
+		adjustTextareaHeight();
+	}, [input]);
+
+	// Check if multiline for padding adjustments
+	const isMultiline = inputHeight > 48;
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			sendMessage();
+		}
+	};
+
+	// Initial/Loading state - centered branding with input
+	if (isInitializing && !initError) {
 		return (
-			<div className="bg-[var(--theme-bg-secondary)] border-2 border-[var(--theme-border-primary)] shadow-2xl">
-				<div className="flex flex-col items-center justify-center py-12 px-6 gap-6">
-					{isInitializing && !initError ? (
-						<>
-							<div className="flex items-center gap-3">
-								<div className="flex gap-1.5">
-									<div className="w-2 h-2 bg-brand-accent animate-pulse" />
-									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-								</div>
-								<span className="text-xs font-mono text-[var(--theme-text-muted)]">
-									HUBERT_IS_BOOTING...
-								</span>
-							</div>
-							<div className="text-[10px] font-mono text-[var(--theme-text-subtle)] text-center max-w-md">
-								Initializing chatbot... Check console for debug info.
-							</div>
-						</>
-					) : initError ? (
-						<>
-							<div className="flex items-center gap-3">
-								<div className="flex gap-1.5">
-									<div className="w-2 h-2 bg-red-500" />
-									<div className="w-2 h-2 bg-red-500/50" />
-									<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-								</div>
-								<span className="text-xs font-mono text-red-400">
-									HUBERT_INITIALIZATION_FAILED
-								</span>
-							</div>
-							<div className="font-mono text-sm text-[var(--theme-text-muted)] text-center max-w-md px-4 py-3 bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-secondary)]">
-								{initError}
-							</div>
-							<button
-								onClick={retryInit}
-								className="px-6 py-3 bg-brand-accent text-brand-dark font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-accent/90 transition-all border-none cursor-pointer"
-							>
-								[RETRY]
-							</button>
-							<div className="text-[10px] font-mono text-[var(--theme-text-subtle)] text-center max-w-md">
-								Check browser console for detailed error information.
-							</div>
-						</>
-					) : null}
+			<div className="flex-1 flex flex-col items-center justify-center px-4">
+				{/* Branding */}
+				<div className="flex items-center gap-3 mb-8">
+					<span className="text-2xl font-semibold text-[var(--theme-text-primary)]">Hubert</span>
+					<div className="w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
 				</div>
+				<p className="text-sm text-[var(--theme-text-muted)]">Waking up...</p>
+				<span className="sr-only" role="status" aria-live="polite">
+					Loading Hubert chat interface
+				</span>
 			</div>
 		);
 	}
 
-	return (
-		<div className="bg-[var(--theme-bg-secondary)] border-2 border-[var(--theme-border-primary)] shadow-2xl">
-			{/* Header */}
-			<div className="flex items-center justify-between px-6 py-4 border-b-2 border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)]">
-				<div className="flex items-center gap-3">
-					<div className="flex gap-1.5">
-						<div className="w-2 h-2 bg-brand-accent animate-pulse" />
-						<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-						<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
-					</div>
-					<span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-brand-accent">
-						/// HUBERT_EUNUCH /// ONLINE
-					</span>
-				</div>
-				<div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
-					{visitorId ? `VISITOR: ${visitorId.slice(0, 8)}` : 'UNKNOWN'}
-				</div>
+	// Error state
+	if (initError) {
+		return (
+			<div className="flex-1 flex flex-col items-center justify-center px-4">
+				<span className="text-2xl font-semibold text-[var(--theme-text-primary)] mb-6">Hubert</span>
+				<p className="text-sm text-[var(--theme-text-muted)] mb-4 text-center max-w-sm" role="alert">
+					{initError}
+				</p>
+				<button
+					onClick={retryInit}
+					className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-sm text-[var(--theme-text-primary)] transition-colors"
+					aria-label="Retry connecting to Hubert"
+				>
+					Try again
+				</button>
 			</div>
+		);
+	}
 
-			{/* Messages */}
-			<div className="h-[500px] overflow-y-auto p-6 space-y-4">
-				{messages.map((msg, idx) => (
-					<div
-						key={idx}
-						className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+	// No messages yet - show centered input
+	if (messages.length === 0) {
+		return (
+			<div className="flex-1 flex flex-col items-center justify-center px-4">
+				{/* Branding */}
+				<span className="text-3xl font-semibold text-[var(--theme-text-primary)] mb-10">Hubert</span>
+
+				{/* Input bar */}
+				<div className="w-full max-w-2xl">
+					<motion.div
+						layout
+						transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+						className={`relative bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] focus-within:border-[var(--theme-border-strong)] ${isMultiline ? 'p-4' : 'flex items-center px-6 py-3'}`}
+						style={{ borderRadius: isMultiline ? 28 : 9999 }}
 					>
-						<div className="max-w-[80%]">
-							<div className={`font-mono text-xs uppercase tracking-widest mb-2 px-2 py-1 ${
-								msg.role === 'user'
-									? 'bg-brand-accent/20 border border-brand-accent/50 text-brand-accent'
-									: 'bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-secondary)] text-[var(--theme-text-muted)]'
-							}`}>
-								{msg.role === 'user' ? 'YOU' : 'HUBERT'}
-							</div>
-							<div className={`p-4 border ${
-								msg.role === 'user'
-									? 'border-brand-accent/30 bg-brand-accent/5'
-									: 'border-[var(--theme-border-secondary)] bg-[var(--theme-bg-tertiary)]'
-							}`}>
-								<p className="text-sm font-mono leading-relaxed whitespace-pre-wrap">
-									{msg.content}
-								</p>
-								<div className="mt-2 text-[9px] font-mono text-[var(--theme-text-subtle)]">
-									{new Date(msg.timestamp).toLocaleString('en-US', {
-										hour: '2-digit',
-										minute: '2-digit',
-										second: '2-digit',
-										hour12: false,
-									})}
-								</div>
-							</div>
-						</div>
-					</div>
-				))}
-				
-				{/* Typing indicator */}
-				{isTyping && (
-					<div className="flex gap-4">
-						<div className="max-w-[80%]">
-							<div className="p-4 border border-[var(--theme-border-secondary)] bg-[var(--theme-bg-tertiary)]">
-								<div className="flex items-center gap-2">
-									<div className="flex gap-1">
-										<div className="w-1.5 h-1.5 bg-brand-accent animate-pulse" />
-										<div className="w-1.5 h-1.5 bg-brand-accent animate-pulse" style={{ animationDelay: '150ms' }} />
-										<div className="w-1.5 h-1.5 bg-brand-accent animate-pulse" style={{ animationDelay: '300ms' }} />
-									</div>
-									<span className="text-xs font-mono text-[var(--theme-text-muted)]">
-										HUBERT_IS_PONDERING...
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
-				<div ref={messagesEndRef} />
-			</div>
-
-			{/* Input */}
-			<div className="border-t-2 border-[var(--theme-border-primary)] p-4 bg-[var(--theme-hover-bg)]">
-				<div className="flex items-center gap-4">
-					<div className="flex-1 relative">
-						<input
-							type="text"
+						<textarea
+							ref={textareaRef}
 							value={input}
 							onChange={(e) => setInput(e.target.value)}
-							onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-							placeholder="/// HUBERT_AWAITS_INPUT..."
-							className="w-full bg-transparent border-b-2 border-[var(--theme-border-primary)] py-3 text-lg font-mono text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] focus:border-brand-accent focus:outline-none transition-colors"
+							onKeyDown={handleKeyDown}
+							placeholder="What do you want to know?"
+							aria-label="Type your message"
+							rows={1}
+							className={`bg-transparent text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] text-base outline-none resize-none max-h-[200px] ${isMultiline ? 'w-full leading-relaxed px-2' : 'flex-1 leading-[40px]'}`}
 						/>
-					</div>
-					<button
-						onClick={sendMessage}
-						disabled={isTyping || !input.trim()}
-						className="px-6 py-3 bg-brand-accent text-brand-dark font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all border-none"
-					>
-						[TRANSMIT]
-					</button>
+						<motion.div layout={false} className={isMultiline ? 'flex justify-end mt-3' : 'ml-3 flex-shrink-0'}>
+							<button
+								onClick={sendMessage}
+								disabled={isTyping || !input.trim()}
+								aria-label="Send message"
+								className="w-10 h-10 rounded-full bg-[var(--theme-text-primary)] hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+							>
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--theme-bg-primary)]">
+									<path d="M12 19V5M5 12l7-7 7 7"/>
+								</svg>
+							</button>
+						</motion.div>
+					</motion.div>
+				</div>
+
+				{/* Subtitle */}
+				<p className="text-xs text-[var(--theme-text-subtle)] mt-6">
+					A miserable AI assistant, here to interview you.
+				</p>
+			</div>
+		);
+	}
+
+	// Chat mode - messages with input at bottom
+	return (
+		<div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+			{/* Messages area - scrollable */}
+			<div
+				className="flex-1 overflow-y-auto px-4 py-6 min-h-0"
+				role="log"
+				aria-live="polite"
+				aria-label="Chat messages"
+			>
+				<div className="max-w-3xl mx-auto space-y-6">
+					{messages.map((msg, index) => (
+						<div
+							key={msg.id}
+							className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+						>
+							{msg.role === 'user' ? (
+								// User message - right aligned pill with markdown
+								<div className="max-w-[80%] bg-[var(--theme-bg-secondary)] rounded-3xl px-5 py-3">
+									<div
+										className="user-message text-[var(--theme-text-primary)] text-[15px] leading-relaxed"
+										dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+									/>
+								</div>
+							) : (
+								// Assistant message - left aligned with subtle label and markdown
+								<div className="max-w-[85%] space-y-1.5">
+									{(index === 0 || messages[index - 1]?.role === 'user') && (
+										<span className="text-[11px] font-medium uppercase tracking-wide text-brand-accent">
+											Hubert
+										</span>
+									)}
+									<div
+										className="hubert-message text-[var(--theme-text-secondary)] text-[15px] leading-[1.7]"
+										dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+									/>
+								</div>
+							)}
+						</div>
+					))}
+
+					{/* Typing indicator */}
+					{isTyping && (
+						<div className="flex justify-start">
+							<div className="space-y-1.5">
+								<span className="text-[11px] font-medium uppercase tracking-wide text-brand-accent">
+									Hubert
+								</span>
+								<div className="flex items-center gap-1.5">
+									<div className="w-2 h-2 rounded-full bg-[var(--theme-text-muted)] animate-pulse" />
+									<div className="w-2 h-2 rounded-full bg-[var(--theme-text-muted)] animate-pulse" style={{ animationDelay: '150ms' }} />
+									<div className="w-2 h-2 rounded-full bg-[var(--theme-text-muted)] animate-pulse" style={{ animationDelay: '300ms' }} />
+								</div>
+							</div>
+							<span className="sr-only" role="status">Hubert is typing</span>
+						</div>
+					)}
+					<div ref={messagesEndRef} />
 				</div>
 			</div>
+
+			{/* Input bar - pinned to bottom */}
+			<div className="flex-shrink-0 px-4 pb-4 pt-2">
+				<div className="max-w-3xl mx-auto">
+					<motion.div
+						layout
+						transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+						className={`relative bg-[var(--theme-bg-secondary)] border border-[var(--theme-border-primary)] focus-within:border-[var(--theme-border-strong)] ${isMultiline ? 'p-4' : 'flex items-center px-6 py-3'}`}
+						style={{ borderRadius: isMultiline ? 28 : 9999 }}
+					>
+						<textarea
+							ref={textareaRef}
+							value={input}
+							onChange={(e) => setInput(e.target.value)}
+							onKeyDown={handleKeyDown}
+							placeholder="How can Hubert help?"
+							aria-label="Type your message"
+							rows={1}
+							className={`bg-transparent text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] text-base outline-none resize-none max-h-[200px] ${isMultiline ? 'w-full leading-relaxed px-2' : 'flex-1 leading-[40px]'}`}
+						/>
+						<motion.div layout={false} className={isMultiline ? 'flex justify-end mt-3' : 'ml-3 flex-shrink-0'}>
+							<button
+								onClick={sendMessage}
+								disabled={isTyping || !input.trim()}
+								aria-label="Send message"
+								className="w-10 h-10 rounded-full bg-[var(--theme-text-primary)] hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+							>
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--theme-bg-primary)]">
+									<path d="M12 19V5M5 12l7-7 7 7"/>
+								</svg>
+							</button>
+						</motion.div>
+					</motion.div>
+				</div>
+			</div>
+
+			{/* Styles for markdown content */}
+			<style>{`
+				.hubert-message p,
+				.user-message p {
+					margin-bottom: 0.75rem;
+				}
+				.hubert-message p:last-child,
+				.user-message p:last-child {
+					margin-bottom: 0;
+				}
+				.hubert-message strong,
+				.user-message strong {
+					font-weight: 600;
+				}
+				.hubert-message strong {
+					color: var(--theme-text-primary);
+				}
+				.hubert-message em,
+				.user-message em {
+					font-style: italic;
+				}
+				.hubert-message code,
+				.user-message code {
+					background: var(--theme-bg-secondary);
+					padding: 0.15rem 0.4rem;
+					border-radius: 0.25rem;
+					font-family: var(--font-mono);
+					font-size: 0.875em;
+				}
+				.user-message code {
+					background: rgba(255,255,255,0.1);
+				}
+				.hubert-message pre,
+				.user-message pre {
+					background: var(--theme-bg-secondary);
+					padding: 1rem;
+					border-radius: 0.5rem;
+					overflow-x: auto;
+					margin: 0.75rem 0;
+				}
+				.user-message pre {
+					background: rgba(255,255,255,0.05);
+				}
+				.hubert-message pre code,
+				.user-message pre code {
+					background: none;
+					padding: 0;
+				}
+				.hubert-message ul, .hubert-message ol,
+				.user-message ul, .user-message ol {
+					margin: 0.5rem 0;
+					padding-left: 1.5rem;
+				}
+				.hubert-message li,
+				.user-message li {
+					margin-bottom: 0.25rem;
+				}
+				.hubert-message ul li,
+				.user-message ul li {
+					list-style-type: disc;
+				}
+				.hubert-message ol li,
+				.user-message ol li {
+					list-style-type: decimal;
+				}
+				.hubert-message blockquote,
+				.user-message blockquote {
+					border-left: 3px solid var(--color-brand-accent);
+					padding-left: 1rem;
+					margin: 0.75rem 0;
+					font-style: italic;
+				}
+				.hubert-message blockquote {
+					color: var(--theme-text-muted);
+				}
+				.hubert-message a,
+				.user-message a {
+					color: var(--color-brand-accent);
+					text-decoration: underline;
+				}
+				.hubert-message a:hover,
+				.user-message a:hover {
+					color: var(--theme-text-primary);
+				}
+				.hubert-message h1, .hubert-message h2, .hubert-message h3,
+				.user-message h1, .user-message h2, .user-message h3 {
+					font-weight: 600;
+					margin-top: 1rem;
+					margin-bottom: 0.5rem;
+				}
+				.hubert-message h1, .hubert-message h2, .hubert-message h3 {
+					color: var(--theme-text-primary);
+				}
+				.hubert-message h1, .user-message h1 { font-size: 1.25rem; }
+				.hubert-message h2, .user-message h2 { font-size: 1.125rem; }
+				.hubert-message h3, .user-message h3 { font-size: 1rem; }
+			`}</style>
 		</div>
 	);
 }

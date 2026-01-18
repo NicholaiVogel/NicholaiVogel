@@ -162,7 +162,7 @@ export default function SearchDialog() {
 		return (
 			<button
 				onClick={() => setIsOpen(true)}
-				className="hidden md:flex items-center gap-3 px-4 py-2 border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] transition-all duration-300 text-xs"
+				className="hidden md:flex items-center gap-3 px-4 py-2 border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] transition-all duration-300 text-xs rounded-full"
 				aria-label="Open search"
 			>
 				<svg
@@ -216,7 +216,7 @@ export default function SearchDialog() {
 						</div>
 						<button
 							onClick={closeSearch}
-							className="text-[9px] font-mono uppercase tracking-wider px-3 py-1.5 border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all"
+							className="text-[9px] font-mono uppercase tracking-wider px-3 py-1.5 border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all rounded-full"
 						>
 							[ESC]
 						</button>
@@ -255,7 +255,7 @@ export default function SearchDialog() {
 										setQuery('');
 										inputRef.current?.focus();
 									}}
-									className="text-[10px] font-mono uppercase tracking-wider px-3 py-1.5 border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all"
+									className="text-[10px] font-mono uppercase tracking-wider px-3 py-1.5 border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all rounded-full"
 								>
 									[CLR]
 								</button>

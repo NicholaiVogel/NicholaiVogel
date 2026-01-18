@@ -1,5 +1,3 @@
-import { getEntry } from 'astro:content';
-
 // Prevent prerendering - this endpoint requires runtime Cloudflare bindings
 export const prerender = false;
 
@@ -41,11 +39,13 @@ export const GET = async ({ env }: { request: Request; env: Env }) => {
 	} catch (error) {
 		console.error('[Hubert] Failed to fetch conversations:', error);
 		
-		return Response.json({
-			status: '/// GUESTBOOK_ERROR',
-			error: 'Failed to retrieve conversations',
-		}),
-		{ status: 500, headers: { 'Content-Type': 'application/json' } }
+		return new Response(
+			JSON.stringify({
+				status: '/// GUESTBOOK_ERROR',
+				error: 'Failed to retrieve conversations',
+			}),
+			{ status: 500, headers: { 'Content-Type': 'application/json' } }
+		)
 	}
 };
 

@@ -284,7 +284,7 @@ const DevEngageModal: React.FC = () => {
 
             <button
               onClick={closeModal}
-              className="flex items-center gap-2 px-4 py-2 border border-[var(--theme-border-primary)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:text-brand-accent"
+              className="flex items-center gap-2 px-4 py-2 border border-[var(--theme-border-primary)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:text-brand-accent rounded-full"
             >
               <span className="hidden sm:inline">DISCONNECT</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
@@ -375,19 +375,19 @@ const DevEngageModal: React.FC = () => {
                         href={activeProject.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-6 py-3 bg-brand-accent text-brand-dark font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-accent/90 transition-colors"
+                        className="px-6 py-3 bg-brand-accent text-brand-dark font-mono text-[10px] uppercase tracking-widest font-bold hover:bg-brand-accent/90 transition-colors rounded-full"
                       >
                         OPEN_EXTERNALLY
                       </a>
                       <button
                         onClick={handleCopyLink}
-                        className="px-6 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all"
+                        className="px-6 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all rounded-full"
                       >
                         COPY_LINK
                       </button>
                       <button
                         onClick={handleRetry}
-                        className="px-6 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all"
+                        className="px-6 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent transition-all rounded-full"
                       >
                         RETRY
                       </button>
@@ -421,7 +421,7 @@ const DevEngageModal: React.FC = () => {
               <button
                 onClick={toggleArm}
                 disabled={modalState === 'booting' || modalState === 'blocked'}
-                className={`w-full py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 border ${
+                className={`w-full py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 border rounded-full ${
                   isInteractive
                     ? 'bg-green-500/20 border-green-500 text-green-500 hover:bg-green-500/30'
                     : 'bg-brand-accent/10 border-brand-accent/50 text-brand-accent hover:bg-brand-accent/20 hover:border-brand-accent'
@@ -470,7 +470,7 @@ const DevEngageModal: React.FC = () => {
                   href={activeProject.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between px-4 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent hover:bg-brand-accent/5 transition-all"
+                  className="flex items-center justify-between px-4 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent hover:bg-brand-accent/5 transition-all rounded-full"
                 >
                   OPEN_EXTERNALLY
                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
@@ -483,7 +483,7 @@ const DevEngageModal: React.FC = () => {
                       iframeRef.current.src = activeProject.link;
                     }
                   }}
-                  className="flex items-center justify-between px-4 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent hover:bg-brand-accent/5 transition-all"
+                  className="flex items-center justify-between px-4 py-3 border border-[var(--theme-border-primary)] font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] hover:border-brand-accent hover:text-brand-accent hover:bg-brand-accent/5 transition-all rounded-full"
                 >
                   RELOAD_FEED
                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">

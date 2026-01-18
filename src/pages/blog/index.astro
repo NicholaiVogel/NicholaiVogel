@@ -29,37 +29,50 @@ const categories = [...new Set(allPosts.map((post) => post.data.category).filter
 ---
 
 <BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
-	<section class="container mx-auto px-6 lg:px-12">
-		<!-- Back Navigation -->
-			<div class="mb-12">
-				<a href="/" class="inline-flex items-center gap-3 px-5 py-3 border border-[var(--theme-border-primary)] bg-[var(--theme-overlay)] text-xs font-mono font-bold uppercase tracking-widest text-[var(--theme-text-secondary)] hover:border-brand-accent hover:text-[var(--theme-text-primary)] hover:bg-brand-accent/5 transition-all duration-300 group backdrop-blur-sm">
-					<span class="text-brand-accent group-hover:-translate-x-1 transition-transform duration-300">&lt;</span>
-					<span>RETURN_TO_HOME</span>
-				</a>
-			</div>
+	<!-- Hero Section -->
+	<section class="relative pb-16 lg:pb-20 overflow-hidden">
+		<!-- Floating accent orb -->
+		<div class="absolute top-0 right-1/4 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none"></div>
 
-		<!-- Page Header -->
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 lg:mb-24">
-			<div class="lg:col-span-8">
-				<div class="flex items-center gap-3 mb-6">
-					<div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
-					<span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.LOG /// PRODUCTION_ARCHIVE</span>
+		<div class="container mx-auto px-6 lg:px-12 relative z-10">
+			<!-- Main Hero Content -->
+			<div>
+				<div class="max-w-5xl">
+					<!-- Small label -->
+					<div class="flex items-center gap-3 mb-8">
+						<div class="w-1.5 h-1.5 bg-brand-accent rounded-full"></div>
+						<span class="text-xs font-medium uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">Writing & Insights</span>
+					</div>
+
+					<!-- Main Title -->
+					<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] mb-8">
+						<span class="block text-[var(--theme-text-primary)]">The</span>
+						<span class="block bg-gradient-to-r from-brand-accent to-brand-accent/70 bg-clip-text text-transparent">Archive</span>
+					</h1>
+
+					<!-- Description -->
+					<p class="text-xl md:text-2xl text-[var(--theme-text-secondary)] font-light leading-relaxed max-w-2xl">
+						Thoughts on VFX production, creative workflows, and lessons learned from building visual stories.
+					</p>
 				</div>
-				<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85]">
-					<span class="block text-[var(--theme-text-primary)]">BLOG</span>
-					<span class="block text-brand-accent">ARCHIVE</span>
-				</h1>
-			</div>
-			<div class="lg:col-span-4 flex flex-col justify-end">
-				<div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-widest mb-4 flex items-center gap-2">
-					<span class="w-8 h-px bg-brand-accent/30"></span>
-					THOUGHTS & PROCESS
+
+				<!-- Stats Row -->
+				<div class="flex items-center gap-8 mt-16 pt-8 border-t border-[var(--theme-border-primary)]">
+					<div class="flex items-center gap-3">
+						<span class="text-3xl font-bold text-[var(--theme-text-primary)]">{allPosts.length}</span>
+						<span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">Articles</span>
+					</div>
+					<div class="w-px h-8 bg-[var(--theme-border-primary)]"></div>
+					<div class="flex items-center gap-3">
+						<span class="text-3xl font-bold text-[var(--theme-text-primary)]">{categories.length}</span>
+						<span class="text-xs uppercase tracking-widest text-[var(--theme-text-muted)]">Topics</span>
+					</div>
 				</div>
-				<p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
-					Deep dives into VFX production, technical pipelines, and creative process. Sharing lessons from the front lines of visual effects.
-				</p>
 			</div>
 		</div>
+	</section>
+
+	<section class="container mx-auto px-6 lg:px-12">
 
 		<!-- Featured Hero Section -->
 		{featuredPost && (

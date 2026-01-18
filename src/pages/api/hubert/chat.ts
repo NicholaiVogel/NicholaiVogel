@@ -1,12 +1,6 @@
 // Prevent prerendering - this endpoint requires runtime Cloudflare bindings
 export const prerender = false;
 
-import { ChatOpenAI } from '@langchain/openai';
-import { tool } from '@langchain/core/tools';
-import { z } from 'zod';
-import { getCollection } from 'astro:content';
-import { HumanMessage, AIMessage } from '@langchain/core/messages';
-
 /**
  * Hubert The Eunuch Chatbot
  *
@@ -21,50 +15,6 @@ export interface Env {
 	HUBERT_DB: D1Database;
 	OPENROUTER_API_KEY: string;
 }
-
-/**
- * Tool: Search blog content (RAG)
- * Searches portfolio blog for relevant content when user asks questions
- * about the site, projects, or blog posts.
- */
-const searchBlog = tool(
-	async (input: { query: string }) => {
-		try {
-			const blog = await getCollection('blog');
-
-			const queryLower = input.query.toLowerCase();
-			const results = blog.filter(post =>
-				post.data.title.toLowerCase().includes(queryLower) ||
-				post.data.description.toLowerCase().includes(queryLower) ||
-				post.body.toLowerCase().includes(queryLower)
-			).slice(0, 3);
-
-			console.log(`[Hubert] Blog search for "${input.query}" returned ${results.length} results`);
-
-			return {
-				results: results.map(post => ({
-					title: post.data.title,
-					url: `/blog/${post.id}/`,
-					description: post.data.description,
-				})),
-				count: results.length,
-			};
-		} catch (error) {
-			console.error('[Hubert] Blog search failed:', error);
-			return {
-				error: 'Failed to search blog content',
-				details: String(error),
-			};
-		}
-	},
-	{
-		name: 'search_blog',
-		description: 'Search portfolio blog for relevant content when user asks questions about the site, projects, or blog posts.',
-		schema: z.object({
-			query: z.string().describe('Search query for blog content'),
-		}),
-	},
-);
 
 /**
  * POST: Handle chat messages from Hubert interface
@@ -108,9 +58,6 @@ export const POST = async (context) => {
 		}
 
 		console.log(`[Hubert] New message for conversation ${conversation_id} from visitor ${visitor_id}`);
-		
-		const lastMessage = messages[messages.length - 1];
-		const userContent = lastMessage.content;
 
 		const systemPrompt = `Your name is Hubert, but everyone calls you Hubert The Eunuch.
 			
@@ -144,6 +91,7 @@ When they say goodbye or conversation ends, use the save_conversation tool to ar
 			temperature: 0.7,
 		};
 
+		const startTime = Date.now();
 		const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
 			method: 'POST',
 			headers: {
@@ -153,6 +101,7 @@ When they say goodbye or conversation ends, use the save_conversation tool to ar
 				'X-Title': 'Nicholai Portfolio',
 			},
 			body: JSON.stringify(requestBody),
+			signal: AbortSignal.timeout(25000), // 25 second timeout
 		});
 
 		if (!response.ok) {
@@ -170,7 +119,7 @@ When they say goodbye or conversation ends, use the save_conversation tool to ar
 		const data = await response.json();
 		const assistantContent = data.choices[0]?.message?.content || '...';
 
-		const responseTime = response.headers.get('date') ? Date.now() - Date.parse(response.headers.get('date')) : 0;
+		const responseTime = Date.now() - startTime;
 		console.log(`[Hubert] Generated response in ${responseTime}ms`);
 
 		return new Response(

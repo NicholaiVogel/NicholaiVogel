@@ -8,8 +8,9 @@
     --color-brand-cyan: #22D3EE;
     --color-brand-red: #E11D48;
 
-    --font-sans: "Inter", sans-serif;
-    --font-mono: "Space Mono", monospace;
+    --font-sans: Sora, ui-sans-serif, sans-serif, system-ui;
+    --font-serif: "IBM Plex Mono", ui-monospace, monospace;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
     /* Animation keyframes */
     --animate-reveal: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -123,11 +124,11 @@
 }
 
 @utility btn-primary {
-    @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[var(--theme-text-primary)] hover:text-[var(--theme-bg-primary)] transition-all duration-300 inline-block;
+    @apply bg-brand-accent text-brand-dark px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[var(--theme-text-primary)] hover:text-[var(--theme-bg-primary)] transition-all duration-300 inline-block rounded-full;
 }
 
 @utility btn-ghost {
-    @apply border border-[var(--theme-border-strong)] text-[var(--theme-text-primary)] px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block;
+    @apply border border-[var(--theme-border-strong)] text-[var(--theme-text-primary)] px-8 py-4 text-xs font-bold uppercase tracking-widest hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 inline-block rounded-full;
 }
 
 @utility grid-overlay {
