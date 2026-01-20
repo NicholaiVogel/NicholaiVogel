@@ -4,8 +4,8 @@
 	"version": "0.0.1",
 	"scripts": {
 		"prebuild:ecosystem": "node scripts/build-ecosystem-data.mjs",
-		"dev": "pnpm prebuild:ecosystem && astro dev",
-		"build": "pnpm prebuild:ecosystem && astro build",
+		"dev": "bun run prebuild:ecosystem && astro dev",
+		"build": "bun run prebuild:ecosystem && astro build",
 		"preview": "astro build && wrangler pages dev",
 		"astro": "astro",
 		"deploy": "astro build && wrangler pages deploy",

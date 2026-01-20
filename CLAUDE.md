@@ -7,16 +7,16 @@ development commands
 ---
 
 core:
-- pnpm dev - run dev server
-- pnpm build - build the project
-- pnpm preview - build and preview with wrangler
-- pnpm deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
+- bun dev - run dev server
+- bun build - build the project
+- bun preview - build and preview with wrangler
+- bun deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
 
 utilities:
-- pnpm commit - interactive git commit with AI-generated messages
-- pnpm notepad - quick note-taking utility
-- pnpm run convert:avif:all - convert images to AVIF
-- pnpm cf-typegen - generate cloudflare types
+- bun commit - interactive git commit with AI-generated messages
+- bun notepad - quick note-taking utility
+- bun run convert:avif:all - convert images to AVIF
+- bun cf-typegen - generate cloudflare types
 
 architecture overview
 ---
