@@ -52,7 +52,7 @@ fn render_header() -> String {
             &format!(
                 "{} — {}",
                 bold_color(SiteContent::NAME, Colors::WHITE),
-                color(SiteContent::TITLE, Colors::CYAN)
+                color(SiteContent::TITLE, Colors::RED)
             ),
             WIDTH - 4,
         ),
@@ -123,7 +123,7 @@ fn format_experience(exp: &Experience) -> String {
         dim(&format!("[{}]", exp.code)),
         color(exp.status, status_color),
         bold_color(exp.title, Colors::WHITE),
-        color(exp.role, Colors::CYAN)
+        color(exp.role, Colors::RED)
     )
 }
 
@@ -146,7 +146,7 @@ fn render_skills() -> String {
 fn format_skill(skill: &Skill) -> String {
     format!(
         "{}  {}{}{}",
-        color(skill.num, Colors::CYAN),
+        color(skill.num, Colors::RED),
         bold_color(&format!("{:<18}", skill.name), Colors::WHITE),
         "  ",
         dim(skill.tools)
@@ -175,7 +175,7 @@ fn format_nav(nav: &NavItem) -> String {
     let padding = 35_usize.saturating_sub(nav.command.len());
     format!(
         "{}  {}{}{}",
-        color("$", Colors::CYAN),
+        color("$", Colors::RED),
         cmd,
         " ".repeat(padding),
         desc
@@ -185,7 +185,7 @@ fn format_nav(nav: &NavItem) -> String {
 fn render_footer() -> String {
     format!(
         "  {} • {}",
-        color(SiteContent::WEBSITE, Colors::CYAN),
+        color(SiteContent::WEBSITE, Colors::RED),
         color(SiteContent::EMAIL, Colors::LIGHT_GRAY)
     )
 }

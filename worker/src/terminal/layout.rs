@@ -25,7 +25,7 @@ pub fn box_top(width: usize, title: Option<&str>) -> String {
 
     match title {
         Some(t) => {
-            let title_colored = color(&format!(" {} ", t), Colors::CYAN);
+            let title_colored = color(&format!(" {} ", t), Colors::RED);
             let title_len = t.len() + 2; // account for spaces
             let line_len = inner_width.saturating_sub(title_len);
             dim(&format!(
