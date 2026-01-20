@@ -8,7 +8,7 @@ const navItems = [
     { href: '/', label: 'Home', icon: 'home' },
     { href: '/dev', label: 'Dev', icon: 'code' },
     { href: '/blog', label: 'Blog', icon: 'file' },
-    { href: '/hubert', label: 'Hubert', icon: 'chat' },
+    // { href: '/hubert', label: 'Hubert', icon: 'chat' }, // temporarily disabled
     { href: '/contact', label: 'Contact', icon: 'mail' },
 ];
 
@@ -138,12 +138,14 @@ function isActive(href: string): boolean {
             >
                 Blog
             </a>
+            <!-- temporarily disabled
             <a
                 href="/hubert"
                 class="mobile-nav-link text-3xl font-bold uppercase tracking-wider text-[var(--theme-text-primary)] hover:text-brand-accent transition-colors duration-300"
             >
                 Hubert
             </a>
+            -->
             <a
                 href="/contact"
                 class="mobile-nav-link text-3xl font-bold uppercase tracking-wider text-[var(--theme-text-primary)] hover:text-brand-accent transition-colors duration-300"
