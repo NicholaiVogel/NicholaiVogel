@@ -21,20 +21,25 @@ pub fn horizontal_line(width: usize) -> String {
 
 /// Render a box top border with optional title
 pub fn box_top(width: usize, title: Option<&str>) -> String {
-    let inner_width = width - 2;
+    let inner_width = width - 2; // subtract corners
 
     match title {
         Some(t) => {
-            let title_colored = color(&format!(" {} ", t), Colors::RED);
-            let title_len = t.len() + 2; // account for spaces
-            let line_len = inner_width.saturating_sub(title_len);
-            dim(&format!(
-                "{}{}{}{}",
-                Box::TOP_LEFT,
-                Box::HORIZONTAL,
-                title_colored,
-                format!("{}{}", dim(&horizontal_line(line_len)), dim(&Box::TOP_RIGHT.to_string()))
-            ))
+            // Title format: ┌─ Title ───────┐
+            // We need: corner + dash + space + title + space + dashes + corner
+            let title_display = format!(" {} ", t);
+            let title_visible_len = title_display.len(); // all ASCII, so len() works
+            // Subtract: 1 for the dash before title, title_visible_len for title
+            let remaining_dashes = inner_width.saturating_sub(1 + title_visible_len);
+
+            format!(
+                "{}{}{}{}{}",
+                dim(&Box::TOP_LEFT.to_string()),
+                dim(&Box::HORIZONTAL.to_string()),
+                color(&title_display, Colors::RED),
+                dim(&horizontal_line(remaining_dashes)),
+                dim(&Box::TOP_RIGHT.to_string())
+            )
         }
         None => dim(&format!(
             "{}{}{}",
@@ -74,7 +79,8 @@ pub fn box_empty(width: usize) -> String {
     box_row("", width)
 }
 
-/// Strip ANSI codes and return visible length
+/// Strip ANSI codes and return visible display width
+/// Accounts for double-width unicode characters (block chars, CJK, etc)
 fn strip_ansi_len(s: &str) -> usize {
     let mut len = 0;
     let mut in_escape = false;
@@ -87,11 +93,38 @@ fn strip_ansi_len(s: &str) -> usize {
                 in_escape = false;
             }
         } else {
-            len += 1;
+            len += char_width(c);
         }
     }
 
     len
+}
+
+/// Get the display width of a character
+/// Half-blocks are single-width, full-blocks vary by terminal
+pub fn char_width(c: char) -> usize {
+    match c {
+        // Half-block characters - reliably single-width
+        '▀' | '▄' | '▌' | '▐' => 1,
+        // Single-line box drawing (what we use for borders) - single width
+        '┌' | '┐' | '└' | '┘' | '│' | '─' | '├' | '┤' | '┬' | '┴' | '┼' => 1,
+        // Most other characters are single width
+        _ => 1,
+    }
+}
+
+/// Get display width of a string (accounting for ANSI codes and double-width chars)
+pub fn display_width(s: &str) -> usize {
+    strip_ansi_len(s)
+}
+
+/// Pad a string with spaces on the right to reach target display width
+pub fn pad_to_width(text: &str, target_width: usize) -> String {
+    let current_width = display_width(text);
+    if current_width >= target_width {
+        return text.to_string();
+    }
+    format!("{}{}", text, " ".repeat(target_width - current_width))
 }
 
 /// Center text within a given width

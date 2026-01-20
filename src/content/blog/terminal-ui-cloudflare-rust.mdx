@@ -2,7 +2,7 @@
 title: "Building a Terminal UI for Your Website with Rust and Cloudflare Workers"
 description: "How we built a curl-able ANSI terminal interface for nicholai.work using Rust compiled to WebAssembly, running on Cloudflare's edge network. Browsers get the normal site, terminals get ASCII art."
 pubDate: 2026-01-20
-heroImage: "../../assets/workbench.avif"
+heroImage: "../../assets/curl-terminal.png"
 featured: true
 category: "Development"
 tags: ["Rust", "Cloudflare Workers", "WebAssembly", "Terminal UI", "Edge Computing"]
@@ -116,6 +116,12 @@ combine these with color codes and you get clean, bordered sections:
 │                                              │
 └──────────────────────────────────────────────┘
 ```
+
+### a note on character widths
+
+we learned this the hard way: **full-block characters (`█`) and double-line box drawing (`╔`, `║`, `═`) have inconsistent display widths across terminals**. some terminals render them as double-width, others as single-width. this causes alignment issues.
+
+the solution: use single-line box drawing characters (`┌`, `─`, `│`) for borders - they're reliably single-width everywhere. if you want ASCII art logos, half-block characters (`▄`, `▀`) are also safe. we ended up ditching the fancy ASCII art logo entirely and going with styled text, which works perfectly across all terminals.
 
 ## the worker entry point
 

@@ -2,15 +2,7 @@ use super::colors::{bold_color, color, dim, Colors};
 use super::content::{Experience, NavItem, SiteContent, Skill, EXPERIENCES, NAV_ITEMS, SKILLS};
 use super::layout::{box_bottom, box_empty, box_row, box_top, center};
 
-const WIDTH: usize = 67;
-
-/// ASCII art logo for "VISUAL ALCHEMIST"
-const LOGO: &str = r#"██╗   ██╗██╗███████╗██╗   ██╗ █████╗ ██╗
-██║   ██║██║██╔════╝██║   ██║██╔══██╗██║
-██║   ██║██║███████╗██║   ██║███████║██║
-╚██╗ ██╔╝██║╚════██║██║   ██║██╔══██║██║
- ╚████╔╝ ██║███████║╚██████╔╝██║  ██║███████╗
-  ╚═══╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝"#;
+const WIDTH: usize = 78;
 
 /// Render the complete terminal UI
 pub fn render() -> String {
@@ -36,14 +28,11 @@ fn render_header() -> String {
     lines.push(box_top(WIDTH, None));
     lines.push(box_empty(WIDTH));
 
-    // Logo
-    for line in LOGO.lines() {
-        let centered = center(&color(line, Colors::RED), WIDTH - 4);
-        lines.push(box_row(&centered, WIDTH));
-    }
-
-    // Subtitle
-    lines.push(box_row(&center(&bold_color("ALCHEMIST", Colors::RED), WIDTH - 4), WIDTH));
+    // Title
+    lines.push(box_row(
+        &center(&bold_color("VISUAL ALCHEMIST", Colors::RED), WIDTH - 4),
+        WIDTH,
+    ));
     lines.push(box_empty(WIDTH));
 
     // Name and title
