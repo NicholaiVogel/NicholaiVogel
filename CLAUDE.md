@@ -1,122 +1,160 @@
-# CLAUDE.md
+nicholai.work - claude guide
+===
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+this is an astro-based portfolio and blog site deployed on cloudflare pages. content-driven architecture with three main layers: content collections, components, and pages/layouts.
 
-## Development Commands
+development commands
+---
 
-### Core Development
-```bash
-pnpm dev              # Run development server
-pnpm build            # Build the project
-pnpm preview          # Build and preview with Wrangler
-pnpm deploy           # Build and deploy to Cloudflare Pages
-```
+core:
+- pnpm dev - run dev server
+- pnpm build - build the project
+- pnpm preview - build and preview with wrangler
+- pnpm deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
 
-### Utilities
-```bash
-# Git commit message automation
-pnpm commit                        # Interactive: review, accept/edit, optionally push
-pnpm commit --accept               # Auto-accept message, prompt for push
-pnpm commit --accept --no-push     # Auto-accept and commit without pushing
-pnpm commit --accept --push        # Fully automated: accept and push
+utilities:
+- pnpm commit - interactive git commit with AI-generated messages
+- pnpm notepad - quick note-taking utility
+- pnpm run convert:avif:all - convert images to AVIF
+- pnpm cf-typegen - generate cloudflare types
 
-pnpm notepad                       # Quick note-taking utility
+architecture overview
+---
 
-# Image conversion to AVIF format
-pnpm run convert:avif:all          # Convert all images
-pnpm run convert:avif:jpeg         # Convert JPEG only
-pnpm run convert:avif:png          # Convert PNG only
+content layer (src/content/**)
 
-# Cloudflare types generation
-pnpm cf-typegen                    # Generate Cloudflare types for TypeScript
-```
+content is managed via astro's content collections API with schema validation in src/content.config.ts:
 
-## High-Level Architecture
+blog/ - blog posts as MDX files
+- schema: title, description, pubDate, updatedDate, heroImage, featured, category, tags
+- sorted by pubDate (newest first)
+- featured post displayed on homepage and blog index
 
-This is an Astro-based portfolio and blog site deployed on Cloudflare Pages. The architecture follows a content-driven approach with three distinct layers:
+sections/ - homepage section content
+- hero, experience, skills, featured-project
+- each has custom schema for its needs
+- experience: systemId, status, dates, company, role, tags, description, achievements, link
+- skills: id, domain, tools, proficiency
 
-### 1. Content Layer (`src/content/**`)
-Content is managed via Astro's Content Collections API with schema validation defined in `src/content.config.ts`:
+pages/ - page-specific content
+- contact form configuration, labels, social links, subject options
 
-- **`blog/`** - Blog posts as MDX files
-  - Schema: title, description, pubDate, updatedDate (optional), heroImage (optional), featured (boolean), category, tags
-  - Posts are sorted by pubDate (newest first)
+component layer
 
-- **`sections/`** - Homepage section content (hero, experience, skills, featured-project)
-  - Each section has a custom schema for its specific data needs
-  - Experience entries include systemId, status, dates, company, role, tags, description, achievements, link
-  - Skills entries include id, domain, tools, proficiency
+organized by purpose:
+- core UI: BlogCard, FormattedDate, Navigation, Footer, GridOverlay
+- blog: BlogFilters, ReadingProgress, TableOfContents, PostNavigation, RelatedPosts
+- sections: Hero, Experience, Skills, FeaturedProject
 
-- **`pages/`** - Page-specific content (contact form configuration)
-  - Includes form labels, social links, subject options
+page & layout layer
 
-### 2. Component Layer
-Components are organized by purpose:
+- BaseLayout - shared structure for all pages
+- BlogPost - blog post template with sidebar, navigation, related posts
+- src/pages/ - static routes + dynamic blog routes via [...slug].astro
 
-- **Core UI**: `BlogCard`, `FormattedDate`, `Navigation`, `Footer`, `GridOverlay`
-- **Blog-specific**: `BlogFilters`, `ReadingProgress`, `TableOfContents`, `PostNavigation`, `RelatedPosts`
-- **Section components**: `Hero`, `Experience`, `Skills`, `FeaturedProject`
+design system
+---
 
-### 3. Page & Layout Layer
-- **Layouts**: `BaseLayout` (shared structure), `BlogPost` (blog template)
-- **Routes**: Static routes in `src/pages/` with dynamic blog routes via `[...slug].astro`
+design.json documents the evolution from industrial/technical to modern/clean design language.
 
-## Data Flow Patterns
+key principle: industrial styling reserved for hero, experience, and featured project sections only. everything else (blog, navigation, new sections) uses modern design.
 
-### Blog Index (`src/pages/blog/index.astro`)
-1. Fetches all posts via `getCollection('blog')`
-2. Sorts by pubDate (newest first)
-3. Identifies featured post (first with `featured: true` or fallback to latest)
-4. Renders featured hero + filterable grid of all posts
-5. Extracts unique categories for filter UI
+modern design (default for new work):
+- rounded corners (rounded-lg, rounded-full, rounded-xl)
+- clean typography (normal case, no excessive uppercase)
+- simple badges with bg-brand-accent/10
+- clean metadata format: "date · read time"
+- hashtag format for tags (#tag)
+- no font-mono or tracking-widest on everything
+- faster transitions (300ms)
 
-### Individual Blog Posts (`src/pages/blog/[...slug].astro`)
-1. Uses `getStaticPaths()` to generate all blog post routes
-2. For each post, calculates:
-   - Previous/next posts (by date)
-   - Related posts (matching category or shared tags, limited to 3)
-   - Reading time (based on word count, 200 wpm)
-3. Passes everything to `BlogPost` layout which handles headings, navigation, related posts
+industrial design (hero/experience/featured only):
+- sharp corners
+- uppercase tracking-tighter titles
+- font-mono system labels
+- pulsing dots, accent strips
+- technical aesthetic
 
-### Content Collections
-All content follows the schema validation pattern:
-```
-MDX file → src/content.config.ts schema → getCollection() → Component props
-```
+when building new features, default to modern design unless explicitly working on hero/experience/featured sections.
 
-## Key Technical Patterns
+data flow patterns
+---
 
-### Image Handling
-- Assets in `src/assets/` are processed by Astro (use relative paths in frontmatter)
-- Static files in `public/media/` are served as-is (use absolute paths like `/media/file.mp4`)
-- AVIF conversion utility available for optimization
+homepage (src/pages/index.astro):
+- fetches hero, experience, skills, featured-project from content collections
+- queries 3 most recent blog posts for latest blogs section
+- displays in order: hero → experience → featured project → skills → latest blogs
 
-### UI Development
-- **Always review UI changes in the browser** - Check if the dev server is already running before starting it with `pnpm dev`, then visually verify components, animations, and layouts before considering work complete
+blog index (src/pages/blog/index.astro):
+- fetches all posts via getCollection('blog')
+- sorts by pubDate newest first
+- identifies featured post (first with featured: true or fallback to latest)
+- renders featured hero + filterable grid of all posts
+- extracts unique categories for filter UI
 
-## Design Specification
+individual blog posts (src/pages/blog/[...slug].astro):
+- uses getStaticPaths() to generate routes
+- calculates previous/next posts by date
+- finds related posts (matching category or shared tags, limited to 3)
+- calculates reading time (200 wpm)
+- passes to BlogPost layout
 
-`dev/design.json` contains V7 Industrial Dark Mode system specification (not yet implemented):
-- Dark mode native with `#0B0D11` primary background
-- Orange/yellow accent `#FFB84C` for CTAs
-- Brutalist/industrial aesthetic with visible grid structure
-- Heavy typography emphasis
+key technical patterns
+---
 
-### Deployment
-- Cloudflare Pages adapter configured in `astro.config.mjs`
-- Image service set to "compile" mode
-- Platform proxy enabled for development
+image handling:
+- assets in src/assets/ processed by astro (use relative paths in frontmatter)
+- static files in public/media/ served as-is (use absolute paths like /media/file.mp4)
+- AVIF conversion utility available
 
-## Blog Post Creation Workflow
+content collections pattern:
+MDX file → src/content.config.ts schema → getCollection() → component props
 
-1. Create `.mdx` file in `src/content/blog/` (filename becomes URL slug)
-2. Add required frontmatter: title, description, pubDate
-3. Optionally add: heroImage, featured, category, tags
-4. Write content using Markdown/MDX with embedded JSX/HTML
-5. Images can reference `src/assets/` (relative) or `public/media/` (absolute)
+UI development:
+- ALWAYS review UI changes in the browser
+- check if dev server is running before starting it
+- visually verify components, animations, layouts before considering work complete
 
-## Utility Scripts
+deployment:
+- cloudflare pages adapter configured in astro.config.mjs
+- image service set to "compile" mode
+- platform proxy enabled for development
+- production domain: nicholai.work
+- hosted on cloudflare pages
 
-- **`src/utils/convert-to-avif.js`** - Converts images to AVIF format with quality options
-- **`src/utils/git-commit.js`** - Auto-generates commit messages from staged changes
-- **`src/utils/notepad.js`** - Quick note-taking utility
+blog post creation workflow
+---
+
+1. create .mdx file in src/content/blog/ (filename becomes URL slug)
+2. add required frontmatter: title, description, pubDate
+3. optionally add: heroImage, featured, category, tags
+4. write content using markdown/MDX with embedded JSX/HTML
+5. images can reference src/assets/ (relative) or public/media/ (absolute)
+
+utility scripts
+---
+
+- src/utils/convert-to-avif.js - converts images to AVIF format
+- src/utils/git-commit.js - auto-generates commit messages
+- src/utils/notepad.js - quick note-taking
+- src/utils/reading-time.ts - calculates reading time (200 wpm)
+
+important files
+---
+
+- design.json - comprehensive design system documentation
+- src/content.config.ts - content collection schemas
+- astro.config.mjs - cloudflare pages adapter config
+- wrangler.jsonc - cloudflare worker configuration
+- src/consts.ts - site metadata (title, description, social links)
+
+theme system
+---
+
+uses CSS custom properties for theming:
+- --theme-bg-primary, --theme-bg-secondary
+- --theme-text-primary, --theme-text-secondary, --theme-text-muted
+- --theme-border-primary, --theme-hover-bg
+- --brand-accent (primary accent color)
+
+dark mode is default, light mode available via theme toggle.
