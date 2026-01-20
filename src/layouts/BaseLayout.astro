@@ -8,7 +8,7 @@ import Navigation from '../components/Navigation.astro';
 import CustomCursor from '../components/CustomCursor';
 import ContextMenu from '../components/ContextMenu.astro';
 import ThemePreferenceDialog from '../components/ThemePreferenceDialog.astro';
-import { HTML_MARKER, SITE_TITLE, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, SOCIAL_LINKS } from '../consts';
 
 interface Props {
   title?: string;
@@ -68,7 +68,6 @@ const personSchema = {
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth" data-theme="dark">
   <head>
-    <meta name="x-nicholai-marker" content={HTML_MARKER} />
     <ClientRouter />
     <!-- Theme initialization script - runs before page render to prevent flash -->
     <script is:inline>
