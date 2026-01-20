@@ -1,0 +1,261 @@
+{
+    "design_system": {
+        "version": "2.0",
+        "last_updated": "2026-01-20",
+        "description": "nicholai.work design language - evolved from industrial/technical to clean modern with selective technical accents"
+    },
+    "design_philosophy": {
+        "core_principles": [
+            "clean and modern with selective technical accents",
+            "rounded corners for contemporary feel",
+            "minimal decorative elements",
+            "readable typography over stylized text",
+            "intentional whitespace",
+            "smooth, refined interactions"
+        ],
+        "when_to_use_industrial": [
+            "hero section only - establishes initial technical vibe",
+            "experience/work history - professional credibility",
+            "featured projects - showcasing technical work"
+        ],
+        "when_to_use_modern": [
+            "navigation - clean, accessible",
+            "blog content - readable, focused",
+            "general UI elements - buttons, cards, badges",
+            "any new sections added to the site"
+        ]
+    },
+    "typography": {
+        "headings": {
+            "modern_style": {
+                "size": "text-3xl to text-5xl",
+                "weight": "font-bold",
+                "case": "normal case (not uppercase)",
+                "tracking": "normal or tracking-tight",
+                "line_height": "leading-tight",
+                "usage": "blog posts, new sections, readable content"
+            },
+            "industrial_style": {
+                "size": "text-5xl to text-9xl",
+                "weight": "font-bold",
+                "case": "uppercase",
+                "tracking": "tracking-tighter",
+                "line_height": "leading-[0.85]",
+                "usage": "hero, experience, featured projects only"
+            }
+        },
+        "body": {
+            "size": "text-base to text-lg",
+            "weight": "font-normal or font-light",
+            "line_height": "leading-relaxed",
+            "color": "text-[var(--theme-text-secondary)]"
+        },
+        "labels": {
+            "modern": {
+                "size": "text-xs to text-sm",
+                "weight": "font-medium",
+                "case": "normal case",
+                "usage": "badges, metadata, general labels"
+            },
+            "technical": {
+                "size": "text-[9px] to text-[10px]",
+                "weight": "font-mono",
+                "case": "uppercase",
+                "tracking": "tracking-[0.2em] to tracking-[0.3em]",
+                "usage": "hero and work sections only"
+            }
+        }
+    },
+    "spacing": {
+        "sections": {
+            "vertical_padding": "py-20 to py-32",
+            "section_gap": "mb-20 to mb-24",
+            "content_gap": "gap-8 to gap-12"
+        },
+        "containers": {
+            "max_width": "container mx-auto",
+            "horizontal_padding": "px-6 lg:px-8 or px-6 lg:px-12",
+            "note": "use px-6 lg:px-8 for tighter layouts, px-6 lg:px-12 for wider"
+        }
+    },
+    "borders_and_corners": {
+        "modern_corners": {
+            "cards": "rounded-lg",
+            "buttons": "rounded-full",
+            "badges": "rounded-full",
+            "images": "rounded-lg",
+            "containers": "rounded-xl to rounded-2xl"
+        },
+        "industrial_corners": {
+            "usage": "none - use sharp corners only in hero/experience/featured",
+            "buttons": "no rounded corners",
+            "containers": "no rounded corners"
+        },
+        "borders": {
+            "default": "border border-[var(--theme-border-primary)]",
+            "subtle": "border-[var(--theme-border-secondary)]",
+            "accent": "border-brand-accent",
+            "dividers": "border-t or border-b"
+        }
+    },
+    "components": {
+        "buttons": {
+            "primary_modern": {
+                "base": "px-6 py-3 rounded-full",
+                "border": "border border-[var(--theme-border-primary)]",
+                "background": "bg-[var(--theme-hover-bg)]",
+                "hover": "hover:border-brand-accent hover:bg-brand-accent/5",
+                "text": "text-sm font-medium",
+                "transition": "transition-all duration-300"
+            },
+            "secondary_modern": {
+                "base": "px-4 py-2 rounded-full",
+                "background": "bg-brand-accent/10",
+                "text": "text-sm text-brand-accent",
+                "hover": "hover:bg-brand-accent/20"
+            },
+            "industrial": {
+                "note": "only use in hero/experience/featured sections",
+                "base": "px-8 py-4 border",
+                "corners": "no rounded corners",
+                "text": "font-mono text-xs uppercase tracking-widest"
+            }
+        },
+        "badges": {
+            "modern": {
+                "base": "px-3 py-1 rounded-full",
+                "background": "bg-brand-accent/10",
+                "text": "text-xs text-brand-accent",
+                "usage": "categories, tags, status indicators"
+            },
+            "minimal": {
+                "base": "px-2 py-1",
+                "text": "text-xs text-[var(--theme-text-muted)]",
+                "usage": "hashtags, minimal labels"
+            }
+        },
+        "cards": {
+            "modern": {
+                "base": "rounded-lg border border-[var(--theme-border-primary)]",
+                "background": "bg-[var(--theme-bg-secondary)]",
+                "hover": "hover:border-brand-accent hover:bg-[var(--theme-hover-bg)]",
+                "padding": "p-6",
+                "transition": "transition-all duration-300"
+            },
+            "images": {
+                "corners": "rounded-lg",
+                "aspect_ratios": "aspect-video, aspect-square, aspect-[4/3]",
+                "object_fit": "object-cover"
+            }
+        },
+        "section_headers": {
+            "modern_style": {
+                "layout": "simple, no grid",
+                "title": "text-3xl to text-5xl font-bold normal-case leading-tight",
+                "subtitle": "text-base to text-lg text-[var(--theme-text-secondary)]",
+                "spacing": "mb-12 to mb-16",
+                "decorative_elements": "none or minimal",
+                "usage": "new sections, blog, modern areas"
+            },
+            "industrial_style": {
+                "layout": "grid grid-cols-1 lg:grid-cols-12 gap-12",
+                "title_col": "lg:col-span-8",
+                "meta_col": "lg:col-span-4",
+                "title": "text-5xl to text-8xl uppercase tracking-tighter leading-[0.85]",
+                "decorative": {
+                    "pulsing_dot": "w-2 h-2 bg-brand-accent animate-pulse",
+                    "system_label": "font-mono text-[10px] uppercase tracking-[0.3em]",
+                    "format": "SYS.LABEL /// DESCRIPTION"
+                },
+                "usage": "hero, experience, featured projects only"
+            }
+        },
+        "navigation": {
+            "container": "rounded-2xl backdrop-blur-md",
+            "items": "rounded-xl hover:bg-[var(--theme-hover-bg-strong)]",
+            "active_state": "bg-brand-accent/10 text-brand-accent",
+            "icons": "w-5 h-5 stroke-width-1.5"
+        },
+        "animations": {
+            "scroll_animations": {
+                "classes": "animate-on-scroll fade-in, slide-up, slide-left, slide-right",
+                "stagger": "stagger-1 through stagger-8",
+                "usage": "applies to all sections, triggered by IntersectionObserver"
+            },
+            "hover_effects": {
+                "duration": "duration-300",
+                "ease": "ease-out or ease-in-out",
+                "transitions": "transition-all, transition-colors, transition-transform"
+            },
+            "reduced_motion": {
+                "respect": "always check prefers-reduced-motion",
+                "fallback": "instant state changes"
+            }
+        }
+    },
+    "color_usage": {
+        "backgrounds": {
+            "primary": "bg-[var(--theme-bg-primary)]",
+            "secondary": "bg-[var(--theme-bg-secondary)]",
+            "overlay": "bg-[var(--theme-overlay)]",
+            "hover": "bg-[var(--theme-hover-bg)]"
+        },
+        "text": {
+            "primary": "text-[var(--theme-text-primary)]",
+            "secondary": "text-[var(--theme-text-secondary)]",
+            "muted": "text-[var(--theme-text-muted)]",
+            "subtle": "text-[var(--theme-text-subtle)]"
+        },
+        "accent": {
+            "solid": "bg-brand-accent, text-brand-accent, border-brand-accent",
+            "transparent": "bg-brand-accent/10, bg-brand-accent/5",
+            "usage": "highlights, active states, CTAs, hover effects"
+        }
+    },
+    "grid_layouts": {
+        "blog_cards": {
+            "mobile": "grid-cols-1",
+            "tablet": "md:grid-cols-2",
+            "desktop": "lg:grid-cols-3",
+            "gap": "gap-6 to gap-8"
+        },
+        "content_layout": {
+            "columns": "grid-cols-1 lg:grid-cols-12",
+            "main_content": "lg:col-span-8 to lg:col-span-10",
+            "sidebar": "lg:col-span-4 to lg:col-span-2"
+        }
+    },
+    "examples": {
+        "modern_section_header": {
+            "html": "<div class=\"mb-16\">\n  <div class=\"mb-4\">\n    <span class=\"px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent\">Section Label</span>\n  </div>\n  <h2 class=\"text-4xl lg:text-5xl font-bold text-[var(--theme-text-primary)] mb-4\">\n    Section Title\n  </h2>\n  <p class=\"text-lg text-[var(--theme-text-secondary)] max-w-2xl\">\n    Description text\n  </p>\n</div>"
+        },
+        "modern_button": {
+            "html": "<a href=\"#\" class=\"inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent hover:bg-brand-accent/5 text-sm font-medium transition-all duration-300\">\n  <span>Button Text</span>\n  <svg>...</svg>\n</a>"
+        },
+        "modern_card": {
+            "html": "<div class=\"rounded-lg border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-brand-accent hover:bg-[var(--theme-hover-bg)] p-6 transition-all duration-300\">\n  <div class=\"aspect-video rounded-lg overflow-hidden mb-4\">\n    <img src=\"...\" class=\"w-full h-full object-cover\" />\n  </div>\n  <div class=\"mb-2\">\n    <span class=\"px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent\">Category</span>\n  </div>\n  <h3 class=\"text-xl font-bold mb-2\">Card Title</h3>\n  <p class=\"text-[var(--theme-text-secondary)]\">Description</p>\n</div>"
+        }
+    },
+    "implementation_notes": {
+        "new_sections": [
+            "use modern design language by default",
+            "rounded corners on all interactive elements",
+            "clean typography (no excessive uppercase)",
+            "simple, readable headers",
+            "badges and pills with rounded-full",
+            "smooth transitions and hover states"
+        ],
+        "existing_sections": [
+            "hero: keep industrial (establishes vibe)",
+            "experience: keep industrial (professional credibility)",
+            "featured project: keep industrial (showcases technical work)",
+            "everything else: modernize as needed"
+        ],
+        "progressive_enhancement": [
+            "start with accessible, readable defaults",
+            "add animations for users without prefers-reduced-motion",
+            "ensure keyboard navigation works",
+            "maintain high contrast ratios"
+        ]
+    }
+}

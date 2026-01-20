@@ -4,13 +4,20 @@ import Hero from '../components/sections/Hero.astro';
 import Experience from '../components/sections/Experience.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
 import Skills from '../components/sections/Skills.astro';
-import { getEntry } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
+import BlogCard from '../components/BlogCard.astro';
+import { calculateReadingTime } from '../utils/reading-time';
 
 // Fetch all section content
 const heroEntry = await getEntry('sections', 'hero');
 const experienceEntry = await getEntry('sections', 'experience');
 const skillsEntry = await getEntry('sections', 'skills');
 const featuredProjectEntry = await getEntry('sections', 'featured-project');
+
+// Fetch 3 most recent blog posts
+const latestBlogs = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 
 // Extract content from entries
 const heroContent = {
@@ -68,4 +75,74 @@ const featuredProjectContent = {
 
 	<FeaturedProject {...featuredProjectContent} />
 	<Skills {...skillsContent} />
+
+	<!-- Container Divider -->
+	<div class="container mx-auto px-6 lg:px-12 my-8">
+		<div class="h-[1px] divider-gradient"></div>
+	</div>
+
+	<!-- Latest Blogs Section -->
+	<section id="latest-blogs" class="bg-[var(--theme-bg-primary)] py-20 lg:py-32 border-t border-[var(--theme-border-primary)]">
+		<div class="container mx-auto px-6 lg:px-8">
+
+			<!-- Header Section -->
+			<div class="mb-16 max-w-3xl">
+				<div class="mb-4">
+					<span class="inline-block px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent">
+						Latest Posts
+					</span>
+				</div>
+				<h2 class="text-4xl lg:text-5xl font-bold text-[var(--theme-text-primary)] mb-4 leading-tight">
+					Recent Writings
+				</h2>
+				<p class="text-lg text-[var(--theme-text-secondary)] leading-relaxed">
+					exploring vfx pipelines, ai workflows, and technical insights from the production trenches
+				</p>
+			</div>
+
+			<!-- Blog Cards Grid -->
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+				{latestBlogs.map((post, index) => (
+					<div class={`animate-on-scroll slide-up stagger-${index + 1}`}>
+						<BlogCard
+							title={post.data.title}
+							description={post.data.description}
+							pubDate={post.data.pubDate}
+							heroImage={post.data.heroImage}
+							category={post.data.category}
+							tags={post.data.tags}
+							href={`/blog/${post.id}/`}
+							readTime={calculateReadingTime(post.body)}
+						/>
+					</div>
+				))}
+			</div>
+
+			<!-- View All Button -->
+			<div class="flex justify-center animate-on-scroll fade-in stagger-4">
+				<a
+					href="/blog"
+					class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent hover:bg-brand-accent/5 text-sm font-medium transition-all duration-300"
+				>
+					<span>View All Posts</span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="transition-transform group-hover:translate-x-1"
+					>
+						<path d="M5 12h14" />
+						<path d="m12 5 7 7-7 7" />
+					</svg>
+				</a>
+			</div>
+
+		</div>
+	</section>
 </BaseLayout>
