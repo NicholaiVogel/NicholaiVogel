@@ -15,7 +15,7 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
 ---
 <section id="hero" class="relative w-full h-[100dvh] overflow-hidden bg-[var(--theme-bg-primary)]">
     <!-- Industrial Scanlines -->
-    <div class="absolute inset-0 z-1 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+    <div class="absolute inset-0 z-1 pointer-events-none opacity-[0.02] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%]"></div>
     
     <!-- Background Image (Portrait) - Optimized with AVIF/WebP -->
     <div class="absolute top-0 right-0 w-full md:w-1/2 h-full z-0">
@@ -26,7 +26,7 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
                 widths={[640, 1024, 1600]}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Nicholai Vogel portrait"
-                class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity transition-opacity duration-[2500ms] ease-out delay-700 intro-element"
+                class="w-full h-full object-cover object-center opacity-0 mix-blend-luminosity intro-portrait"
                 id="hero-portrait"
                 loading="eager"
                 decoding="sync"
@@ -35,7 +35,7 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
             <div class="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg-primary)] via-transparent to-transparent transition-colors duration-500"></div>
             
             <!-- Technical Overlay Elements -->
-            <div class="absolute bottom-12 right-12 hidden lg:flex flex-col items-end gap-1 font-mono text-[9px] text-brand-accent/40 uppercase tracking-[0.3em] intro-element opacity-0 delay-1000">
+            <div class="absolute bottom-12 right-12 hidden lg:flex flex-col items-end gap-1 font-mono text-[9px] text-brand-accent/40 uppercase tracking-[0.3em] intro-tech opacity-0">
                 <span>COORD: 38.8339° N, 104.8214° W</span>
                 <span>ELV: 1,839M</span>
                 <div class="flex gap-2 mt-2">
@@ -55,14 +55,14 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
 
     <!-- The Content -->
     <!-- Mobile: pt-24 clears mobile top bar. Desktop: pt-16 since nav is on left side -->
-    <div class="absolute inset-0 z-20 flex flex-col justify-between p-6 md:p-12 lg:p-16 pt-24 lg:pt-16 pointer-events-auto">
+    <div class="absolute inset-0 z-20 flex flex-col justify-between p-8 md:p-16 lg:p-24 pt-28 lg:pt-24 pointer-events-auto">
 
         <!-- Top Metadata -->
-        <div class="flex justify-between items-start w-full intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
+        <div class="flex justify-between items-start w-full intro-top opacity-0">
             <div class="flex items-center gap-3">
-                <div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+                <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
                 <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
-                    <span class="text-brand-accent mr-1">SYS.PRTF</span> / {portfolioYear}
+                    <span class="text-brand-accent mr-1">SYS.PRTF</span> <span class="text-brand-accent font-bold mx-1">///</span> {portfolioYear}
                 </div>
             </div>
             
@@ -77,23 +77,23 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
         </div>
 
         <!-- Main Heading & Description -->
-        <div class="max-w-5xl">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] font-bold text-[var(--theme-text-primary)] mb-4 perspective-text">
-                <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">{headlineLine1}</span>
-                <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">{headlineLine2}</span>
+        <div class="max-w-6xl">
+            <h1 class="text-5xl md:text-7xl lg:text-[9rem] tracking-tight leading-[0.85] font-bold uppercase text-[var(--theme-text-primary)] mb-8 perspective-text">
+                <span class="block intro-head opacity-0">{headlineLine1}</span>
+                <span class="block text-brand-accent intro-head opacity-0">{headlineLine2}</span>
             </h1>
 
-            <div class="font-mono text-xs text-[var(--theme-text-muted)] mb-6 intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
+            <div class="font-mono text-sm text-[var(--theme-text-muted)] mb-8 intro-sub opacity-0">
                 <span class="text-brand-accent">$</span> <span class="text-[var(--theme-text-subtle)]">curl nicholai.work</span>
             </div>
 
-            <p class="font-mono text-sm md:text-base max-w-lg text-[var(--theme-text-secondary)] font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
+            <p class="font-mono text-base md:text-lg max-w-xl text-[var(--theme-text-secondary)] font-light leading-relaxed intro-bio opacity-0">
                 {bio}
             </p>
         </div>
 
         <!-- Bottom Navigation -->
-        <div class="flex justify-between items-end w-full intro-element opacity-0 transition-all duration-1000 ease-out delay-700">
+        <div class="flex justify-between items-end w-full intro-bottom opacity-0">
             <a href="#experience" class="group flex items-center gap-6 py-2">
                 <div class="relative w-12 h-12 flex items-center justify-center border border-[var(--theme-border-primary)] text-brand-accent hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover:translate-y-1 transition-transform duration-300">
@@ -128,25 +128,11 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
         /* Snappier fade-out */
         transition: opacity 0.6s ease-out, background-color 0.6s ease-out;
     }
-
-    /* Initial Loaded State Classes */
-    .intro-visible {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-    }
-
-    /* Portrait Loaded State */
-    .portrait-visible {
-        opacity: 0.4 !important; /* Mobile default */
-    }
-    @media (min-width: 768px) {
-        .portrait-visible {
-            opacity: 0.6 !important; /* Desktop default */
-        }
-    }
 </style>
 
 <script>
+    import gsap from 'gsap';
+
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
     const finePointer = window.matchMedia?.('(pointer: fine) and (hover: hover)')?.matches ?? false;
 
@@ -159,11 +145,58 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
         if (pulseInterval) window.clearInterval(pulseInterval);
         clockTimer = undefined;
         pulseInterval = undefined;
+        // Kill any GSAP animations on this component to prevent memory leaks/conflicts
+        gsap.killTweensOf('.intro-portrait, .intro-top, .intro-head, .intro-sub, .intro-bio, .intro-bottom, .intro-tech');
     }
 
     function initHero() {
         // Clean up previous instances first
         cleanup();
+
+        // ===== GSAP INTRO ANIMATIONS =====
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        
+        // Portrait opacity based on screen size
+        const portraitOpacity = window.innerWidth >= 768 ? 0.7 : 0.4;
+
+        if (!reduceMotion) {
+            tl.to('.intro-portrait', { 
+                opacity: portraitOpacity, 
+                duration: 2.5, 
+                ease: 'power2.out' 
+            }, 0.5)
+            .fromTo('.intro-top', 
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1 }, 
+                0.8
+            )
+            .fromTo('.intro-head', 
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.2, stagger: 0.15 }, 
+                0.9
+            )
+            .fromTo('.intro-sub', 
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1 }, 
+                1.3
+            )
+            .fromTo('.intro-bio', 
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1 }, 
+                1.5
+            )
+            .to('.intro-bottom', { opacity: 1, duration: 1 }, 1.8)
+            .to('.intro-tech', { opacity: 1, duration: 1 }, 2.2);
+        } else {
+            // Reduced motion: simple fades
+            gsap.to('.intro-portrait', { opacity: portraitOpacity, duration: 1.5 });
+            gsap.to('.intro-top, .intro-head, .intro-sub, .intro-bio, .intro-bottom, .intro-tech', { 
+                opacity: 1, 
+                duration: 1, 
+                stagger: 0.2, 
+                delay: 0.5 
+            });
+        }
 
         // ===== CLOCK =====
         const clock = document.getElementById('clock');
@@ -196,17 +229,10 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
         }
 
         // ===== INTRO ANIMATIONS =====
-        // Trigger Intro Elements
-        const introElements = document.querySelectorAll('.intro-element');
-        introElements.forEach(el => {
-            el.classList.add('intro-visible');
-        });
+        // (Handled by GSAP above)
 
         // Trigger Portrait
-        const portrait = document.getElementById('hero-portrait');
-        if (portrait) {
-            portrait.classList.add('portrait-visible');
-        }
+        // (Handled by GSAP above)
 
         const section = document.getElementById('hero');
         const cells = document.querySelectorAll('.grid-cell');
