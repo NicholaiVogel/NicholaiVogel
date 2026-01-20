@@ -30,6 +30,11 @@ src/utils/.env
 !.dev.vars.example
 !.env.example
 
+# rust build artifacts
+worker/target/
+worker/build/
+worker/node_modules/
+
 .specstory/**
 .specstory/
 .cursorindexingignore
