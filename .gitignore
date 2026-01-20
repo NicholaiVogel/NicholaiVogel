@@ -50,3 +50,7 @@ GEMINI.md
 
 # dev notes and scratch work
 dev/
+
+# FUSE filesystem temp files
+.fuse_hidden*
+**/.fuse_hidden*

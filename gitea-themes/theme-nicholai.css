@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap');
+
+gitea-theme-meta-info {
+  --theme-display-name: "Nicholai Work";
+}
+
+:root {
+  --is-dark-theme: true;
+  color-scheme: dark;
+
+  /* fonts */
+  --fonts-regular: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --fonts-monospace: 'IBM Plex Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', monospace;
+
+  /* primary accent - nicholai.work red */
+  --color-primary: #dd4132;
+  --color-primary-contrast: #ffffff;
+  --color-primary-dark-1: #c73a2d;
+  --color-primary-dark-2: #b13328;
+  --color-primary-light-1: #e35d50;
+  --color-primary-light-2: #e9796e;
+
+  /* contribution graph alpha tokens */
+  --color-primary-alpha-10: rgba(221, 65, 50, 0.15);
+  --color-primary-alpha-20: rgba(221, 65, 50, 0.30);
+  --color-primary-alpha-40: rgba(221, 65, 50, 0.50);
+  --color-primary-alpha-60: rgba(221, 65, 50, 0.70);
+  --color-primary-alpha-80: rgba(221, 65, 50, 0.85);
+
+  /* backgrounds - nicholai.work dark palette */
+  --color-body: #0B0D11;
+  --color-box-body: #111318;
+  --color-box-body-highlight: #171B22;
+  --color-box-header: #1A1F28;
+  --color-secondary: #1E242E;
+  --color-secondary-dark-1: #171B22;
+  --color-secondary-dark-2: #111318;
+  --color-secondary-light-1: #252C38;
+  --color-secondary-light-2: #2C3542;
+
+  /* text colors - high contrast for readability */
+  --color-text-dark: #FFFFFF;
+  --color-text: #D1D9E6;           /* ~11:1 - primary text, very readable */
+  --color-text-light: #B0BFD0;     /* ~8:1 - secondary text */
+  --color-text-light-2: #94A3B8;   /* ~6.5:1 - tertiary text */
+  --color-text-light-3: #7A8A9D;   /* ~4.8:1 - muted text */
+
+  /* borders */
+  --color-border: #2C3542;
+  --color-light-border: #1E242E;
+  --color-input-border: #2C3542;
+  --color-input-border-hover: #dd4132;
+
+  /* semantic colors */
+  --color-success: #10B981;
+  --color-success-text: #34D399;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-success-border: rgba(16, 185, 129, 0.3);
+
+  --color-warning: #F59E0B;
+  --color-warning-text: #FBBF24;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-warning-border: rgba(245, 158, 11, 0.3);
+
+  --color-error: #EF4444;
+  --color-error-text: #F87171;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-error-border: rgba(239, 68, 68, 0.3);
+
+  --color-info: #3B82F6;
+  --color-info-text: #60A5FA;
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  --color-info-border: rgba(59, 130, 246, 0.3);
+
+  /* diff colors */
+  --color-diff-removed-word-bg: rgba(239, 68, 68, 0.4);
+  --color-diff-added-word-bg: rgba(16, 185, 129, 0.4);
+  --color-diff-removed-row-bg: rgba(239, 68, 68, 0.1);
+  --color-diff-moved-row-bg: rgba(245, 158, 11, 0.1);
+  --color-diff-added-row-bg: rgba(16, 185, 129, 0.1);
+  --color-diff-removed-row-border: rgba(239, 68, 68, 0.3);
+  --color-diff-moved-row-border: rgba(245, 158, 11, 0.3);
+  --color-diff-added-row-border: rgba(16, 185, 129, 0.3);
+
+  /* code/syntax */
+  --color-code-bg: #111318;
+  --color-code-sidebar-bg: #0B0D11;
+
+  /* interactive states */
+  --color-hover: rgba(221, 65, 50, 0.1);
+  --color-active: rgba(221, 65, 50, 0.2);
+  --color-focus: rgba(221, 65, 50, 0.3);
+
+  /* shadows */
+  --color-shadow: rgba(0, 0, 0, 0.5);
+
+  /* buttons */
+  --color-button: #252C38;
+  --color-button-hover: #2C3542;
+
+  /* navbar */
+  --color-nav-bg: #0B0D11;
+  --color-nav-text: #D1D9E6;
+  --color-nav-hover-bg: #1A1F28;
+
+  /* labels */
+  --color-label-bg: #252C38;
+  --color-label-text: #D1D9E6;
+  --color-label-hover-bg: #2C3542;
+
+  /* menu */
+  --color-menu: #111318;
+  --color-menu-hover: #1A1F28;
+  --color-menu-active: #1E242E;
+
+  /* markdown */
+  --color-markdown-code-block: #111318;
+  --color-markdown-table-row: #171B22;
+
+  /* reaction */
+  --color-reaction-bg: #1A1F28;
+  --color-reaction-hover-bg: #252C38;
+  --color-reaction-active-bg: rgba(221, 65, 50, 0.2);
+
+  /* placeholder/input */
+  --color-placeholder-text: #7A8A9D;
+  --color-input-text: #D1D9E6;
+  --color-input-background: #111318;
+
+  /* accent shades for various UI elements */
+  --color-accent: #dd4132;
+  --color-small-accent: #dd4132;
+
+  /* link colors */
+  --color-link: #dd4132;
+  --color-link-hover: #e35d50;
+}
+
+/* font overrides */
+body,
+.ui,
+.ui.menu,
+.ui.text,
+.ui.header,
+.ui.message,
+.ui.button,
+input,
+textarea,
+select {
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+code,
+pre,
+.mono,
+.codebox,
+.CodeMirror,
+.code-view,
+.file-view {
+  font-family: 'IBM Plex Mono', 'SFMono-Regular', 'Menlo', monospace !important;
+}
