@@ -10,7 +10,7 @@ core:
 - bun dev - run dev server
 - bun build - build the project
 - bun preview - build and preview with wrangler
-- bun deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
+- bun run deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
 
 utilities:
 - bun commit - interactive git commit with AI-generated messages
