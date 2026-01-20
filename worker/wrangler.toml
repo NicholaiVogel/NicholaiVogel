@@ -1,10 +1,15 @@
 name = "nicholai-terminal-worker"
 main = "build/worker/shim.mjs"
 compatibility_date = "2025-12-05"
+account_id = "a19f770b9be1b20e78b8d25bdcfd3bbd"
+
+# Route all nicholai.work traffic through this worker
+routes = [
+  { pattern = "nicholai.work/*", zone_name = "nicholai.work" }
+]
 
 [build]
 command = "cargo install -q worker-build && worker-build --release"
 
-# The worker will proxy browser requests to the Pages deployment
 [vars]
 PAGES_ORIGIN = "https://nicholai-work-2026.pages.dev"

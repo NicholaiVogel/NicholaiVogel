@@ -78,10 +78,14 @@ const { headlineLine1, headlineLine2, portfolioYear, location, locationLabel, bi
 
         <!-- Main Heading & Description -->
         <div class="max-w-5xl">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] font-bold text-[var(--theme-text-primary)] mb-8 perspective-text">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] font-bold text-[var(--theme-text-primary)] mb-4 perspective-text">
                 <span class="block intro-element opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-100">{headlineLine1}</span>
                 <span class="block text-brand-accent opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 intro-element">{headlineLine2}</span>
             </h1>
+
+            <div class="font-mono text-xs text-[var(--theme-text-muted)] mb-6 intro-element opacity-0 translate-y-4 transition-all duration-1000 ease-out delay-300">
+                <span class="text-brand-accent">$</span> <span class="text-[var(--theme-text-subtle)]">curl nicholai.work</span>
+            </div>
 
             <p class="font-mono text-sm md:text-base max-w-lg text-[var(--theme-text-secondary)] font-light leading-relaxed intro-element opacity-0 translate-y-6 transition-all duration-1000 ease-out delay-500">
                 {bio}

@@ -1,0 +1,232 @@
+---
+title: "Building a Terminal UI for Your Website with Rust and Cloudflare Workers"
+description: "How I added a curl-able ANSI terminal interface to my portfolio site using Rust compiled to WebAssembly, running on Cloudflare's edge network. Browsers get the normal site, terminals get ASCII art."
+pubDate: 2026-01-20
+heroImage: "../../assets/workbench.avif"
+featured: true
+category: "Development"
+tags: ["Rust", "Cloudflare Workers", "WebAssembly", "Terminal UI", "Edge Computing"]
+---
+
+try it: `curl nicholai.work`
+
+i've always thought it was cool when sites have a terminal-friendly version. so i built one for my portfolio. when you curl the site, you get a beautiful ANSI-rendered terminal UI. browsers get the normal Astro site. the magic happens at cloudflare's edge using a rust worker compiled to wasm.
+
+## the architecture
+
+```
+                    ┌─────────────────┐
+                    │   browser       │
+                    │   User-Agent    │
+     ┌──────────────┤                 │
+     │              └────────┬────────┘
+     ▼                       │
+┌────────────────────────────┼─────────────────┐
+│       Cloudflare Edge      │                 │
+│  ┌─────────────────────────┼──────────────┐  │
+│  │      Rust Worker        │              │  │
+│  │  ┌──────────────────────┴───────────┐  │  │
+│  │  │  1. check User-Agent             │  │  │
+│  │  │  2. if curl/wget → terminal UI   │  │  │
+│  │  │  3. else → proxy to Pages        │  │  │
+│  │  └─────────────┬───────────┬────────┘  │  │
+│  │     ┌──────────▼───┐ ┌─────▼────────┐  │  │
+│  │     │ ANSI         │ │  Astro/Pages │  │  │
+│  │     │ renderer     │ │  (existing)  │  │  │
+│  │     └──────────────┘ └──────────────┘  │  │
+│  └────────────────────────────────────────┘  │
+└──────────────────────────────────────────────┘
+```
+
+the worker intercepts all requests to my domain. it checks the user-agent header, and if it looks like a terminal client (curl, wget, httpie, etc), it returns the terminal UI directly. otherwise, it proxies to my existing astro site on cloudflare pages.
+
+## why rust and wasm?
+
+i could have done this with typescript. but rust + wasm has some nice properties for edge workers:
+
+- **fast cold starts**: the wasm binary is ~150kb gzipped. it loads and executes quickly.
+- **predictable performance**: no garbage collection pauses. important at the edge where every millisecond counts.
+- **type safety**: rust's compiler catches a lot of bugs at build time. the worker crate has good types for cloudflare's runtime.
+
+plus, i wanted to learn rust better. building something real is the best way.
+
+## user-agent detection
+
+detecting terminal clients is simpler than you'd think:
+
+```rust
+pub fn is_terminal_client(user_agent: &str) -> bool {
+    let ua = user_agent.to_lowercase();
+
+    ua.contains("curl")
+        || ua.contains("wget")
+        || ua.contains("httpie")
+        || ua.starts_with("python-requests")
+        || ua.starts_with("go-http-client")
+        // text browsers
+        || ua.contains("lynx")
+        || ua.contains("w3m")
+        // empty often means CLI tools
+        || ua.is_empty()
+}
+```
+
+browsers have distinctive user-agents that contain "Mozilla" or specific browser names. terminal clients typically have simple, identifying strings like `curl/8.0.1` or `Wget/1.21`.
+
+## ansi rendering
+
+the terminal UI uses ANSI escape codes for colors and styling. ANSI codes are sequences that terminals interpret as formatting instructions rather than text:
+
+```rust
+// ANSI 256-color codes
+pub const RED: &str = "\x1b[38;5;167m";      // #dd4132
+pub const CYAN: &str = "\x1b[38;5;87m";      // #22D3EE
+pub const WHITE: &str = "\x1b[97m";
+pub const DIM: &str = "\x1b[2m";
+pub const RESET: &str = "\x1b[0m";
+
+pub fn color(text: &str, code: &str) -> String {
+    format!("{}{}{}", code, text, RESET)
+}
+```
+
+the `\x1b[` sequence starts an escape code. `38;5;167m` means "set foreground color to palette color 167". when curl outputs this to your terminal, you see colored text.
+
+## box drawing
+
+unicode has dedicated characters for drawing boxes. they connect seamlessly:
+
+```rust
+pub const TOP_LEFT: char = '┌';
+pub const TOP_RIGHT: char = '┐';
+pub const BOTTOM_LEFT: char = '└';
+pub const BOTTOM_RIGHT: char = '┘';
+pub const HORIZONTAL: char = '─';
+pub const VERTICAL: char = '│';
+```
+
+combine these with the color codes and you get clean, bordered sections:
+
+```
+┌─ Experience ─────────────────────────────────┐
+│                                              │
+│  [SYS.01]  ACTIVE  Biohazard VFX             │
+│  2022 — PRESENT                              │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+## the worker entry point
+
+the cloudflare `worker` crate provides macros for handling requests:
+
+```rust
+use worker::*;
+
+#[event(fetch)]
+async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
+    let user_agent = req
+        .headers()
+        .get("User-Agent")?
+        .unwrap_or_default();
+
+    if is_terminal_client(&user_agent) {
+        // render terminal UI
+        let body = terminal::render();
+        return Response::ok(body);
+    }
+
+    // proxy to pages
+    let pages_origin = env.var("PAGES_ORIGIN")?.to_string();
+    let url = req.url()?;
+    let origin_url = format!("{}{}", pages_origin, url.path());
+
+    Fetch::Request(Request::new(&origin_url, Method::Get)?).send().await
+}
+```
+
+for browser requests, we proxy to the pages deployment. cloudflare handles this efficiently since both the worker and pages run on the same network.
+
+## project structure
+
+```
+worker/
+├── Cargo.toml
+├── wrangler.toml
+└── src/
+    ├── lib.rs          # entry point
+    ├── detect.rs       # user-agent detection
+    └── terminal/
+        ├── mod.rs
+        ├── colors.rs   # ANSI codes
+        ├── layout.rs   # box drawing
+        ├── content.rs  # site content
+        └── renderer.rs # main render logic
+```
+
+the modular structure keeps things organized. `content.rs` holds the actual text, making it easy to update without touching the rendering logic.
+
+## wrangler configuration
+
+```toml
+name = "nicholai-terminal-worker"
+main = "build/worker/shim.mjs"
+compatibility_date = "2025-12-05"
+account_id = "your-account-id"
+
+routes = [
+  { pattern = "nicholai.work/*", zone_name = "nicholai.work" }
+]
+
+[build]
+command = "cargo install -q worker-build && worker-build --release"
+
+[vars]
+PAGES_ORIGIN = "https://your-site.pages.dev"
+```
+
+the `routes` array tells cloudflare to route all traffic through this worker. `worker-build` handles compiling rust to wasm and bundling it for cloudflare.
+
+## building and deploying
+
+```bash
+# install wasm target
+rustup target add wasm32-unknown-unknown
+
+# build locally
+cd worker
+worker-build --release
+
+# test locally
+wrangler dev
+
+# deploy
+wrangler deploy
+```
+
+`wrangler dev` runs the worker locally with a simulated cloudflare environment. test with `curl localhost:8787` to see the terminal UI.
+
+## why this is actually useful
+
+beyond being fun, there are practical reasons to have a terminal-friendly site:
+
+- **accessibility**: some people browse in text-only environments
+- **scripting**: you can pipe the output to other tools
+- **speed**: no javascript, no assets to load, just text over the wire
+- **easter eggs**: it's a fun surprise for technical visitors
+
+and honestly, it's just cool to type `curl nicholai.work` and see something other than HTML soup.
+
+## try it yourself
+
+the full source is in my [portfolio repo](https://git.biohazardvfx.com/Nicholai/nicholai-work-2026). the key files:
+
+- `worker/src/lib.rs` - request handling
+- `worker/src/detect.rs` - user-agent logic
+- `worker/src/terminal/renderer.rs` - the ANSI rendering
+
+fork it, customize the content, deploy to your own domain. the pattern works for any cloudflare pages site.
+
+---
+
+*this post was written on my behalf by mr claude :)*
