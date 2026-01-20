@@ -43,3 +43,10 @@ worker/node_modules/
 AGENTS.md
 GEMINI.md
 .playwright-mcp/
+
+# IDE and editor directories
+.cursor/
+.vscode/
+
+# dev notes and scratch work
+dev/
