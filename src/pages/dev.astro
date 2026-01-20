@@ -63,36 +63,31 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
     <section class="relative z-10 py-24 container mx-auto px-6 lg:px-12">
         <div class="grid grid-cols-1 gap-24">
             {allProjects.map((project, index) => (
-                <article 
-                    class={`group relative border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] overflow-hidden flex flex-col lg:flex-row animate-on-scroll slide-up stagger-${(index % 4) + 1} min-h-[600px]`}
+                <article
+                    class={`group relative rounded-xl border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-brand-accent hover:bg-[var(--theme-hover-bg)] overflow-hidden flex flex-col lg:flex-row animate-on-scroll slide-up stagger-${(index % 4) + 1} min-h-[600px] transition-all duration-300`}
                     data-project-index={index}
                 >
-                    
-                    <div class="relative z-10 w-full lg:w-1/3 p-8 lg:p-12 flex flex-col justify-between bg-[var(--theme-bg-secondary)]/95 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-[var(--theme-border-primary)]">
+
+                    <div class="relative z-10 w-full lg:w-1/3 p-8 lg:p-12 flex flex-col justify-between bg-[var(--theme-bg-secondary)]/95 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-[var(--theme-border-primary)] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl">
                         <div>
-                             <div class="flex justify-between items-start mb-8">
-                                <div class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.2em] flex items-center gap-3">
-                                    <span>PRJ.0{project.data.order}</span>
-                                    <span class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></span>
-                                    <span>LIVE_FEED</span>
-                                </div>
+                             <div class="flex justify-between items-start mb-6">
+                                <span class="inline-block px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent">
+                                    Project {project.data.order}
+                                </span>
                             </div>
 
-                            <h2 class="text-3xl lg:text-5xl font-bold uppercase tracking-tight text-[var(--theme-text-primary)] mb-6 group-hover:text-brand-accent transition-colors duration-300">
+                            <h2 class="text-3xl lg:text-4xl font-bold text-[var(--theme-text-primary)] mb-4 group-hover:text-brand-accent transition-colors duration-300 leading-tight">
                                 {project.data.title}
                             </h2>
-                            <p class="text-[var(--theme-text-secondary)] text-base leading-relaxed font-light mb-8">
+                            <p class="text-[var(--theme-text-secondary)] text-base leading-relaxed mb-6">
                                 {project.data.description}
                             </p>
 
-                             <div class="font-mono text-[10px] text-[var(--theme-text-subtle)] uppercase tracking-[0.2em] mb-4">
-                                /// STACK_MANIFEST
-                            </div>
                             {project.data.tags && (
                                 <div class="flex flex-wrap gap-2 mb-8">
                                     {project.data.tags.map((tag) => (
-                                        <span class="px-3 py-1.5 text-[10px] font-mono uppercase bg-[var(--theme-bg-tertiary)] border border-[var(--theme-border-primary)] text-[var(--theme-text-muted)] group-hover:text-[var(--theme-text-secondary)] group-hover:border-[var(--theme-border-strong)] transition-colors">
-                                            {tag}
+                                        <span class="px-2 py-1 text-xs text-[var(--theme-text-muted)]">
+                                            #{tag}
                                         </span>
                                     ))}
                                 </div>
@@ -102,7 +97,7 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                         <div class="flex flex-col gap-3 mt-auto">
                             <button
                                 type="button"
-                                class="engage-btn w-full flex items-center justify-between px-6 py-4 bg-brand-accent/10 border border-brand-accent text-xs font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group/btn rounded-full"
+                                class="engage-btn w-full flex items-center justify-between px-6 py-3 bg-brand-accent/10 border border-brand-accent text-sm font-medium text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 group/btn rounded-full"
                                 data-project={JSON.stringify({
                                     title: project.data.title,
                                     description: project.data.description,
@@ -113,7 +108,7 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                                 })}
                             >
                                 <span>Engage Fullscreen</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover/btn:scale-110 transition-transform">
                                     <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
                                 </svg>
                             </button>
@@ -121,21 +116,21 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                                 href={project.data.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="w-full flex items-center justify-between px-6 py-4 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)] hover:border-brand-accent/50 hover:text-brand-accent transition-all duration-300 group/btn rounded-full"
+                                class="w-full flex items-center justify-between px-6 py-3 bg-[var(--theme-hover-bg)] border border-[var(--theme-border-primary)] text-sm font-medium text-[var(--theme-text-primary)] hover:border-brand-accent hover:text-brand-accent transition-all duration-300 group/btn rounded-full"
                             >
                                 <span>Open Externally</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="group-hover/btn:translate-x-1 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover/btn:translate-x-1 transition-transform">
                                     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
                                 </svg>
                             </a>
                         </div>
                     </div>
 
-                    <div class="relative w-full lg:w-2/3 h-[400px] lg:h-auto overflow-hidden bg-[var(--theme-bg-primary)] group-hover:border-brand-accent/50 transition-colors duration-500 cursor-pointer engage-preview" data-project-index={index}>
+                    <div class="relative w-full lg:w-2/3 h-[400px] lg:h-auto overflow-hidden bg-[var(--theme-bg-primary)] transition-colors duration-300 cursor-pointer engage-preview rounded-b-xl lg:rounded-b-none lg:rounded-r-xl" data-project-index={index}>
                         <div class="w-[200%] h-[200%] origin-top-left transform scale-50 pointer-events-none">
-                            <iframe 
-                                src={project.data.link} 
-                                class="w-full h-full border-none grayscale-[0.8] group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100"
+                            <iframe
+                                src={project.data.link}
+                                class="w-full h-full border-none grayscale-[0.5] group-hover:grayscale-0 transition-all duration-500 opacity-70 group-hover:opacity-100"
                                 loading="lazy"
                                 title={`Live preview of ${project.data.title}`}
                             ></iframe>
@@ -146,8 +141,8 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
                         <div class="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]"></div>
 
                         <div class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <div class="px-6 py-3 bg-brand-accent/10 border border-brand-accent backdrop-blur-md text-brand-accent font-mono text-xs font-bold uppercase tracking-widest flex items-center gap-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                            <div class="px-6 py-3 rounded-full bg-brand-accent/10 border border-brand-accent backdrop-blur-md text-brand-accent text-sm font-medium flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                     <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
                                 </svg>
                                 Click to Engage
@@ -163,24 +158,26 @@ const pageTitle = `Dev | ${SITE_TITLE}`;
         <div class="container mx-auto px-6 lg:px-12">
              <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-7">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">/// SECONDARY_SPECIALIZATION</span>
+                    <div class="mb-4">
+                        <span class="inline-block px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent">
+                            Also Offering
+                        </span>
                     </div>
-                    <h2 class="text-4xl md:text-5xl font-bold uppercase text-[var(--theme-text-primary)] mb-6 tracking-tight">
+                    <h2 class="text-4xl md:text-5xl font-bold text-[var(--theme-text-primary)] mb-6 leading-tight">
                         Visual Effects & <br/> <span class="text-brand-accent">Technical Art</span>
                     </h2>
-                    <p class="text-[var(--theme-text-secondary)] text-lg font-light leading-relaxed max-w-xl">
+                    <p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed max-w-xl">
                         Beyond traditional web development, I specialize in high-end VFX production and pipeline automation.
                     </p>
                 </div>
                 <div class="lg:col-span-5 flex justify-end">
-                    <a href="/#work" class="group relative inline-flex items-center justify-center gap-6 px-10 py-5 bg-brand-accent/5 border border-brand-accent/30 hover:bg-brand-accent hover:border-brand-accent transition-all duration-300">
-                        <span class="relative z-10 font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-accent group-hover:text-brand-dark transition-colors">View VFX Portfolio</span>
-                        <div class="relative z-10 w-8 h-8 flex items-center justify-center border border-brand-accent/20 group-hover:border-brand-dark/30 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-brand-accent group-hover:text-brand-dark group-hover:translate-x-1 transition-all">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </div>
+                    <a href="/#work" class="group relative inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300">
+                        <span class="text-sm font-medium text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors">
+                            View VFX Portfolio
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </a>
                 </div>
             </div>
