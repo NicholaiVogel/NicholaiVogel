@@ -1,160 +1,244 @@
-nicholai.work - claude guide
+nicholai.work - agent guide
 ===
 
-this is an astro-based portfolio and blog site deployed on cloudflare pages. content-driven architecture with three main layers: content collections, components, and pages/layouts.
+important
+---
+
+- do not casually rewrite or discard this document. improve it carefully.
+- this repo is a content-driven astro portfolio/blog deployed to cloudflare pages.
+- treat changes here like product work, not generic scaffolding. design, content, and information architecture all matter.
+
+this file provides guidance to ai assistants working on this repository. it is version controlled and should stay specific to how this site actually works.
+
+session protocol (mandatory)
+---
+
+before starting any feature, fix, refactor, content change, or design pass:
+
+1. identify the layer you are changing: content, components, pages/layouts, or config/deployment.
+2. read the relevant source of truth before editing:
+   - `design.json` for visual/design work
+   - `src/content.config.ts` for content collections or frontmatter/schema changes
+   - the specific files under `src/content/**` for content-driven sections/pages
+   - the relevant component/layout/page files for rendering changes
+   - `astro.config.mjs`, `wrangler.jsonc`, and `src/consts.ts` for platform/site metadata changes
+3. preserve the existing site invariants unless the task explicitly changes them.
+4. if the change is visual, check whether the dev server is already running before starting it.
+5. all ui changes must be reviewed in the browser before the task is considered complete.
+6. if you change routes, content schemas, config, or build behavior, run `bun build` before finishing.
+
+site invariants (do not drift accidentally)
+---
+
+- homepage order is: hero → experience → featured project → skills → latest blogs.
+- blog posts are sorted by `pubDate` newest first.
+- featured blog post is the first post with `featured: true`, or the latest post as fallback.
+- individual posts calculate reading time at 200 wpm.
+- related posts are based on matching category or shared tags, limited to 3.
+- dark mode is the default theme. light mode is optional via theme toggle.
+
+incident -> guardrail loop (mandatory)
+---
+
+when a bug, regression, broken page, or content failure is found, the fix is not complete until at least one durable prevention mechanism is added:
+
+1. tighten schema validation in `src/content.config.ts` if the failure came from content shape/frontmatter.
+2. add a component guard, fallback, or empty state if the failure came from rendering assumptions.
+3. add a build-time or route-level validation step if the failure came from integration drift.
+4. update this `AGENTS.md` if the failure mode was process-related and should be prevented next time.
+
+common failure modes
+---
+
+prevent these proactively:
+
+1. content/schema drift
+   - if frontmatter shape changes, update `src/content.config.ts` in the same pass.
+   - do not add ad-hoc fields in mdx without schema support.
+
+2. design language drift
+   - modern design is the default for new work.
+   - industrial styling is reserved for hero, experience, and featured project sections unless explicitly requested.
+   - do not spread mono/uppercase/technical styling across blog, navigation, or new general-purpose sections by accident.
+
+3. image path mistakes
+   - assets in `src/assets/` should be referenced relatively in frontmatter/components.
+   - static files in `public/media/` should use absolute paths like `/media/file.mp4`.
+
+4. homepage/blog logic regressions
+   - preserve ordering, featured-post fallback behavior, reading-time assumptions, and related-post limits unless the task says otherwise.
+
+5. unverified visual work
+   - no visual task is done until it has been checked in-browser.
+   - verify the exact route affected, not just a component in isolation.
+
+6. astro/cloudflare config drift
+   - any change to `astro.config.mjs`, `wrangler.jsonc`, image handling, or platform proxy behavior should be validated with a build or preview.
+
+completion checklist (mandatory before finishing)
+---
+
+- [ ] read the relevant source-of-truth files first
+- [ ] kept content schema and content usage in sync
+- [ ] respected the correct design language for the section being changed
+- [ ] used the correct image path strategy (`src/assets` vs `public/media`)
+- [ ] reviewed ui changes in the browser
+- [ ] ran `bun build` for route/schema/config/structural changes
+- [ ] checked for broken links, slugs, imports, and obvious empty states
 
 development commands
 ---
 
 core:
-- bun dev - run dev server
-- bun build - build the project
-- bun preview - build and preview with wrangler
-- bun run deploy - build and deploy to cloudflare pages (then run `wrangler pages deploy --branch=main` for production)
+- `bun dev` - run astro dev server
+- `bun build` - build the site
+- `bun preview` - build and preview with wrangler/cloudflare behavior
+- `bun run deploy` - build and deploy to cloudflare pages
+- `wrangler pages deploy --branch=main` - production deployment step
 
 utilities:
-- bun commit - interactive git commit with AI-generated messages
-- bun notepad - quick note-taking utility
-- bun run convert:avif:all - convert images to AVIF
-- bun cf-typegen - generate cloudflare types
+- `bun commit` - interactive git commit with ai-generated messages
+- `bun notepad` - quick note-taking utility
+- `bun run convert:avif:all` - convert images to avif
+- `bun cf-typegen` - generate cloudflare types
+
+validation expectations
+---
+
+- visual/component/layout changes: review in browser.
+- content/schema/route/config changes: run `bun build`.
+- cloudflare-specific behavior changes: use `bun preview` when needed.
+- do not deploy as part of a normal task unless the user asks for it.
 
 architecture overview
 ---
 
-content layer (src/content/**)
+this site has three main layers: content collections, components, and pages/layouts.
 
-content is managed via astro's content collections API with schema validation in src/content.config.ts:
+content layer (`src/content/**`)
 
-blog/ - blog posts as MDX files
-- schema: title, description, pubDate, updatedDate, heroImage, featured, category, tags
-- sorted by pubDate (newest first)
-- featured post displayed on homepage and blog index
+content is managed via astro's content collections api with schema validation in `src/content.config.ts`.
 
-sections/ - homepage section content
-- hero, experience, skills, featured-project
-- each has custom schema for its needs
-- experience: systemId, status, dates, company, role, tags, description, achievements, link
-- skills: id, domain, tools, proficiency
+- `blog/` - mdx blog posts
+  - schema: `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `featured`, `category`, `tags`
+  - sorted by `pubDate` newest first
+  - featured post is surfaced on homepage and blog index
 
-pages/ - page-specific content
-- contact form configuration, labels, social links, subject options
+- `sections/` - homepage section content
+  - `hero`, `experience`, `skills`, `featured-project`
+  - `experience`: `systemId`, `status`, `dates`, `company`, `role`, `tags`, `description`, `achievements`, `link`
+  - `skills`: `id`, `domain`, `tools`, `proficiency`
+
+- `pages/` - page-specific content such as contact form config, labels, social links, and subject options
 
 component layer
 
 organized by purpose:
-- core UI: BlogCard, FormattedDate, Navigation, Footer, GridOverlay
-- blog: BlogFilters, ReadingProgress, TableOfContents, PostNavigation, RelatedPosts
-- sections: Hero, Experience, Skills, FeaturedProject
+- core ui: `BlogCard`, `FormattedDate`, `Navigation`, `Footer`, `GridOverlay`
+- blog: `BlogFilters`, `ReadingProgress`, `TableOfContents`, `PostNavigation`, `RelatedPosts`
+- sections: `Hero`, `Experience`, `Skills`, `FeaturedProject`
 
 page & layout layer
 
-- BaseLayout - shared structure for all pages
-- BlogPost - blog post template with sidebar, navigation, related posts
-- src/pages/ - static routes + dynamic blog routes via [...slug].astro
+- `BaseLayout` - shared shell for all pages
+- `BlogPost` - blog post template with sidebar, navigation, and related posts
+- `src/pages/` - static routes plus dynamic blog routes via `[...slug].astro`
 
 design system
 ---
 
-design.json documents the evolution from industrial/technical to modern/clean design language.
+design direction is documented in `design.json`.
 
-key principle: industrial styling reserved for hero, experience, and featured project sections only. everything else (blog, navigation, new sections) uses modern design.
+key rule: industrial styling is reserved for hero, experience, and featured project sections only. everything else should use the modern design language unless the task explicitly says otherwise.
 
-modern design (default for new work):
-- rounded corners (rounded-lg, rounded-full, rounded-xl)
-- clean typography (normal case, no excessive uppercase)
-- simple badges with bg-brand-accent/10
-- clean metadata format: "date · read time"
-- hashtag format for tags (#tag)
-- no font-mono or tracking-widest on everything
-- faster transitions (300ms)
+modern design, default for new work:
+- rounded corners (`rounded-lg`, `rounded-xl`, `rounded-full`)
+- clean typography, normal case
+- simple badges with `bg-brand-accent/10`
+- metadata format like `date · read time`
+- hashtag tag format like `#tag`
+- restrained transitions, around 300ms
+- avoid spraying `font-mono` and wide tracking everywhere
 
-industrial design (hero/experience/featured only):
+industrial design, only where intended:
 - sharp corners
 - uppercase tracking-tighter titles
-- font-mono system labels
-- pulsing dots, accent strips
-- technical aesthetic
-
-when building new features, default to modern design unless explicitly working on hero/experience/featured sections.
+- mono system labels
+- pulsing dots, accent strips, technical framing
 
 data flow patterns
 ---
 
-homepage (src/pages/index.astro):
-- fetches hero, experience, skills, featured-project from content collections
-- queries 3 most recent blog posts for latest blogs section
-- displays in order: hero → experience → featured project → skills → latest blogs
+homepage (`src/pages/index.astro`):
+- fetches `hero`, `experience`, `skills`, and `featured-project` from content collections
+- queries the 3 most recent blog posts for the latest blogs section
+- renders in this order: hero → experience → featured project → skills → latest blogs
 
-blog index (src/pages/blog/index.astro):
-- fetches all posts via getCollection('blog')
-- sorts by pubDate newest first
-- identifies featured post (first with featured: true or fallback to latest)
-- renders featured hero + filterable grid of all posts
-- extracts unique categories for filter UI
+blog index (`src/pages/blog/index.astro`):
+- fetches all posts with `getCollection('blog')`
+- sorts by `pubDate` newest first
+- identifies the featured post from `featured: true`, with fallback to the latest post
+- renders a featured hero plus a filterable grid of all posts
+- extracts unique categories for filter ui
 
-individual blog posts (src/pages/blog/[...slug].astro):
-- uses getStaticPaths() to generate routes
+individual blog posts (`src/pages/blog/[...slug].astro`):
+- uses `getStaticPaths()` to generate routes
 - calculates previous/next posts by date
-- finds related posts (matching category or shared tags, limited to 3)
-- calculates reading time (200 wpm)
-- passes to BlogPost layout
+- finds related posts by shared category or tags, limited to 3
+- calculates reading time at 200 wpm
+- passes computed data to the `BlogPost` layout
 
 key technical patterns
 ---
 
 image handling:
-- assets in src/assets/ processed by astro (use relative paths in frontmatter)
-- static files in public/media/ served as-is (use absolute paths like /media/file.mp4)
-- AVIF conversion utility available
+- assets in `src/assets/` are processed by astro
+- static files in `public/media/` are served as-is
+- avif conversion utility is available
 
 content collections pattern:
-MDX file → src/content.config.ts schema → getCollection() → component props
+- mdx file → `src/content.config.ts` schema → `getCollection()` → component props
 
-UI development:
-- ALWAYS review UI changes in the browser
-- check if dev server is running before starting it
-- visually verify components, animations, layouts before considering work complete
+ui development:
+- always review ui changes in the browser
+- check whether the dev server is already running before starting another one
+- visually verify layouts, animations, spacing, and responsive behavior before calling the work done
 
-deployment:
-- cloudflare pages adapter configured in astro.config.mjs
-- image service set to "compile" mode
-- platform proxy enabled for development
-- production domain: nicholai.work
-- hosted on cloudflare pages
-
-blog post creation workflow
+deployment
 ---
 
-1. create .mdx file in src/content/blog/ (filename becomes URL slug)
-2. add required frontmatter: title, description, pubDate
-3. optionally add: heroImage, featured, category, tags
-4. write content using markdown/MDX with embedded JSX/HTML
-5. images can reference src/assets/ (relative) or public/media/ (absolute)
+- cloudflare pages adapter is configured in `astro.config.mjs`
+- image service is set to `compile` mode
+- platform proxy is enabled for development
+- production domain is `nicholai.work`
+- site is hosted on cloudflare pages
 
-utility scripts
+blog post workflow
 ---
 
-- src/utils/convert-to-avif.js - converts images to AVIF format
-- src/utils/git-commit.js - auto-generates commit messages
-- src/utils/notepad.js - quick note-taking
-- src/utils/reading-time.ts - calculates reading time (200 wpm)
+1. create an `.mdx` file in `src/content/blog/`
+2. add required frontmatter: `title`, `description`, `pubDate`
+3. optionally add: `heroImage`, `featured`, `category`, `tags`
+4. write the post in markdown/mdx, including jsx/html only when it genuinely helps
+5. use relative asset paths for `src/assets/` files, or absolute `/media/...` paths for `public/media/` files
 
 important files
 ---
 
-- design.json - comprehensive design system documentation
-- src/content.config.ts - content collection schemas
-- astro.config.mjs - cloudflare pages adapter config
-- wrangler.jsonc - cloudflare worker configuration
-- src/consts.ts - site metadata (title, description, social links)
+- `AGENTS.md` - this guide
+- `design.json` - design system and stylistic direction
+- `src/content.config.ts` - content collection schemas
+- `astro.config.mjs` - astro + cloudflare adapter config
+- `wrangler.jsonc` - cloudflare worker/pages configuration
+- `src/consts.ts` - site metadata and social links
 
 theme system
 ---
 
-uses CSS custom properties for theming:
-- --theme-bg-primary, --theme-bg-secondary
-- --theme-text-primary, --theme-text-secondary, --theme-text-muted
-- --theme-border-primary, --theme-hover-bg
-- --brand-accent (primary accent color)
+uses css custom properties for theming:
+- `--theme-bg-primary`, `--theme-bg-secondary`
+- `--theme-text-primary`, `--theme-text-secondary`, `--theme-text-muted`
+- `--theme-border-primary`, `--theme-hover-bg`
+- `--brand-accent`
 
-dark mode is default, light mode available via theme toggle.
+dark mode is default. light mode is available via the theme toggle.
