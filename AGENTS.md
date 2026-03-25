@@ -1,6 +1,14 @@
 nicholai.work - agent guide
 ===
 
+related guides
+---
+
+- [[src/assets/AGENTS.md|assets guide]]
+- [[src/components/AGENTS.md|components guide]]
+- [[src/pages/AGENTS.md|pages guide]]
+- [[src/utils/AGENTS.md|utilities guide]]
+
 important
 ---
 
@@ -17,11 +25,11 @@ before starting any feature, fix, refactor, content change, or design pass:
 
 1. identify the layer you are changing: content, components, pages/layouts, or config/deployment.
 2. read the relevant source of truth before editing:
-   - `design.json` for visual/design work
-   - `src/content.config.ts` for content collections or frontmatter/schema changes
+   - [[design.json|design.json]] for visual/design work
+   - [[src/content.config.ts|src/content.config.ts]] for content collections or frontmatter/schema changes
    - the specific files under `src/content/**` for content-driven sections/pages
    - the relevant component/layout/page files for rendering changes
-   - `astro.config.mjs`, `wrangler.jsonc`, and `src/consts.ts` for platform/site metadata changes
+   - [[astro.config.mjs|astro.config.mjs]], [[wrangler.jsonc|wrangler.jsonc]], and [[src/consts.ts|src/consts.ts]] for platform/site metadata changes
 3. preserve the existing site invariants unless the task explicitly changes them.
 4. if the change is visual, check whether the dev server is already running before starting it.
 5. all ui changes must be reviewed in the browser before the task is considered complete.
@@ -42,10 +50,10 @@ incident -> guardrail loop (mandatory)
 
 when a bug, regression, broken page, or content failure is found, the fix is not complete until at least one durable prevention mechanism is added:
 
-1. tighten schema validation in `src/content.config.ts` if the failure came from content shape/frontmatter.
+1. tighten schema validation in [[src/content.config.ts|src/content.config.ts]] if the failure came from content shape/frontmatter.
 2. add a component guard, fallback, or empty state if the failure came from rendering assumptions.
 3. add a build-time or route-level validation step if the failure came from integration drift.
-4. update this `AGENTS.md` if the failure mode was process-related and should be prevented next time.
+4. update this [[AGENTS.md|AGENTS.md]] if the failure mode was process-related and should be prevented next time.
 
 common failure modes
 ---
@@ -53,7 +61,7 @@ common failure modes
 prevent these proactively:
 
 1. content/schema drift
-   - if frontmatter shape changes, update `src/content.config.ts` in the same pass.
+   - if frontmatter shape changes, update [[src/content.config.ts|src/content.config.ts]] in the same pass.
    - do not add ad-hoc fields in mdx without schema support.
 
 2. design language drift
@@ -73,7 +81,7 @@ prevent these proactively:
    - verify the exact route affected, not just a component in isolation.
 
 6. astro/cloudflare config drift
-   - any change to `astro.config.mjs`, `wrangler.jsonc`, image handling, or platform proxy behavior should be validated with a build or preview.
+   - any change to [[astro.config.mjs|astro.config.mjs]], [[wrangler.jsonc|wrangler.jsonc]], image handling, or platform proxy behavior should be validated with a build or preview.
 
 completion checklist (mandatory before finishing)
 ---
@@ -117,7 +125,7 @@ this site has three main layers: content collections, components, and pages/layo
 
 content layer (`src/content/**`)
 
-content is managed via astro's content collections api with schema validation in `src/content.config.ts`.
+content is managed via astro's content collections api with schema validation in [[src/content.config.ts|src/content.config.ts]].
 
 - `blog/` - mdx blog posts
   - schema: `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `featured`, `category`, `tags`
@@ -134,20 +142,20 @@ content is managed via astro's content collections api with schema validation in
 component layer
 
 organized by purpose:
-- core ui: `BlogCard`, `FormattedDate`, `Navigation`, `Footer`, `GridOverlay`
-- blog: `BlogFilters`, `ReadingProgress`, `TableOfContents`, `PostNavigation`, `RelatedPosts`
-- sections: `Hero`, `Experience`, `Skills`, `FeaturedProject`
+- core ui: [[src/components/BlogCard.astro|BlogCard.astro]], [[src/components/FormattedDate.astro|FormattedDate.astro]], [[src/components/Navigation.astro|Navigation.astro]], [[src/components/Footer.astro|Footer.astro]], [[src/components/GridOverlay.astro|GridOverlay.astro]]
+- blog: [[src/components/BlogFilters.astro|BlogFilters.astro]], [[src/components/TableOfContents.astro|TableOfContents.astro]], [[src/components/PostNavigation.astro|PostNavigation.astro]], [[src/components/RelatedPosts.astro|RelatedPosts.astro]]
+- sections: [[src/components/sections/Hero.astro|Hero.astro]], [[src/components/sections/Experience.astro|Experience.astro]], [[src/components/sections/Skills.astro|Skills.astro]], [[src/components/sections/FeaturedProject.astro|FeaturedProject.astro]]
 
 page & layout layer
 
-- `BaseLayout` - shared shell for all pages
-- `BlogPost` - blog post template with sidebar, navigation, and related posts
-- `src/pages/` - static routes plus dynamic blog routes via `[...slug].astro`
+- [[src/layouts/BaseLayout.astro|BaseLayout.astro]] - shared shell for all pages
+- [[src/layouts/BlogPost.astro|BlogPost.astro]] - blog post template with sidebar, navigation, and related posts
+- [[src/pages|src/pages]] - static routes plus dynamic blog routes via [[src/pages/blog/[...slug].astro|[...slug].astro]]
 
 design system
 ---
 
-design direction is documented in `design.json`.
+design direction is documented in [[design.json|design.json]].
 
 key rule: industrial styling is reserved for hero, experience, and featured project sections only. everything else should use the modern design language unless the task explicitly says otherwise.
 
@@ -169,24 +177,24 @@ industrial design, only where intended:
 data flow patterns
 ---
 
-homepage (`src/pages/index.astro`):
+homepage ([[src/pages/index.astro|src/pages/index.astro]]):
 - fetches `hero`, `experience`, `skills`, and `featured-project` from content collections
 - queries the 3 most recent blog posts for the latest blogs section
 - renders in this order: hero → experience → featured project → skills → latest blogs
 
-blog index (`src/pages/blog/index.astro`):
+blog index ([[src/pages/blog/index.astro|src/pages/blog/index.astro]]):
 - fetches all posts with `getCollection('blog')`
 - sorts by `pubDate` newest first
 - identifies the featured post from `featured: true`, with fallback to the latest post
 - renders a featured hero plus a filterable grid of all posts
 - extracts unique categories for filter ui
 
-individual blog posts (`src/pages/blog/[...slug].astro`):
+individual blog posts ([[src/pages/blog/[...slug].astro|src/pages/blog/[...slug].astro]]):
 - uses `getStaticPaths()` to generate routes
 - calculates previous/next posts by date
 - finds related posts by shared category or tags, limited to 3
 - calculates reading time at 200 wpm
-- passes computed data to the `BlogPost` layout
+- passes computed data to the [[src/layouts/BlogPost.astro|BlogPost.astro]] layout
 
 key technical patterns
 ---
@@ -194,10 +202,10 @@ key technical patterns
 image handling:
 - assets in `src/assets/` are processed by astro
 - static files in `public/media/` are served as-is
-- avif conversion utility is available
+- avif conversion utility is available via [[src/utils/convert-to-avif.js|convert-to-avif.js]]
 
 content collections pattern:
-- mdx file → `src/content.config.ts` schema → `getCollection()` → component props
+- mdx file → [[src/content.config.ts|src/content.config.ts]] schema → `getCollection()` → component props
 
 ui development:
 - always review ui changes in the browser
@@ -207,7 +215,7 @@ ui development:
 deployment
 ---
 
-- cloudflare pages adapter is configured in `astro.config.mjs`
+- cloudflare pages adapter is configured in [[astro.config.mjs|astro.config.mjs]]
 - image service is set to `compile` mode
 - platform proxy is enabled for development
 - production domain is `nicholai.work`
@@ -225,12 +233,12 @@ blog post workflow
 important files
 ---
 
-- `AGENTS.md` - this guide
-- `design.json` - design system and stylistic direction
-- `src/content.config.ts` - content collection schemas
-- `astro.config.mjs` - astro + cloudflare adapter config
-- `wrangler.jsonc` - cloudflare worker/pages configuration
-- `src/consts.ts` - site metadata and social links
+- [[AGENTS.md|AGENTS.md]] - this guide
+- [[design.json|design.json]] - design system and stylistic direction
+- [[src/content.config.ts|src/content.config.ts]] - content collection schemas
+- [[astro.config.mjs|astro.config.mjs]] - astro + cloudflare adapter config
+- [[wrangler.jsonc|wrangler.jsonc]] - cloudflare worker/pages configuration
+- [[src/consts.ts|src/consts.ts]] - site metadata and social links
 
 theme system
 ---

@@ -1,5 +1,7 @@
 # ASSETS
 
+related guides: [[AGENTS.md|root guide]], [[src/utils/AGENTS.md|utilities guide]]
+
 **Type:** Astro-processed images
 **Count:** 6 files
 
@@ -31,7 +33,7 @@ import portrait from '../../assets/portrait.jpg';
 - **Referenced in frontmatter** via relative path (`../../assets/image.jpg`)
 - **Imported in MDX** for component usage
 - **Optimized automatically** by Astro image service (compile mode)
-- **AVIF preferred** - Use `convert-to-avif.js` utility
+- **AVIF preferred** - Use [[src/utils/convert-to-avif.js|convert-to-avif.js]] for batch conversion
 
 ## NOTES
 
