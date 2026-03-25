@@ -38,18 +38,11 @@ worker/node_modules/
 .specstory/**
 .specstory/
 .cursorindexingignore
-
-# AGENTS.md symlink
-AGENTS.md
-GEMINI.md
 .playwright-mcp/
 
 # IDE and editor directories
 .cursor/
 .vscode/
-
-# dev notes and scratch work
-dev/
 
 # FUSE filesystem temp files
 .fuse_hidden*
