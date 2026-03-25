@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = "NUKE | nicholai.work";
+---
+
+<BaseLayout title={pageTitle} description="A dedicated shrine to the one and only NUKE." usePadding={false}>
+
+    <!-- Background radiation effect -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-accent/3 rounded-full blur-[200px] animate-pulse"></div>
+        <div class="absolute top-1/4 right-1/4 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl animate-float-slow"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-48 h-48 bg-orange-500/5 rounded-full blur-3xl animate-float-slower"></div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-32">
+
+        <!-- Radiation Symbol -->
+        <div class="relative w-48 h-48 mb-12 animate-spin-very-slow">
+            <svg viewBox="0 0 100 100" class="w-full h-full text-brand-accent drop-shadow-[0_0_30px_rgba(var(--brand-accent-rgb),0.3)]">
+                <!-- Radiation trefoil -->
+                <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.9"/>
+                <path d="M50 42 C50 42, 65 20, 50 10 C35 20, 50 42, 50 42 Z" fill="currentColor" opacity="0.8" transform="rotate(0, 50, 50)"/>
+                <path d="M50 42 C50 42, 65 20, 50 10 C35 20, 50 42, 50 42 Z" fill="currentColor" opacity="0.8" transform="rotate(120, 50, 50)"/>
+                <path d="M50 42 C50 42, 65 20, 50 10 C35 20, 50 42, 50 42 Z" fill="currentColor" opacity="0.8" transform="rotate(240, 50, 50)"/>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+            </svg>
+        </div>
+
+        <!-- Name -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <div class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></div>
+                <span class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.3em]">/// SUBJECT_FILE_001</span>
+                <div class="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse"></div>
+            </div>
+
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter uppercase mb-4">
+                <span class="bg-gradient-to-r from-brand-accent via-orange-400 to-yellow-500 bg-clip-text text-transparent">NUKE</span>
+            </h1>
+
+            <p class="font-mono text-xs text-[var(--theme-text-muted)] uppercase tracking-[0.2em]">
+                aka Parth /// VFX Menace /// Explosion Enthusiast
+            </p>
+        </div>
+
+        <!-- Dossier Card -->
+        <div class="w-full max-w-2xl relative bg-white/[0.02] border border-[var(--theme-border-primary)] backdrop-blur-sm p-8 md:p-12 mb-12">
+            <!-- Corner accents -->
+            <div class="absolute -top-px -left-px w-8 h-8 border-t-2 border-l-2 border-brand-accent"></div>
+            <div class="absolute -top-px -right-px w-8 h-8 border-t-2 border-r-2 border-brand-accent"></div>
+            <div class="absolute -bottom-px -left-px w-8 h-8 border-b-2 border-l-2 border-brand-accent"></div>
+            <div class="absolute -bottom-px -right-px w-8 h-8 border-b-2 border-r-2 border-brand-accent"></div>
+
+            <div class="space-y-6">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
+                    <span class="font-mono text-[10px] text-brand-accent uppercase tracking-[0.3em] font-bold">CLASSIFIED DOSSIER</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Codename</span>
+                        <p class="text-lg text-[var(--theme-text-primary)] font-bold">NUKE</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Real Name</span>
+                        <p class="text-lg text-[var(--theme-text-primary)] font-bold">Parth</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Specialty</span>
+                        <p class="text-lg text-[var(--theme-text-primary)] font-bold">Blowing Things Up (Digitally)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Threat Level</span>
+                        <p class="text-lg text-brand-accent font-bold">MAXIMUM</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Known Associates</span>
+                        <p class="text-lg text-[var(--theme-text-primary)] font-bold">Nicholai (won't call back)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest">Status</span>
+                        <p class="text-lg text-green-400 font-bold flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Active & Dangerous
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-[var(--theme-border-primary)] pt-6 mt-8">
+                    <span class="font-mono text-[9px] text-[var(--theme-text-muted)] uppercase tracking-widest block mb-3">Intercepted Transmission</span>
+                    <blockquote class="text-xl text-[var(--theme-text-secondary)] italic border-l-2 border-brand-accent pl-4">
+                        "You suck !"
+                        <span class="block text-sm text-[var(--theme-text-muted)] mt-2 not-italic">— NUKE, moments before being obliterated on this very website</span>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer message -->
+        <div class="text-center">
+            <p class="font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em]">
+                This page was built by an AI at Nicholai's command /// You're welcome, Parth
+            </p>
+        </div>
+
+    </section>
+
+</BaseLayout>
+
+<style>
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-20px) translateX(10px); }
+    }
+
+    @keyframes float-slower {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(15px) translateX(-15px); }
+    }
+
+    @keyframes spin-very-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+
+    .animate-float-slower {
+        animation: float-slower 12s ease-in-out infinite;
+    }
+
+    .animate-spin-very-slow {
+        animation: spin-very-slow 20s linear infinite;
+    }
+</style>
