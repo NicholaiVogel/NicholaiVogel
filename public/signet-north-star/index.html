@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Signet North Star</title>
+<style>
+  :root {
+    --paper: #f4efe5;
+    --paper-2: #e9dfcf;
+    --ink: #191713;
+    --muted: #6d6254;
+    --faint: #9b8d7a;
+    --line: rgba(42, 35, 25, .18);
+    --panel: rgba(255, 252, 244, .62);
+    --dark: #181612;
+    --dark-2: #252017;
+    --gold: #b9832e;
+    --rust: #8a3d24;
+    --green: #3d5f50;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 18% -4%, rgba(185,131,46,.16), transparent 34rem),
+      radial-gradient(circle at 90% 18%, rgba(61,95,80,.13), transparent 33rem),
+      linear-gradient(120deg, rgba(25,23,19,.035) 1px, transparent 1px),
+      var(--paper);
+    background-size: auto, auto, 38px 38px, auto;
+    color: var(--ink);
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    line-height: 1.58;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 42px 26px 72px; }
+  header.hero {
+    min-height: 62vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 44px;
+    align-items: end;
+    padding: 54px 0 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .kicker {
+    font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-size: clamp(58px, 10vw, 136px);
+    line-height: .88;
+    letter-spacing: -.075em;
+    margin: 0 0 26px;
+    max-width: 850px;
+  }
+  .dek {
+    max-width: 760px;
+    color: #3a3329;
+    font-size: clamp(21px, 2.3vw, 32px);
+    line-height: 1.18;
+    letter-spacing: -.025em;
+    margin: 0;
+  }
+  .thesis-card {
+    background: var(--dark);
+    color: #f8eddc;
+    border: 1px solid rgba(255,255,255,.11);
+    padding: 28px;
+    box-shadow: 0 28px 70px rgba(38, 30, 18, .25);
+  }
+  .thesis-card .label {
+    font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #d1a45b;
+    margin-bottom: 18px;
+  }
+  .thesis-card p { margin: 0; font-size: 22px; line-height: 1.24; color: #fff4df; }
+  .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 56px; padding-top: 38px; }
+  nav { position: sticky; top: 24px; align-self: start; padding-top: 4px; }
+  nav a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 2px solid var(--line);
+    padding: 8px 0 8px 14px;
+    font: 650 12px/1.25 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  nav a:hover { color: var(--ink); border-left-color: var(--gold); }
+  .section {
+    padding: 52px 0 54px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section:first-child { padding-top: 10px; }
+  .eyebrow {
+    font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--gold);
+    letter-spacing: .12em;
+    margin: 0 0 12px;
+  }
+  h2 {
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: .96;
+    letter-spacing: -.052em;
+    margin: 0 0 26px;
+  }
+  p { font-size: 20px; margin: 0 0 18px; max-width: 760px; }
+  p.short-claim {
+    display: inline-block;
+    background: var(--dark);
+    color: #fff2dc;
+    padding: 12px 15px;
+    font-size: 23px;
+    line-height: 1.2;
+    margin: 6px 0 22px;
+  }
+  ul, ol { max-width: 760px; margin: 0 0 22px 0; padding-left: 0; list-style: none; }
+  li {
+    position: relative;
+    padding: 9px 0 9px 28px;
+    border-top: 1px solid rgba(42,35,25,.10);
+    font-size: 19px;
+  }
+  ul li::before { content: "—"; position: absolute; left: 0; color: var(--rust); }
+  ol { counter-reset: step; }
+  ol li { counter-increment: step; }
+  ol li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: 12px;
+    color: var(--gold);
+    font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .86em;
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(42,35,25,.13);
+    padding: .06em .34em;
+  }
+  .wikilink {
+    color: #5d321f;
+    border-bottom: 1px solid rgba(138,61,36,.25);
+    font-weight: 650;
+  }
+  blockquote {
+    margin: 28px 0;
+    padding: 22px 26px;
+    max-width: 840px;
+    color: #211c15;
+    background: var(--panel);
+    border-left: 4px solid var(--gold);
+    font-size: 27px;
+    line-height: 1.2;
+    letter-spacing: -.026em;
+  }
+  .arc {
+    margin: 34px 0 8px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.32);
+  }
+  .arc div { padding: 18px; border-right: 1px solid var(--line); min-height: 138px; }
+  .arc div:last-child { border-right: 0; }
+  .arc strong { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: .08em; color: var(--rust); font-family: ui-monospace, monospace; }
+  .arc span { display: block; margin-top: 12px; font-size: 20px; line-height: 1.15; }
+  .thesis-section {
+    background: linear-gradient(135deg, var(--dark), var(--dark-2));
+    color: #f6ecd8;
+    margin: 54px -34px 0;
+    padding: 54px 34px;
+    border: 0;
+  }
+  .thesis-section p, .thesis-section li { color: #f6ecd8; }
+  .thesis-section .eyebrow { color: #d6a451; }
+  .thesis-section .wikilink { color: #f2c46c; border-color: rgba(242,196,108,.35); }
+  .final-line {
+    margin-top: 28px;
+    padding: 28px;
+    background: #f9f1df;
+    border: 1px solid var(--line);
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    max-width: 980px;
+  }
+  footer { padding: 42px 0 0; color: var(--muted); font: 13px/1.4 ui-monospace, monospace; }
+  @media (max-width: 860px) {
+    .page { padding: 26px 18px 54px; }
+    header.hero { grid-template-columns: 1fr; min-height: auto; gap: 26px; }
+    .layout { grid-template-columns: 1fr; gap: 18px; }
+    nav { position: static; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    nav a { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+    .arc { grid-template-columns: 1fr; }
+    .arc div { border-right: 0; border-bottom: 1px solid var(--line); min-height: auto; }
+    .thesis-section { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
+    p { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <div class="kicker">Permanent note · May 2026</div>
+        <h1>Signet North Star</h1>
+        <p class="dek">Not a spec. The outcome-oriented why: continuity as an operating substrate for agents, sources, identity, authority, and human craft.</p>
+      </div>
+      <aside class="thesis-card">
+        <div class="label">North Star</div>
+        <p>Agents should act with continuity without flattening the human/source reality underneath.</p>
+      </aside>
+    </header>
+    <div class="arc" aria-label="Four-day synthesis arc">
+      <div><strong>May 3</strong><span>the skeleton: build the operational world model</span></div>
+      <div><strong>May 11</strong><span>the soul: know what human craft and care the system protects</span></div>
+      <div><strong>May 12</strong><span>the warning: institutions erase provenance, authority, and craft memory</span></div>
+      <div><strong>May 13</strong><span>the method: modular artifacts, authority, and dreaming loops</span></div>
+    </div>
+    <div class="layout">
+      <nav aria-label="Page sections"><a href="#the-artifact-is-ground-truth">The artifact is ground truth</a>
+<a href="#the-operational-world-model">The operational world model</a>
+<a href="#the-human-reason">The human reason</a>
+<a href="#authority-is-part-of-memory">Authority is part of memory</a>
+<a href="#memory-has-different-shapes">Memory has different shapes</a>
+<a href="#dreaming-is-the-maintenance-loop">Dreaming is the maintenance loop</a>
+<a href="#the-product-promise">The product promise</a>
+<a href="#the-north-star">The North Star</a></nav>
+      <article>
+        <section id="opening" class="section opening"><p>This is not a spec. A spec says what to build. This note says why the thing is worth building, what kind of outcome it is supposed to protect, and what it should feel like when it is working.</p>
+<p>Signet exists because context, care, craft, authority, and continuity are real things, and most software only preserves pieces of them. A person builds up years of judgment, habits, relationships, source material, corrections, preferences, projects, failures, taste, and hard-won world-models. Some tools preserve part of that record. Some agents can be warmed up with context. Some platforms offer exports, sync, memory, or history. But the continuity is usually fragmented, platform-scoped, hard to inspect, hard to move, and easy to compress into a summary that loses the living structure underneath.</p>
+<p class="short-claim">Signet should repair that fragmentation.</p>
+<p>It should make a user&#x27;s world legible to agents without stealing it from the user. It should let agents act with context without turning context into mush. It should preserve the raw artifacts, expose the semantic shape, make authority inspectable, and keep behavior portable across tools, harnesses, machines, and models.</p></section><section id="the-artifact-is-ground-truth" class="section"><p class="eyebrow">01</p><h2>The artifact is ground truth</h2><p>The graph is not God. The artifact is ground truth.</p>
+<p>A transcript, an Obsidian note, an email, a file, a repo, a canvas, a source clipping, a generated asset, a user correction, a saved memory: these are not just inputs for a memory database. They are the record of what happened. They carry provenance, texture, uncertainty, and consequence.</p>
+<p>The semantic layer exists because reading every artifact every time is too expensive. It is a navigation layer, not a replacement for reality. A derived claim, summary, memory, entity, or edge should always be able to lead back to the source that justifies it. If it cannot, it is gossip with a database behind it.</p>
+<p>Signet should be source-native first. It should mount the user&#x27;s real world — vaults, repos, emails, documents, transcripts, media, tasks, notes — and make that world agent-readable without pretending the derived graph is more real than the artifacts underneath.</p></section><section id="the-operational-world-model" class="section"><p class="eyebrow">02</p><h2>The operational world model</h2><p>Signet is not just personal memory. That frame is too small.</p>
+<p>The stronger target is an agent-first operational ontology: a model of the world an agent has to act inside. Not a decorative knowledge graph. Not a starfield of semantic vibes. A working model of sources, objects, claims, policies, actions, permissions, people, projects, tools, and consequences.</p>
+<p>Good memory is not storage. Good memory is not even recall. Great memory is consequence-aware context.</p>
+<p>An agent should be able to ask:</p>
+<ul>
+<li>what is this task about?</li>
+<li>what source is authoritative?</li>
+<li>what evidence supports this claim?</li>
+<li>what changed since last time?</li>
+<li>what actions are allowed?</li>
+<li>what needs approval?</li>
+<li>what should not be disclosed here?</li>
+<li>what will this action affect?</li>
+</ul>
+<p>That is the useful kind of world model. It does not need to predict the future in a grand AGI sense. It needs to model operational consequences well enough that an agent can act without trampling source truth, user intent, or permission boundaries.</p></section><section id="the-human-reason" class="section"><p class="eyebrow">03</p><h2>The human reason</h2><p>The last few days made the emotional stakes clearer.</p>
+<p>Craft teaches what real competence feels like. Visual effects was not just a job or a hobby; it was a way of understanding systems in service of an outcome. A shot works or it does not. The image holds up or it betrays itself. That kind of craft builds taste, attention, and a bullshit detector.</p>
+<p>A system that ignores craft does not merely lose trivia. It loses judgment. It loses the living process that made the output valuable.</p>
+<p>That is why institutional craft amnesia matters. Disney and Marvel are not only a story about layoffs or AI. They are a warning about what happens when an institution archives the outputs of human judgment, then forgets the people, continuity, and process memory that made those outputs possible. AI can become a laundering layer for accumulated craft: management treats an archive of judgment like an asset library, then calls the living workers replaceable.</p>
+<p>Signet should be built against that pattern.</p>
+<p>It should preserve the connection between output and origin, action and authority, claim and evidence, agent behavior and the identity files that shaped it. It should make it harder for context to be extracted, flattened, and reused without memory of where it came from or what permissions governed it.</p></section><section id="authority-is-part-of-memory" class="section"><p class="eyebrow">04</p><h2>Authority is part of memory</h2><p>Agents are going to act across more surfaces: ACP, UCP, MCP, A2A, AP2, wallets, payment rails, creative tools, codebases, browsers, calendars, inboxes, and whatever comes next.</p>
+<p>The important question is not only whether an agent can do the action. The important question is who the agent is, why it has access, what it is allowed to do, what source context it is relying on, and what evidence proves it stayed inside its authority.</p>
+<p>That means authority is not a sidecar. It is part of memory.</p>
+<p>A delegated purchase, a code edit, a generated video, a calendar action, a published post, a graph mutation, or an identity-file patch all need some form of source-backed authority. Signet&#x27;s natural role is to hold the portable identity, permissions, policies, evidence, and audit trail that travel underneath the protocol war.</p></section><section id="memory-has-different-shapes" class="section"><p class="eyebrow">05</p><h2>Memory has different shapes</h2><p>One of the most important corrections is that memory should not be forced into one substrate.</p>
+<p>Different lessons belong in different forms:</p>
+<ul>
+<li>graph facts belong in the ontology with provenance;</li>
+<li>behavioral lessons belong in identity files like <code>AGENTS.md</code> or <code>SOUL.md</code>;</li>
+<li>repeated procedures belong in skills;</li>
+<li>source-backed concepts belong in literature notes;</li>
+<li>permissions and delegation boundaries belong in authority artifacts;</li>
+<li>experiment outcomes belong in evaluated run records;</li>
+<li>raw events belong in source artifacts.</li>
+</ul>
+<p>A single omnivorous memory database is not the goal. The goal is routing. The system should learn what kind of thing a lesson is, then put it where it can actually change future behavior without losing evidence.</p>
+<p>That is why identity files matter. A graph can preserve provenance and connective tissue, but an identity file directly shapes the next agent turn. A scheduled dream session that reviews transcripts, asks what the agent did well or poorly, and proposes a small patch to <code>AGENTS.md</code> may deliver more practical self-improvement than a much fancier ontology mutation.</p></section><section id="dreaming-is-the-maintenance-loop" class="section"><p class="eyebrow">06</p><h2>Dreaming is the maintenance loop</h2><p>Signet should not silently mutate itself on the hot path.</p>
+<p>The hot path is where an agent does the task. The dreaming path is where the system reviews what happened, analyzes outcomes, and proposes durable changes. That pass needs evidence, diffs, review, rollback, and metrics. It should not produce vibe summaries. It should produce mutation proposals.</p>
+<p>ASI-Evolve gives the operating pattern:</p>
+<ol>
+<li>learn from prior cognition and source artifacts;</li>
+<li>design a candidate change;</li>
+<li>experiment or evaluate against real traces;</li>
+<li>analyze the result into a reusable lesson;</li>
+<li>route that lesson into the right memory shape.</li>
+</ol>
+<p>The analyzer is the key. Without analysis, the system has logs and scores. With analysis, expensive traces become cognition. A failed agent session can become an identity-file patch. A repeated workflow can become a skill. A stale fact can become a graph repair. A bad retrieval can become a retrieval-contract change. A risky action can become an authority boundary.</p>
+<p>Dreaming is how experience becomes better future behavior.</p></section><section id="the-product-promise" class="section"><p class="eyebrow">07</p><h2>The product promise</h2><p>Signet should feel like continuity that follows you.</p>
+<p>It should make the user&#x27;s context portable across harnesses instead of trapping it inside Claude, Codex, Cursor, OpenClaw, Hermes, or whatever comes next. It should make setup boring. It should make source connection easy. It should make memory inspectable. It should make identity and skills durable. It should make agent action safer because provenance and authority are always nearby.</p>
+<p>The daemon should be boring substrate: source truth, APIs, graph state, proposal application, transcripts, artifacts, and durable storage. Agents and harnesses can provide the intelligence. Cron jobs, scheduled dream passes, CLI tools, and review surfaces can do the maintenance. The system should be open, inspectable, and harness-neutral without becoming ceremony-heavy.</p>
+<p>Low-touch usage still matters. An agent should be able to <code>recall</code>, <code>remember</code>, ask for context, inspect evidence, and list allowed actions without navigating a bureaucratic ontology. The richness should sit underneath. The everyday interface should stay humane.</p></section><section id="the-north-star" class="section thesis-section"><p class="eyebrow">08</p><h2>The North Star</h2><p>Signet is a source-native, agent-readable continuity layer for people and organizations.</p>
+<p>It preserves artifacts as ground truth, builds semantic shortcuts with provenance, routes lessons into the right memory shapes, and gives agents an operational world model with authority, evidence, and consequence attached.</p>
+<p>It exists so agents can act with continuity without flattening the human/source reality underneath.</p>
+<p>May 3 was the skeleton: build the operational world model.</p>
+<p>May 11 was the soul: know what kind of human craft and care the system is meant to protect.</p>
+<p>May 12 was the warning: watch institutions and AI systems fail to preserve provenance, authority, and craft memory.</p>
+<p>May 13 was the method: modular artifacts, retrieval contracts, identity files, skills, authority artifacts, and dreaming/analyzer loops that keep the system alive.</p>
+<p>That is the North Star: not better memory as a feature, but continuity as an operating substrate.</p></section>
+        <div class="final-line">Not better memory as a feature, but continuity as an operating substrate.</div>
+        <footer>Generated from <span class="wikilink">Signet North Star</span>. Self-contained local HTML artifact for Obsidian.</footer>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
