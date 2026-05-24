@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2019 Crosstrek VB WRX Swap Technical Build Guide</title>
+  <style>
+    :root {
+      --paper: #f3eadc;
+      --paper-2: #e7dac6;
+      --cream: #fff8ea;
+      --ink: #201914;
+      --muted: #665b50;
+      --faint: #9b8c7a;
+      --rule: rgba(75, 61, 43, .22);
+      --rule-strong: rgba(72, 54, 35, .42);
+      --charcoal: #171412;
+      --charcoal-2: #272018;
+      --rust: #913521;
+      --rust-2: #6a2418;
+      --amber: #b9822e;
+      --blue: #2f5e73;
+      --green: #3e604f;
+      --danger: #9e3028;
+      --shadow: 0 28px 80px rgba(38, 29, 18, .18);
+      --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.56;
+      background:
+        radial-gradient(circle at 16% -2%, rgba(145, 53, 33, .16), transparent 31rem),
+        radial-gradient(circle at 84% 9%, rgba(47, 94, 115, .13), transparent 30rem),
+        linear-gradient(135deg, var(--paper), var(--paper-2));
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .24;
+      background-image:
+        linear-gradient(rgba(32, 25, 20, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(32, 25, 20, .035) 1px, transparent 1px);
+      background-size: 30px 30px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+      z-index: -1;
+    }
+    a { color: var(--rust-2); text-underline-offset: 3px; }
+    a:hover { color: var(--rust); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 248, 234, .84);
+      border-bottom: 1px solid var(--rule);
+      backdrop-filter: blur(18px);
+    }
+    .topbar-inner {
+      width: min(var(--max), calc(100vw - 34px));
+      margin: 0 auto;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .72rem;
+      min-width: max-content;
+      color: #35271c;
+      font: 760 12px/1 var(--mono);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .badge {
+      width: 2.35rem;
+      height: 2.35rem;
+      display: grid;
+      place-items: center;
+      color: #fff4df;
+      background: var(--charcoal);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 5px 5px 0 rgba(145, 53, 33, .32);
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+    nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .18rem .34rem; }
+    nav a, .print-btn {
+      appearance: none;
+      min-height: 40px;
+      border: 1px solid transparent;
+      color: #514638;
+      background: transparent;
+      text-decoration: none;
+      padding: .72rem .66rem .58rem;
+      font: 760 13px/1 var(--mono);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    nav a:hover, .print-btn:hover {
+      color: var(--rust-2);
+      border-bottom-color: var(--rust);
+    }
+    .print-btn {
+      border-color: var(--rule-strong);
+      background: rgba(255,255,255,.35);
+      padding-inline: .82rem;
+    }
+
+    header {
+      width: min(var(--max), calc(100vw - 34px));
+      margin: 34px auto 0;
+      min-height: 610px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, .88fr);
+      gap: clamp(26px, 5vw, 74px);
+      align-items: stretch;
+      padding: clamp(36px, 6vw, 78px);
+      border: 1px solid rgba(106, 36, 24, .18);
+      background:
+        linear-gradient(90deg, rgba(255, 248, 234, .97), rgba(255, 248, 234, .66)),
+        repeating-linear-gradient(0deg, rgba(106, 36, 24, .055), rgba(106, 36, 24, .055) 1px, transparent 1px, transparent 13px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border: 1px solid rgba(255,255,255,.52);
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+    header > * { position: relative; z-index: 1; }
+    .doc-tag, .k, .label, h3, th {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+    .doc-tag {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: .7rem;
+      color: var(--rust-2);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+    .doc-tag::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--rust);
+      display: inline-block;
+    }
+    h1 {
+      margin: 0 0 28px;
+      max-width: 800px;
+      font-family: var(--serif);
+      font-size: clamp(56px, 8.6vw, 118px);
+      font-weight: 610;
+      line-height: .88;
+      letter-spacing: -.056em;
+      text-wrap: balance;
+    }
+    .lede {
+      max-width: 720px;
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: clamp(18px, 1.8vw, 23px);
+      line-height: 1.38;
+      text-wrap: pretty;
+    }
+    .lede strong { color: var(--ink); }
+    .callout {
+      margin-top: 26px;
+      max-width: 760px;
+      border-left: 5px solid var(--rust);
+      background: rgba(145, 53, 33, .075);
+      padding: 17px 20px;
+      color: #33271e;
+      font-size: 17px;
+    }
+    .callout strong { color: var(--rust-2); }
+    .hero-card {
+      background: linear-gradient(135deg, var(--charcoal), var(--charcoal-2));
+      color: #fff4df;
+      padding: clamp(24px, 3.4vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      box-shadow: 0 26px 72px rgba(38, 29, 18, .24);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 22% 16%, rgba(185, 130, 46, .24), transparent 16rem),
+        linear-gradient(135deg, transparent, rgba(255, 248, 234, .055));
+      pointer-events: none;
+    }
+    .hero-card > * { position: relative; z-index: 1; }
+    .hero-card .callout {
+      border-left-color: var(--amber);
+      background: rgba(255,255,255,.07);
+      color: #f2e2cb;
+      margin-top: 22px;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(255, 248, 234, .18);
+      background: rgba(255, 248, 234, .04);
+    }
+    .spec {
+      min-height: 96px;
+      padding: 18px;
+      border-right: 1px solid rgba(255, 248, 234, .16);
+      border-bottom: 1px solid rgba(255, 248, 234, .16);
+    }
+    .spec:nth-child(2n) { border-right: 0; }
+    .spec:nth-last-child(-n + 2) { border-bottom: 0; }
+    .k { color: #e6c681; font-size: 11px; font-weight: 850; }
+    .v {
+      margin-top: 10px;
+      color: #fff6e5;
+      font-family: var(--serif);
+      font-size: clamp(20px, 2vw, 27px);
+      line-height: 1.03;
+      letter-spacing: -.025em;
+    }
+
+    main {
+      width: min(var(--max), calc(100vw - 34px));
+      margin: 0 auto 54px;
+      padding: clamp(34px, 5vw, 72px);
+      background: rgba(255, 248, 234, .78);
+      border: 1px solid rgba(106, 36, 24, .16);
+      border-top: 0;
+      box-shadow: var(--shadow);
+    }
+    section {
+      margin: 0 0 clamp(54px, 7vw, 88px);
+      scroll-margin-top: 84px;
+    }
+    section:last-child { margin-bottom: 0; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(250px, .55fr) minmax(0, 1fr);
+      gap: clamp(18px, 3.8vw, 54px);
+      align-items: end;
+      padding-top: 34px;
+      border-top: 1px solid var(--rule-strong);
+      margin-bottom: 22px;
+    }
+    h2 {
+      margin: 0;
+      max-width: 780px;
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 72px);
+      font-weight: 610;
+      line-height: .94;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 740px;
+      font-size: 18px;
+    }
+    h3 {
+      margin: 0 0 11px;
+      color: var(--rust-2);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    p { text-wrap: pretty; }
+    .label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #244e60;
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .grid-2, .grid-3, .refs { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .panel, .card, .tabs, .ref {
+      border: 1px solid var(--rule);
+      background: rgba(255,255,255,.34);
+      box-shadow: 0 12px 34px rgba(38, 29, 18, .065);
+    }
+    .panel, .card, .ref { padding: 24px; }
+    .panel p, .card p, .ref span {
+      margin: 0;
+      color: #3d3329;
+      font-size: 16px;
+    }
+    .tabs { overflow: hidden; }
+    .tab-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      padding: 0;
+      border-bottom: 1px solid var(--rule);
+      background: rgba(231, 218, 198, .65);
+    }
+    .tab {
+      cursor: pointer;
+      min-height: 48px;
+      border: 0;
+      border-right: 1px solid var(--rule);
+      background: transparent;
+      color: #594c3e;
+      padding: .85rem 1rem;
+      font: 800 12px/1 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .tab:hover { background: rgba(255,255,255,.35); color: var(--rust-2); }
+    .tab[aria-selected="true"] {
+      background: var(--charcoal);
+      color: #fff4df;
+      box-shadow: inset 0 -4px 0 var(--rust);
+    }
+    .tab-panel { display: none; padding: clamp(22px, 3vw, 34px); }
+    .tab-panel.active { display: block; }
+    .tab-panel ul {
+      columns: 2;
+      column-gap: 54px;
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+    li { margin: .48rem 0; break-inside: avoid; color: #342a22; }
+
+    .seq {
+      display: grid;
+      gap: 12px;
+      counter-reset: step;
+    }
+    details.step {
+      border: 1px solid var(--rule);
+      background: rgba(255,255,255,.31);
+      box-shadow: 0 10px 26px rgba(38, 29, 18, .055);
+    }
+    details.step[open] { background: rgba(255, 248, 234, .76); }
+    details.step summary {
+      list-style: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 15px 18px;
+    }
+    details.step summary::-webkit-details-marker { display: none; }
+    .num {
+      counter-increment: step;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      background: var(--charcoal);
+      color: #fff4df;
+      font: 900 13px/1 var(--mono);
+      box-shadow: 5px 5px 0 rgba(145, 53, 33, .28);
+    }
+    .num::before { content: counter(step, decimal-leading-zero); }
+    .step-title b {
+      display: block;
+      color: #231a13;
+      font-size: 18px;
+    }
+    .step-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    summary > span:last-child {
+      color: #7c6b58;
+      font: 850 11px/1 var(--mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .step-body {
+      padding: 0 24px 22px 82px;
+      color: #342a22;
+    }
+    .step-body ul { margin: .2rem 0 0; padding-left: 1.15rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,.32);
+      box-shadow: 0 12px 34px rgba(38, 29, 18, .055);
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 14px 15px;
+      border: 1px solid var(--rule);
+    }
+    th {
+      background: var(--charcoal);
+      color: #fff4df;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    th + th, td + td { border-left-color: rgba(72, 54, 35, .34); }
+    td { color: #30261f; }
+    tbody tr:nth-child(even) td { background: rgba(231, 218, 198, .25); }
+    tbody tr:hover td { background: rgba(185, 130, 46, .10); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    input, select {
+      min-height: 46px;
+      border: 1px solid var(--rule-strong);
+      background: rgba(255,255,255,.55);
+      color: var(--ink);
+      padding: .7rem .78rem;
+      font: 600 15px/1.2 var(--sans);
+    }
+    input { flex: 1 1 280px; }
+    input:focus, select:focus, button:focus-visible, a:focus-visible, summary:focus-visible {
+      outline: 3px solid rgba(47, 94, 115, .28);
+      outline-offset: 2px;
+    }
+    .risk-critical, .risk-open, .risk-known {
+      font: 850 12px/1 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+    .risk-critical { color: var(--danger); }
+    .risk-open { color: #8a5b0f; }
+    .risk-known { color: var(--green); }
+    .refs { grid-template-columns: repeat(2, 1fr); }
+    .ref b {
+      display: block;
+      margin-bottom: 7px;
+      font-family: var(--serif);
+      font-size: 25px;
+      line-height: 1.08;
+      letter-spacing: -.02em;
+    }
+    .ref span { display: block; margin-bottom: 12px; }
+    .print-note {
+      margin-top: 18px;
+      color: #493d31;
+      border: 1px dashed var(--rule-strong);
+      background: rgba(231, 218, 198, .38);
+      padding: 15px 18px;
+    }
+
+    @media (max-width: 960px) {
+      .topbar-inner { align-items: flex-start; padding: 12px 0; flex-direction: column; }
+      nav { justify-content: flex-start; }
+      header, .section-head, .grid-2, .grid-3, .refs { grid-template-columns: 1fr; }
+      header { min-height: auto; }
+      main { padding: 28px 20px 44px; }
+      .tab-panel ul { columns: 1; }
+      .step-body { padding-left: 24px; }
+      table { display: block; overflow-x: auto; }
+    }
+    @media (max-width: 620px) {
+      .topbar { position: static; }
+      nav a { min-height: 36px; padding-inline: .25rem; }
+      header, main { width: min(100vw - 20px, var(--max)); }
+      header { margin-top: 14px; padding: 28px 20px; }
+      .spec-grid { grid-template-columns: 1fr; }
+      .spec, .spec:nth-child(2n) { border-right: 0; }
+      .spec:nth-last-child(-n + 2) { border-bottom: 1px solid rgba(255, 248, 234, .16); }
+      .spec:last-child { border-bottom: 0; }
+      details.step summary { grid-template-columns: auto 1fr; }
+      summary > span:last-child { display: none; }
+    }
+    @media print {
+      body { background: white; color: black; }
+      body::before, .topbar, .controls { display: none; }
+      header, main { width: 100%; margin: 0; box-shadow: none; border: 0; }
+      header { min-height: 0; }
+      .hero-card { color: black; background: white; box-shadow: none; border: 1px solid #999; }
+      .hero-card .callout, .callout { color: black; background: white; }
+      .v, .k { color: black; }
+      .panel, .card, details.step, .ref, .tabs { break-inside: avoid; box-shadow: none; }
+      details.step:not([open]) .step-body, .tab-panel { display: block !important; }
+      a { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="topbar-inner"><div class="brand"><span class="badge">XV</span><span>VB WRX swap technical guide</span></div><nav><a href="#parts">Parts</a><a href="#sequence">Sequence</a><a href="#electronics">Electronics</a><a href="#body">Body</a><a href="#srs">SRS</a><a href="#gaps">Open items</a><a href="#refs">References</a></nav><button class="print-btn" onclick="window.print()">Print</button></div></div>
+
+  <header>
+    <div>
+      <div class="doc-tag">Technical build dossier · full donor method</div>
+      <h1>2019 Crosstrek VB WRX Swap</h1>
+      <p class="lede"><strong>Purpose:</strong> a practical technical plan for building a VB WRX-powered Crosstrek from a 2019 Crosstrek recipient and a complete VB WRX donor.</p>
+      <p class="lede"><strong>Method:</strong> move the WRX drivetrain and nervous system into the Crosstrek shell, then adapt hatch-specific body wiring, cooling, SRS, exhaust, and suspension.</p>
+      <div class="callout"><strong>Core instruction:</strong> buy the whole WRX donor. Keep the wiring, modules, keys, dash structure, subframes, pedals, SRS components, and every connector. A loose engine is not a build plan.</div>
+    </div>
+    <aside class="hero-card">
+      <div class="spec-grid">
+        <div class="spec"><div class="k">Recipient</div><div class="v">2019 Crosstrek Premium</div></div>
+        <div class="spec"><div class="k">Donor</div><div class="v">2022+ VB WRX 6MT</div></div>
+        <div class="spec"><div class="k">Engine</div><div class="v">FA24 turbo</div></div>
+        <div class="spec"><div class="k">Trans</div><div class="v">6-speed manual</div></div>
+        <div class="spec"><div class="k">Architecture</div><div class="v">WRX ECU / BCM / harness</div></div>
+        <div class="spec"><div class="k">Custom zones</div><div class="v">Hatch wiring, cooling, SRS, exhaust</div></div>
+      </div>
+      <div class="callout">First version should be OEM-first. Get it starting, scanning cleanly, cooling properly, and driving before tuning or adding power.</div>
+    </aside>
+  </header>
+
+  <main>
+    <section id="parts">
+      <div class="section-head"><h2>Parts to retain</h2><p>Strip the donor like every small bracket and connector matters, because it does. The WRX donor supplies the systems; the Crosstrek supplies the hatch body.</p></div>
+      <div class="tabs" data-tabs>
+        <div class="tab-list" role="tablist"><button class="tab" data-tab="wrx" aria-selected="true">WRX donor</button><button class="tab" data-tab="xv" aria-selected="false">Crosstrek retained</button><button class="tab" data-tab="tools" aria-selected="false">Tools / setup</button></div>
+        <div class="tab-panel active" data-panel="wrx"><h3>Keep from VB WRX</h3><ul><li>FA24 turbo engine assembly, turbo, intake/intercooler plumbing</li><li>6MT, clutch/flywheel, hydraulics, pedal box, trans mounts</li><li>Front subframe with drivetrain attached where possible</li><li>Rear subframe, suspension, brakes, hubs, axles as required</li><li>ECU, BCM, key/immobilizer components</li><li>Bulkhead, engine, dash, body, door, SRS harness sections</li><li>Fuse boxes, relay panels, cluster, dash beam, steering column, switchgear</li><li>Airbag module, crash sensors, pretensioner wiring, SRS pieces</li><li>Radiator, fans, intercooler path, front clip/core support if doing WRX nose</li><li>Hood, bumper, headlights, fenders, brackets, clips, supports</li></ul></div>
+        <div class="tab-panel" data-panel="xv"><h3>Keep from Crosstrek</h3><ul><li>Hatch shell, doors, hatch, cargo structure</li><li>Rear lamps and lamp pigtails if retaining Crosstrek rear lights</li><li>Rear hatch release hardware</li><li>Rear wiper motor, washer pump, washer tank, stalk as needed</li><li>Backup camera hardware and connectors if adapting Crosstrek camera</li><li>Rear window regulators and door internals if WRX regulators do not fit</li><li>Rear body connectors/pigtails for hatch wiring adaptation</li><li>Rear trim/cargo pieces</li><li>Crosstrek front body only if not doing WRX nose conversion</li></ul></div>
+        <div class="tab-panel" data-panel="tools"><h3>Build setup</h3><ul><li>Heavy-duty lift table for engine/trans/front-subframe assemblies</li><li>Wheel dollies for non-steerable shells</li><li>Label printer / masking tape / paint pens</li><li>Bag-and-tag hardware system</li><li>Connector photo log before disassembly</li><li>Spreadsheet for donor parts, transferred parts, discarded parts</li><li>Factory service manuals and wiring diagrams for both vehicles</li><li>Subaru-capable scan/programming tools or shop access</li></ul></div>
+      </div>
+    </section>
+
+    <section id="sequence">
+      <div class="section-head"><h2>Build sequence</h2><p>The order follows the documented VB Crosstrek build: strip both cars, transplant the WRX electrical backbone, move the drivetrain/subframes, then solve hatch-specific wiring and finishing systems.</p></div>
+      <div class="seq">
+        <details class="step" open><summary><span class="num"></span><span class="step-title"><b>Strip the WRX donor</b><span>Preserve the complete WRX nervous system.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Remove seats, dash, console, steering column, pedals, dash beam, door cards, carpet.</li><li>Extract ECU, BCM, cluster, fuse/relay boxes, key/immobilizer, switchgear, SRS modules.</li><li>Remove and label engine, bulkhead, dash, body, door, and SRS harnesses.</li><li>Remove drivetrain, subframes, brakes, hubs, suspension, radiator/intercooler, front clip parts.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Strip the Crosstrek recipient</b><span>Expose the shell for WRX harness and drivetrain installation.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Remove interior enough to route WRX harness and install WRX dash beam/modules.</li><li>Remove Crosstrek drivetrain/front subframe assembly.</li><li>Remove rear subframe/suspension if the chosen architecture uses WRX rear hardware.</li><li>Remove front core support/body pieces if doing WRX nose conversion.</li><li>Retain rear-body pigtails for lamps, hatch release, rear wiper, camera, and windows.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Install WRX electrical backbone</b><span>Make the Crosstrek shell electronically WRX-first.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Lay WRX bulkhead/main harness into the Crosstrek shell.</li><li>Install WRX BCM, ECU path, dash beam, steering column, pedals, cluster, fuse/relay boxes.</li><li>Route WRX harness branches before closing interior.</li><li>Keep Crosstrek rear-body connectors available for hatch-function adaptation.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Install WRX drivetrain/front subframe</b><span>Transfer FA24/6MT as an assembly.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Drop Crosstrek engine/trans/front subframe with lift table.</li><li>Prepare WRX FA24/6MT/front-subframe assembly.</li><li>Raise WRX assembly into Crosstrek shell and bolt in.</li><li>Check firewall, turbo, steering, axle, mount, and cooling clearances.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Transfer rear suspension/brake architecture</b><span>Follow the donor architecture far enough to keep drivetrain and braking coherent.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Move WRX rear subframe/suspension/brakes/hubs as needed.</li><li>Resolve wheel bolt pattern and hub architecture.</li><li>Keep alignment and tire-clearance decisions tied to final rally/off-road stance.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Solve body and cooling</b><span>Choose WRX nose conversion or Crosstrek nose with custom cooling.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>WRX nose path: weld WRX core support into Crosstrek rails, test-fit radiator, hood, bumper, headlights.</li><li>Address fender mismatch: WRX fender does not bolt cleanly to Crosstrek door/body line.</li><li>Crosstrek nose path: design custom front-mount intercooler/cooling package around Crosstrek bodywork.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Adapt hatch wiring</b><span>The WRX is a sedan. The Crosstrek rear body is the custom zone.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Lengthen and repin rear lamp wiring.</li><li>Lengthen/repin hatch release wiring.</li><li>Lengthen/repin backup camera wiring.</li><li>Wire rear wiper/washer through BCM programming or a custom bypass harness.</li><li>Wire Crosstrek rear regulators from WRX master window switch if WRX rear regulators do not fit.</li><li>Verify locks, remote functions, lights, camera, hatch, rear windows, rear wiper.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Solve SRS</b><span>Do not close the dash until SRS is clean.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Install WRX airbag module, sensors, and SRS harness strategy.</li><li>Resolve rear seatbelt pretensioner compatibility.</li><li>Use later Crosstrek pretensioner-style rear belts if required.</li><li>Reset or replace crash-locked airbag module before final assembly.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>Fabricate exhaust</b><span>WRX exhaust does not naturally terminate like a hatch exhaust.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Use WRX J-pipe/downstream path as far as it fits.</li><li>Fabricate or modify cat-back to fit Crosstrek rear body.</li><li>Maintain clearance, hangers, heat shielding, and conservative noise.</li></ul></div></details>
+        <details class="step"><summary><span class="num"></span><span class="step-title"><b>First start and shakedown</b><span>Run it stock-ish before adding power.</span></span><span>toggle</span></summary><div class="step-body"><ul><li>Fill fluids, verify grounds, connect scan tool, confirm immobilizer path.</li><li>Start and check oil pressure, charging, coolant temperature, fans, throttle, clutch, leaks.</li><li>Scan codes. Debug lights, locks, hatch, camera, windows, rear wiper, SRS, ABS/VDC.</li><li>Align, road-test conservatively, then plan suspension/power upgrades.</li></ul></div></details>
+      </div>
+    </section>
+
+    <section id="electronics">
+      <div class="section-head"><h2>Electronics workbench</h2><p>These are the specific electrical problems to solve. This is where the build lives or dies.</p></div>
+      <table>
+        <thead><tr><th>Subsystem</th><th>Reference build solution</th><th>Required work</th></tr></thead>
+        <tbody>
+          <tr><td>ECU / BCM</td><td>WRX ECU and BCM used so the car behaves as a WRX electronically.</td><td>Move donor ECU/BCM/key/immobilizer/fuse architecture as a set.</td></tr>
+          <tr><td>Main harness</td><td>WRX main harness laid into Crosstrek shell.</td><td>Transfer bulkhead, dash, engine, and body harnesses; preserve ground/junction locations.</td></tr>
+          <tr><td>Rear lamps</td><td>WRX sedan harness lengthened and repinned to reach hatch lamps.</td><td>Create rear-lamp pinout map using WRX harness and Crosstrek pigtails.</td></tr>
+          <tr><td>Hatch release</td><td>Harness lengthened/repinned; release worked from buttons/remotes.</td><td>Map hatch actuator and release switch behavior to WRX BCM outputs.</td></tr>
+          <tr><td>Backup camera</td><td>Harness lengthened/repinned.</td><td>Adapt Crosstrek camera connector/signals to WRX display/module path.</td></tr>
+          <tr><td>Rear wiper / washer</td><td>Crosstrek stalk transferred to WRX column; custom harness bypassed BCM.</td><td>Choose OEM BCM programming route or custom fused/relayed bypass harness.</td></tr>
+          <tr><td>Rear windows</td><td>WRX rear regulators did not fit; Crosstrek regulators wired from WRX master switch.</td><td>Custom rear-window wiring from master switch to Crosstrek regulators.</td></tr>
+          <tr><td>Locks / remote</td><td>Functional after rear-body wiring adaptation.</td><td>Confirm door/hatch lock actuators and switch wiring against WRX BCM expectations.</td></tr>
+          <tr><td>SRS</td><td>Rear belts and crash module required specialist work.</td><td>Resolve rear pretensioners, crash sensors, airbag module reset, and codes before final dash assembly.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="body">
+      <div class="section-head"><h2>Body, cooling, suspension</h2><p>The drivetrain fit. The cooling/front-end packaging created the major fabrication branch.</p></div>
+      <div class="grid-2">
+        <article class="panel"><span class="label">Path 1</span><h3>WRX front-end conversion</h3><p>Use WRX radiator/front support/front-end components. Remove Crosstrek core support, weld in WRX support structure, fit WRX hood/bumper/headlights, and fabricate hybrid fenders. Reference build used fiberglass strip, rivets, filler, sanding, and paint to merge steel/aluminum fender geometry.</p></article>
+        <article class="panel"><span class="label">Path 2</span><h3>Crosstrek nose + custom cooling</h3><p>Keep Crosstrek exterior front identity and design custom cooling/front-mount intercooler path. Mach V noted this could reduce bodywork and avoid hood conversion, but requires custom charge-air/cooling packaging.</p></article>
+      </div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <article class="card"><span class="label">Suspension</span><h3>Rally/off-road stance</h3><p>Do not copy lowered reference stance. Select springs/coilovers/control arms after final hub/subframe/brake architecture is known.</p></article>
+        <article class="card"><span class="label">Wheels</span><h3>5x100 vs 5x114</h3><p>Reference used adapters for VB WRX wheels. Final architecture should decide hubs/brakes/wheels together, not separately.</p></article>
+        <article class="card"><span class="label">Exhaust</span><h3>Hatch-specific rear section</h3><p>WRX exhaust can be used forward, but the rear section needs custom fitment to the Crosstrek hatch body.</p></article>
+      </div>
+    </section>
+
+    <section id="srs">
+      <div class="section-head"><h2>SRS notes</h2><p>The reference build got stuck here. Treat SRS as a build subsystem, not cleanup.</p></div>
+      <div class="grid-2">
+        <div class="panel"><h3>Known reference issue</h3><p>Donor airbag module stored a rear passenger crash fault. Rear belts differed between WRX and Crosstrek. WRX used pyrotechnic pretensioners; the Crosstrek rear belt setup did not directly satisfy the WRX module.</p></div>
+        <div class="panel"><h3>Reference solution</h3><p>Later Crosstrek rear belt units with active pretensioners were sourced and brackets were lightly modified. The airbag module still needed to be removed, sent to a specialist, cleared, and reinstalled.</p></div>
+      </div>
+    </section>
+
+    <section id="gaps">
+      <div class="section-head"><h2>Actual open items</h2><p>Only technical unknowns that affect the build procedure.</p></div>
+      <div class="controls"><input id="search" type="search" placeholder="Search open items" /><select id="filter"><option value="all">All</option><option value="critical">Critical</option><option value="open">Open</option><option value="known">Known path</option></select></div>
+      <table id="gapTable"><thead><tr><th>Item</th><th>Answer needed</th><th>Status</th></tr></thead><tbody>
+        <tr data-risk="critical"><td>Factory wiring diagrams</td><td>Exact WRX/Crosstrek pinouts for ECU, BCM, rear body, door, hatch, SRS, and lighting circuits.</td><td class="risk-critical">Critical</td></tr>
+        <tr data-risk="critical"><td>Harness merge map</td><td>Which WRX harnesses move whole, which Crosstrek pigtails stay, and every repin/extension point.</td><td class="risk-critical">Critical</td></tr>
+        <tr data-risk="critical"><td>Key / immobilizer set</td><td>Required donor modules and keys to keep WRX ECU/BCM happy.</td><td class="risk-critical">Critical</td></tr>
+        <tr data-risk="critical"><td>SRS rear belt compatibility</td><td>Which later Crosstrek or WRX pretensioner hardware physically mounts and satisfies WRX SRS.</td><td class="risk-critical">Critical</td></tr>
+        <tr data-risk="open"><td>Rear wiper strategy</td><td>OEM BCM programming vs custom fused/relayed bypass harness.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="open"><td>Rear window wiring</td><td>WRX master switch to Crosstrek rear regulators wiring path.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="open"><td>Front-end choice</td><td>WRX nose conversion vs Crosstrek nose with custom cooling/intercooler.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="open"><td>Fender merge method</td><td>If WRX nose: exact steel/aluminum/body-line solution.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="open"><td>Hub/brake/wheel architecture</td><td>Whether to use WRX hubs/brakes/wheels, adapters, or hybrid setup.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="open"><td>Off-road suspension package</td><td>Lift/coilover/spring/control-arm/tire combination after architecture is fixed.</td><td class="risk-open">Open</td></tr>
+        <tr data-risk="known"><td>Engine/trans fitment</td><td>Reference build confirmed FA24/6MT/front subframe fit in GT7 Crosstrek chassis.</td><td class="risk-known">Known path</td></tr>
+        <tr data-risk="known"><td>Exhaust rear section</td><td>Use WRX exhaust forward, fabricate hatch-compatible rear section.</td><td class="risk-known">Known path</td></tr>
+      </tbody></table>
+    </section>
+
+    <section id="refs">
+      <div class="section-head"><h2>References</h2><p>Primary sources behind the technical sequence.</p></div>
+      <div class="refs">
+        <article class="ref"><b>Building a Car: Subaru VB WRX Crosstrek Swap</b><span>Mach V / FastWRX writeup. Main source for disassembly, drivetrain transfer, wiring, bodywork, SRS, and exhaust lessons.</span><a href="https://www.fastwrx.com/blogs/news/building-a-car-subaru-vb-wrx-crosstrek-swap">Open source</a></article>
+        <article class="ref"><b>Subaru Crosstrek WRX Swap: The Crosstrek Subaru Never Built</b><span>Renndvous article. Confirms donor, FA24/6MT, front-end work, electronic behavior, and final build details.</span><a href="https://renndvous.com/blogs/subaru-crosstrek-wrx-swap/">Open source</a></article>
+        <article class="ref"><b>Full WRX swap! Is it possible...</b><span>Forum discussion. Supports full-donor approach and notes prior complete STI/XV swap strategy.</span><a href="https://www.subaruxvforum.com/threads/full-wrx-swap-is-it-possible.183019/">Open source</a></article>
+        <article class="ref"><b>CVT to Manual Swap?</b><span>Forum discussion. Useful mainly to show why a standalone CVT/manual conversion is not the right center of gravity.</span><a href="https://www.subaruxvforum.com/threads/cvt-to-manual-swap.60705/">Open source</a></article>
+      </div>
+      <div class="print-note">This is a planning and technical synthesis document. Final work needs factory service manuals, wiring diagrams, and competent mechanical/electrical/fabrication execution.</div>
+    </section>
+  </main>
+
+  <script>
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+    $$('[data-tabs]').forEach(group => {
+      const tabs = $$('.tab', group), panels = $$('.tab-panel', group);
+      tabs.forEach(tab => tab.addEventListener('click', () => {
+        tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+        panels.forEach(p => p.classList.toggle('active', p.dataset.panel === tab.dataset.tab));
+      }));
+    });
+    const search = document.getElementById('search'), filter = document.getElementById('filter'), rows = $$('#gapTable tbody tr');
+    function applyFilter(){
+      const q = search.value.toLowerCase().trim(); const f = filter.value;
+      rows.forEach(row => {
+        const okText = !q || row.innerText.toLowerCase().includes(q);
+        const okRisk = f === 'all' || row.dataset.risk === f;
+        row.style.display = okText && okRisk ? '' : 'none';
+      });
+    }
+    search.addEventListener('input', applyFilter); filter.addEventListener('change', applyFilter);
+  </script>
+</body>
+</html>
