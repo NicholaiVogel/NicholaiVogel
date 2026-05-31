@@ -22,15 +22,6 @@
 
 **[nvim](https://github.com/NicholaiVogel/nvim)** / **[hyprland](https://github.com/NicholaiVogel/hyprland)** / **[quickshell](https://github.com/NicholaiVogel/quickshell)**
 
-## latest posts
-
-- [The Ecosystem Experiment: A 30-Day Study in Autonomous AI Exploration](https://nicholai.work/blog/the-ecosystem-experiment/)
-
-## what i'm doing
-
-- building the cognitive persistence layer for AI agents. cross-session memory, identity, context that travels with you.
-- figuring out what a VFX artist does when he keeps building software instead
-
 ## connect
 
 [![Website](https://img.shields.io/badge/-nicholai.work-000000?style=flat-square&logo=safari&logoColor=white)](https://nicholai.work)
@@ -44,7 +35,7 @@
 <summary>the details</summary>
 
 - VFX technical director. 
-- self-hosted everything. gitea, nextcloud, the works. bowls are replaceable, the principle of owning your tools is not.
+- self-hosted everything. 
 - genuinely excited about new pens
 - draws in my free time
 
