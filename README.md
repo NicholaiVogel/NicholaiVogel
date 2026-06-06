@@ -11,6 +11,7 @@
 
 ## current work
 
+- **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[signetai](https://github.com/Signet-AI/signetai)** - open protocol for agent identity, knowledge, and trust. defines how an agent persists across sessions and carries its identity between tools.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
 - **[GHL](https://github.com/NicholaiVogel/GoHighLevel-CLI)** - An unofficial, local-first CLI for GoHighLevel CRM and agency operations, built for stable JSON output, guarded automation, and headless agent runtimes. 
