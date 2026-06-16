@@ -6,7 +6,7 @@ const currentPath = Astro.url.pathname;
 // Navigation items
 const navItems = [
     { href: '/', label: 'Home', icon: 'home' },
-    { href: '/#blog', label: 'Blog', icon: 'file' },
+    { href: '/blog', label: 'Blog', icon: 'file' },
     // { href: '/hubert', label: 'Hubert', icon: 'chat' }, // temporarily disabled
     { href: 'https://github.com/NicholaiVogel', label: 'Git', icon: 'git', external: true },
     { href: '/contact', label: 'Contact', icon: 'mail' },
@@ -17,11 +17,7 @@ function isActive(href: string): boolean {
     if (href === '/') {
         return currentPath === '/';
     }
-    // Blog icon anchors to the homepage archive; keep it active on individual posts too
-    if (href === '/#blog') {
-        return currentPath.startsWith('/blog/');
-    }
-    return currentPath.startsWith(href.split('#')[0]);
+    return currentPath.startsWith(href);
 }
 ---
 

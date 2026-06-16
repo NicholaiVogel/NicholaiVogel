@@ -38,7 +38,7 @@ before starting any feature, fix, refactor, content change, or design pass:
 site invariants (do not drift accidentally)
 ---
 
-- homepage order is: hero → experience → featured project → blog archive. the homepage is the single blog listing (no separate `/blog` index route). the skills/technical-arsenal section was removed.
+- homepage order is: hero → experience → featured project → blog (minimal list over a backdrop image). the homepage blog section is a teaser — the full archive with filters, search, and thumbnails lives at `/blog`. the skills/technical-arsenal section was removed.
 - blog posts are sorted by `pubDate` newest first.
 - featured blog post is the first post with `featured: true`, or the latest post as fallback.
 - individual posts calculate reading time at 200 wpm.
@@ -180,10 +180,13 @@ data flow patterns
 homepage ([[src/pages/index.astro|src/pages/index.astro]]):
 - fetches `hero`, `experience`, and `featured-project` from content collections
 - fetches all blog posts with `getCollection('blog')`, sorted by `pubDate` newest first
-- identifies the featured post from `featured: true`, with fallback to the latest post
-- renders in this order: hero → experience → featured project → blog archive (featured post + filterable grid of all posts)
-- the blog archive section has `id="blog"`; the nav "Blog" link points to `/#blog`
-- there is no separate blog index route — individual posts live at `/blog/{slug}`
+- renders in this order: hero → experience → featured project → blog (minimal text-only list over a full-bleed backdrop image)
+- the blog section links to `/blog` for the full archive
+
+blog archive ([[src/pages/blog/index.astro|src/pages/blog/index.astro]]):
+- fetches all posts with `getCollection('blog')`, sorted by `pubDate` newest first
+- renders the full setup: industrial header + BlogFilters (search + category chips) + thumbnail rows
+- this is where filters, search, and thumbnails live
 
 individual blog posts ([[src/pages/blog/[...slug].astro|src/pages/blog/[...slug].astro]]):
 - uses `getStaticPaths()` to generate routes

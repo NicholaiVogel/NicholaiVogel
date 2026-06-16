@@ -50,17 +50,19 @@ const entryImages: ImageMetadata[] = [silhouetteImg, closeupPortrait];
 
 		return (
 			<section class:list={['group/chapter relative w-full overflow-hidden', index > 0 ? 'border-t border-[var(--theme-border-primary)]' : '']}>
-				<!-- Full-bleed background image -->
+				<!-- Full-bleed background image (oversized for parallax slack) -->
 				<div class="absolute inset-0 z-0">
-					<Picture
-						src={img}
-						formats={['avif', 'webp']}
-						widths={[1024, 1600, 2400]}
-						sizes="100vw"
-						alt={`${entry.company} — ${entry.role}`}
-						class="w-full h-full object-cover grayscale-[0.25] group-hover/chapter:grayscale-0 opacity-70 group-hover/chapter:opacity-90 transition-all duration-700 ease-out"
-						loading={index === 0 ? 'eager' : 'lazy'}
-					/>
+					<div class="absolute left-0 w-full h-[130%] -top-[15%]" data-parallax-media>
+						<Picture
+							src={img}
+							formats={['avif', 'webp']}
+							widths={[1024, 1600, 2400]}
+							sizes="100vw"
+							alt={`${entry.company} — ${entry.role}`}
+							class="w-full h-full object-cover grayscale-[0.25] group-hover/chapter:grayscale-0 opacity-70 group-hover/chapter:opacity-90 transition-[filter,opacity] duration-700 ease-out will-change-transform"
+							loading={index === 0 ? 'eager' : 'lazy'}
+						/>
+					</div>
 					<!-- Single soft vignette: gentle fade on the text side only (long falloff, no hard edge) -->
 					<div
 						class:list={['absolute inset-0 pointer-events-none', textRight ? 'lg:bg-gradient-to-l' : 'lg:bg-gradient-to-r']}
@@ -80,7 +82,7 @@ const entryImages: ImageMetadata[] = [silhouetteImg, closeupPortrait];
 						'w-full grid grid-cols-1 lg:grid-cols-12 gap-8',
 						textRight ? '' : ''
 					]}>
-						<div class:list={['lg:col-span-6 flex flex-col justify-center', textRight ? 'lg:col-start-7' : 'lg:col-span-6']}>
+						<div class:list={['lg:col-span-6 flex flex-col justify-center will-change-transform', textRight ? 'lg:col-start-7' : 'lg:col-span-6']} data-parallax-text>
 
 							<!-- Meta: dates · role -->
 							<p class="text-sm text-[var(--theme-text-muted)] mb-4">
@@ -119,3 +121,64 @@ const entryImages: ImageMetadata[] = [silhouetteImg, closeupPortrait];
 		);
 	})}
 </div>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+
+	function initParallax() {
+		if (reduceMotion) return;
+
+		// Image parallax: background drifts slower than scroll → depth
+		gsap.utils.toArray<HTMLElement>('[data-parallax-media]').forEach((el) => {
+			const section = el.closest('section');
+			if (!section || !document.body.contains(el)) return;
+			gsap.fromTo(el,
+				{ yPercent: -8 },
+				{
+					yPercent: 8,
+					ease: 'none',
+					scrollTrigger: {
+						trigger: section,
+						start: 'top bottom',
+						end: 'bottom top',
+						scrub: 1,
+					},
+				}
+			);
+		});
+
+		// Text entrance: gentle rise + fade as it enters the viewport
+		gsap.utils.toArray<HTMLElement>('[data-parallax-text]').forEach((el) => {
+			if (!document.body.contains(el)) return;
+			gsap.fromTo(el,
+				{ y: 48, opacity: 0 },
+				{
+					y: 0, opacity: 1, ease: 'power2.out',
+					scrollTrigger: {
+						trigger: el,
+						start: 'top 82%',
+						end: 'top 42%',
+						scrub: 1,
+					},
+				}
+			);
+		});
+	}
+
+	function cleanupParallax() {
+		ScrollTrigger.getAll().forEach((st) => st.kill());
+		gsap.killTweensOf('[data-parallax-media], [data-parallax-text]');
+		document.querySelectorAll<HTMLElement>('[data-parallax-media], [data-parallax-text]').forEach((el) => {
+			gsap.set(el, { clearProps: 'all' });
+		});
+	}
+
+	initParallax();
+	document.addEventListener('astro:page-load', initParallax);
+	document.addEventListener('astro:before-swap', cleanupParallax);
+</script>

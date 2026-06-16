@@ -1,13 +1,12 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import Experience from '../components/sections/Experience.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
-import BlogFilters from '../components/BlogFilters.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import junoImg from '../assets/juno.avif';
 import { getEntry, getCollection } from 'astro:content';
-import { calculateReadingTime } from '../utils/reading-time';
 
 // Fetch section content
 const heroEntry = await getEntry('sections', 'hero');
@@ -18,9 +17,6 @@ const featuredProjectEntry = await getEntry('sections', 'featured-project');
 const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
-// Unique categories for filters
-const categories = [...new Set(allPosts.map((post) => post.data.category).filter(Boolean))] as string[];
 
 // Extract content from entries
 const heroContent = {
@@ -57,125 +53,79 @@ const featuredProjectContent = {
 <BaseLayout usePadding={false}>
 	<Hero {...heroContent} />
 
-
 	<Experience {...experienceContent} />
 
-	<FeaturedProject {...featuredProjectContent} />
+    <!--	<FeaturedProject {...featuredProjectContent} /> -->
 
-	<!-- Container Divider -->
-	<div class="container mx-auto px-6 lg:px-12 my-8">
-		<div class="h-[1px] divider-gradient"></div>
-	</div>
+	<!-- Blog Section: minimal text list over a full-bleed backdrop image -->
+	<section id="blog" class="relative w-full overflow-hidden scroll-mt-24">
+		<!-- Full-bleed backdrop image -->
+		<div class="absolute inset-0 z-0">
+			<div class="absolute left-0 w-full h-[130%] -top-[15%]" data-parallax-media>
+				<Picture
+					src={junoImg}
+					formats={['avif', 'webp']}
+					widths={[1024, 1600, 2400]}
+					sizes="100vw"
+					alt=""
+					class="w-full h-full object-cover grayscale-[0.4] opacity-40 will-change-transform"
+					loading="lazy"
+				/>
+			</div>
+			<!-- Soft vignette so the text stays readable -->
+			<div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, var(--theme-bg-primary) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, var(--theme-bg-primary) 100%);"></div>
+			<div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to right, var(--theme-bg-primary), rgba(0,0,0,0) 35%, rgba(0,0,0,0) 65%, var(--theme-bg-primary));"></div>
+		</div>
 
-	<!-- Blog Archive Section -->
-	<section id="blog" class="bg-[var(--theme-bg-primary)] py-20 lg:py-32 border-t border-[var(--theme-border-primary)] scroll-mt-24">
-		<div class="container mx-auto px-6 lg:px-8">
-
-				<!-- Section Header (industrial) -->
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-24">
-				<div class="lg:col-span-8">
-									<h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
-						<span class="block text-brand-accent">Journal</span>
-					</h2>
+		<!-- Minimal list overlay -->
+		<div class="relative z-10 container mx-auto px-6 lg:px-8 py-24 lg:py-32">
+			<!-- Header (quiet) -->
+			<div class="mb-10 lg:mb-12">
+				<div class="flex items-center gap-3 mb-4">
+					<div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+					<span class="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-accent">SYS.WRITINGS · FIELD_NOTES</span>
 				</div>
-				<div class="lg:col-span-4 flex flex-col justify-end">
-									<p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
-                    lessons learned from my independent research telling visual stories.
-					</p>
-				</div>
+				<h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--theme-text-primary)] leading-[1.05]">
+					Journal
+				</h2>
 			</div>
 
-			<!-- All Posts (minimal list format) -->
-			<div>
-				<div class="flex items-center gap-4 mb-8">
-					<span class="text-[10px] font-mono uppercase tracking-widest font-bold text-[var(--theme-text-muted)]">ALL_ENTRIES</span>
-					<span class="h-px flex-grow bg-[var(--theme-border-primary)]"></span>
-				</div>
-
-				<BlogFilters categories={categories} />
-
-				<!-- Posts List: industrial row format (same DNA as Experience section) -->
-				<div data-posts-grid class="w-full border-t border-[var(--theme-border-primary)]">
-					{allPosts.map((post, index) => (
-						<article
-							data-post
-							data-category={post.data.category || ''}
-							data-title={post.data.title}
-							data-description={post.data.description}
-							class:list={[
-								'group relative border-b border-[var(--theme-border-primary)] transition-all duration-500 overflow-hidden',
-								`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`
-							]}
-						>
-							<!-- Hover accent strip -->
-							<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-
-							<a href={`/blog/${post.id}/`} class="flex items-stretch">
-								<!-- Left image: fixed height for consistent rows, object-cover crops consistently -->
-								<div class="relative w-32 lg:w-80 h-36 lg:h-44 shrink-0 overflow-hidden bg-[var(--theme-bg-secondary)]">
-									{post.data.heroImage ? (
-										<Image
-											src={post.data.heroImage}
-											alt=""
-											width={512}
-											height={512}
-											class="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-105"
-										/>
-									) : (
-										<div class="w-full h-full flex items-center justify-center">
-											<span class="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--theme-text-subtle)]">NO_PREVIEW</span>
-										</div>
-									)}
-									<!-- Subtle scanline texture over the image -->
-									<div class="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%] opacity-[0.08] group-hover:opacity-0 transition-opacity duration-500"></div>
-									<!-- Minimal right-edge fade: dissolves the seam into the content -->
-									<div class="absolute inset-y-0 right-0 w-1/3 pointer-events-none" style="background: linear-gradient(to right, transparent, var(--theme-bg-primary));"></div>
-								</div>
-
-								<!-- Content: title first, metadata underneath -->
-								<div class="relative flex-1 flex items-center gap-4 lg:gap-8 py-5 lg:py-7 pr-4 lg:pr-8 pl-5 lg:pl-8">
-									<div class="flex-1 min-w-0">
-										<h3 class="text-lg lg:text-xl font-bold tracking-tight text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors duration-300 leading-snug">
-											{post.data.title}
-										</h3>
-										<!-- Metadata line beneath the title -->
-										<div class="flex items-center gap-2 lg:gap-3 mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--theme-text-muted)] flex-wrap">
-											{post.data.featured && <span class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></span>}
-											<FormattedDate date={post.data.pubDate} />
-											{post.data.category && <span class="text-[var(--theme-border-strong)]">/</span>}
-											{post.data.category && <span class="text-brand-accent">{post.data.category}</span>}
-											{post.data.featured && <span class="text-[var(--theme-border-strong)]">/</span>}
-											{post.data.featured && <span>FEATURED</span>}
-											<span class="text-[var(--theme-border-strong)]">/</span>
-											<span>{calculateReadingTime(post.body)}</span>
-										</div>
-										<p class="hidden lg:block text-sm text-[var(--theme-text-secondary)] leading-relaxed mt-2 line-clamp-1">
-											{post.data.description}
-										</p>
-									</div>
-									<!-- Hover arrow indicator -->
-									<div class="hidden lg:flex items-center justify-center w-9 h-9 shrink-0 border border-[var(--theme-border-secondary)] text-[var(--theme-text-muted)] group-hover:border-brand-accent group-hover:text-brand-accent transition-all duration-300">
-										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
-											<path d="M5 12h14M12 5l7 7-7 7"/>
-										</svg>
-									</div>
-								</div>
-							</a>
-						</article>
-					))}
-				</div>
-
-				<!-- Empty state (shown via JS when no results) -->
-				<div id="no-results" class="hidden text-center py-20">
-					<div class="text-[var(--theme-text-primary)] text-lg font-semibold mb-2">
-						no matching articles found
-					</div>
-					<p class="text-[var(--theme-text-secondary)] text-sm">
-						try adjusting your search or filter criteria
-					</p>
-				</div>
+			<!-- Minimal text-only list (no thumbnails, no filters) -->
+			<div class="w-full border-t border-[var(--theme-border-primary)]">
+				{allPosts.map((post, index) => (
+					<article
+						class:list={[
+							'group relative border-b border-[var(--theme-border-primary)] transition-colors duration-500 overflow-hidden',
+							`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`
+						]}
+					>
+						<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+						<a href={`/blog/${post.id}/`} class="block py-4 px-4 lg:px-8">
+							<div class="flex items-baseline justify-between gap-6">
+								<h3 class="text-base font-normal text-[var(--theme-text-secondary)] group-hover:text-brand-accent transition-colors duration-300">
+									{post.data.title}
+								</h3>
+								<span class="font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-subtle)] shrink-0 hidden sm:block">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+							</div>
+						</a>
+					</article>
+				))}
 			</div>
 
+			<!-- Link to the full archive -->
+			<div class="mt-12">
+				<a
+					href="/blog"
+					class="inline-flex items-center gap-2 text-sm text-brand-accent hover:gap-3 transition-all duration-300"
+				>
+					<span>Browse full archive</span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
+				</a>
+			</div>
 		</div>
 	</section>
 </BaseLayout>

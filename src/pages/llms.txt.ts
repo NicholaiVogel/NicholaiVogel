@@ -21,7 +21,7 @@ export const GET: APIRoute = async (context) => {
     '## Pages',
     '',
     `- [Home](${site}/)`,
-    `- [Blog](${site}/#blog)`,
+    `- [Blog](${site}/blog/)`,
     `- [Contact](${site}/contact/)`,
     '',
     '## Blog Posts',
