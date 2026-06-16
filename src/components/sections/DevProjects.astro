@@ -1,0 +1,97 @@
+---
+const projects = [
+	{
+		name: 'signetai',
+		desc: 'Open protocol for agent identity, knowledge, and trust — how an agent persists across sessions and carries identity between tools.',
+		href: 'https://github.com/Signet-AI/signetai',
+		contrib: false,
+	},
+	{
+		name: 'pr-reviewer',
+		desc: 'Self-hosted PR review daemon in Rust. Watches repos, spawns a local AI coding CLI, posts review comments automatically.',
+		href: 'https://github.com/NicholaiVogel/pr-reviewer',
+		contrib: false,
+	},
+	{
+		name: 'comfyui-materia',
+		desc: 'Diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.',
+		href: 'https://github.com/NicholaiVogel/comfyui-materia',
+		contrib: false,
+	},
+	{
+		name: 'Odysseus',
+		desc: 'A self-hosted AI workspace.',
+		href: 'https://github.com/pewdiepie-archdaemon/odysseus',
+		contrib: true,
+	},
+	{
+		name: 'NXC',
+		desc: 'Unofficial Nextcloud CLI for humans, shell scripts, and AI agents.',
+		href: 'https://github.com/NicholaiVogel/Nextcloud-CLI',
+		contrib: false,
+	},
+	{
+		name: 'GHL',
+		desc: 'Local-first CLI for GoHighLevel CRM — stable JSON output for headless agent runtimes.',
+		href: 'https://github.com/NicholaiVogel/GoHighLevel-CLI',
+		contrib: false,
+	},
+];
+
+const dotfiles = [
+	{ name: 'nvim', href: 'https://github.com/NicholaiVogel/nvim' },
+	{ name: 'hyprland', href: 'https://github.com/NicholaiVogel/hyprland' },
+	{ name: 'quickshell', href: 'https://github.com/NicholaiVogel/quickshell' },
+];
+---
+
+<section id="code" class="bg-[var(--theme-bg-primary)] py-24 lg:py-32 scroll-mt-24 border-t border-[var(--theme-border-primary)]">
+	<div class="container mx-auto px-6 lg:px-8">
+		<!-- Quiet header -->
+		<div class="mb-16 lg:mb-20">
+			<div class="flex items-center gap-3 mb-4">
+				<div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+				<span class="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-accent">SYS.DEV · CURRENT_WORK</span>
+			</div>
+			<h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--theme-text-primary)] leading-[1.05]">
+				Development
+			</h2>
+		</div>
+
+		<!-- Open wordmark grid: large mono names set directly on the backdrop, no boxes -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 lg:gap-x-16 gap-y-12 lg:gap-y-16">
+			{projects.map((project, index) => (
+				<a
+					href={project.href}
+					target="_blank"
+					rel="noopener noreferrer"
+					class:list={['group block', `animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`]}
+				>
+					<div class="flex items-baseline gap-2 mb-2">
+						<h3 class="font-mono text-xl lg:text-2xl font-semibold text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors duration-300">
+							{project.name}
+						</h3>
+						{project.contrib && (
+							<span class="font-mono text-[9px] uppercase tracking-widest text-brand-accent/60">contrib</span>
+						)}
+					</div>
+					<p class="text-sm text-[var(--theme-text-muted)] leading-relaxed max-w-xs">
+						{project.desc}
+					</p>
+				</a>
+			))}
+		</div>
+
+		<!-- Dotfiles (quiet footnote) -->
+		<div class="mt-16 flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-subtle)]">
+			<span>dotfiles</span>
+			<span class="text-[var(--theme-border-strong)]">/</span>
+			{dotfiles.map((dot, i) => (
+				<span>
+					<a href={dot.href} target="_blank" rel="noopener noreferrer" class="hover:text-brand-accent transition-colors">{dot.name}</a>
+					{i < dotfiles.length - 1 && <span class="text-[var(--theme-border-strong)]"> · </span>}
+				</span>
+			))}
+		</div>
+	</div>
+</section>
