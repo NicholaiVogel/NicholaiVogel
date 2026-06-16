@@ -20,7 +20,7 @@ const { prevPost, nextPost } = Astro.props;
 	<nav class="post-navigation mt-20 pt-12 border-t border-[var(--theme-border-primary)]" aria-label="Post navigation">
 		<div class="flex items-center gap-4 mb-8">
 			<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest font-bold">
-				/// NEXT_IN_SEQUENCE
+				NEXT_IN_SEQUENCE
 			</span>
 			<span class="h-px flex-grow bg-[var(--theme-border-primary)]"></span>
 		</div>
@@ -60,7 +60,7 @@ const { prevPost, nextPost } = Astro.props;
 				</a>
 			) : (
 				<div class="border border-[var(--theme-border-secondary)] bg-[var(--theme-hover-bg)] p-6 flex items-center justify-center">
-                    <span class="text-[10px] font-mono text-[var(--theme-text-subtle)] uppercase tracking-widest">/// START_OF_ARCHIVE</span>
+                    <span class="text-[10px] font-mono text-[var(--theme-text-subtle)] uppercase tracking-widest">START_OF_ARCHIVE</span>
                 </div>
 			)}
 			
@@ -98,7 +98,7 @@ const { prevPost, nextPost } = Astro.props;
 				</a>
 			) : (
 				<div class="border border-[var(--theme-border-secondary)] bg-[var(--theme-hover-bg)] p-6 flex items-center justify-center">
-                    <span class="text-[10px] font-mono text-[var(--theme-text-subtle)] uppercase tracking-widest">/// END_OF_ARCHIVE</span>
+                    <span class="text-[10px] font-mono text-[var(--theme-text-subtle)] uppercase tracking-widest">END_OF_ARCHIVE</span>
                 </div>
 			)}
 		</div>

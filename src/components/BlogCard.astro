@@ -34,29 +34,39 @@ const isFeatured = variant === 'featured';
 ---
 
 <article class:list={[
-	'group relative rounded-lg border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-brand-accent hover:bg-[var(--theme-hover-bg)] transition-all duration-300 overflow-hidden',
+	'group relative border border-[var(--theme-border-primary)] bg-[var(--theme-bg-secondary)] hover:border-brand-accent hover:bg-[var(--theme-hover-bg)] transition-all duration-300 overflow-hidden flex flex-col',
 	isFeatured ? 'lg:grid lg:grid-cols-2' : '',
 	className
 ]}>
+	<!-- Industrial accent strip (slides in on hover) -->
+	<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-20"></div>
+
 	<!-- Image section -->
 	<a href={href} class:list={[
-		'block relative overflow-hidden rounded-t-lg',
-		isFeatured ? 'aspect-[16/10] lg:aspect-auto lg:h-full lg:rounded-t-none lg:rounded-l-lg' : isCompact ? 'aspect-[16/9]' : 'aspect-video'
+		'block relative overflow-hidden',
+		isFeatured ? 'aspect-[16/10] lg:aspect-auto lg:h-full' : isCompact ? 'aspect-[16/9]' : 'aspect-video'
 	]}>
-		{heroImage && (
+		{heroImage ? (
 			<Image
 				src={heroImage}
 				alt=""
 				width={isFeatured ? 800 : 720}
 				height={isFeatured ? 500 : 360}
-				class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+				class="w-full h-full object-cover grayscale-[0.4] group-hover:grayscale-0 transition-all duration-500 ease-out group-hover:scale-105"
 			/>
+		) : (
+			<div class="w-full h-full bg-[var(--theme-bg-primary)] flex items-center justify-center">
+				<span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--theme-text-subtle)]">// NO_PREVIEW</span>
+			</div>
 		)}
 
-		<!-- Category badge overlay -->
+		<!-- Industrial scanline texture overlay -->
+		<div class="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%] opacity-[0.08] group-hover:opacity-0 transition-opacity duration-500"></div>
+
+		<!-- Category label (technical, sharp) -->
 		{category && (
 			<div class="absolute top-4 left-4">
-				<span class="px-3 py-1 rounded-full bg-brand-accent/10 backdrop-blur-sm text-xs text-brand-accent">
+				<span class="inline-block px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-brand-accent bg-black/40 backdrop-blur-sm border border-brand-accent/30">
 					{category}
 				</span>
 			</div>
@@ -65,20 +75,24 @@ const isFeatured = variant === 'featured';
 
 	<!-- Content section -->
 	<div class:list={[
-		'flex flex-col',
+		'flex flex-col flex-1',
 		isFeatured ? 'p-8 lg:p-12 justify-center' : isCompact ? 'p-5' : 'p-6'
 	]}>
-		<!-- Metadata -->
-		<div class="flex items-center gap-2 mb-3 text-sm text-[var(--theme-text-muted)]">
+		<!-- Metadata (mono technical) -->
+		<div class:list={[
+			'flex items-center gap-2 font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-3',
+			isCompact ? 'text-[9px]' : 'text-[10px]'
+		]}>
+			<span class="text-brand-accent">/</span>
 			<FormattedDate date={pubDate} />
-			<span>·</span>
+			<span class="text-brand-accent">·</span>
 			<span>{readTime}</span>
 		</div>
 
 		<!-- Title -->
-		<a href={href}>
+		<a href={href} class="block">
 			<h3 class:list={[
-				'font-bold text-[var(--theme-text-primary)] mb-2 group-hover:text-brand-accent transition-colors duration-300 leading-tight',
+				'font-bold tracking-tight text-[var(--theme-text-primary)] mb-2 group-hover:text-brand-accent transition-colors duration-300 leading-tight',
 				isFeatured ? 'text-2xl lg:text-3xl' : isCompact ? 'text-lg' : 'text-xl'
 			]}>
 				{title}
@@ -87,20 +101,30 @@ const isFeatured = variant === 'featured';
 
 		<!-- Description -->
 		<p class:list={[
-			'text-[var(--theme-text-secondary)] leading-relaxed mb-4',
-			isFeatured ? 'text-base line-clamp-3' : isCompact ? 'text-sm line-clamp-2' : 'text-sm line-clamp-3'
+			'text-[var(--theme-text-secondary)] leading-relaxed',
+			isFeatured ? 'text-base line-clamp-3 mb-6' : isCompact ? 'text-sm line-clamp-2' : 'text-sm line-clamp-3 mb-4'
 		]}>
 			{description}
 		</p>
 
-		<!-- Tags (only for featured and default variants) -->
+		<!-- Tags (mono technical labels) -->
 		{tags && tags.length > 0 && !isCompact && (
-			<div class="flex flex-wrap gap-2 mt-auto">
+			<div class:list={['flex flex-wrap gap-2', isFeatured ? 'mt-auto' : 'mt-auto']}>
 				{tags.slice(0, 3).map((tag) => (
-					<span class="px-2 py-1 text-xs text-[var(--theme-text-muted)]">
-						#{tag}
+					<span class="text-[9px] font-mono uppercase tracking-wider px-2 py-1 border border-[var(--theme-border-secondary)] text-[var(--theme-text-muted)] group-hover:border-brand-accent/30 group-hover:text-[var(--theme-text-secondary)] transition-all duration-300">
+						{tag}
 					</span>
 				))}
+			</div>
+		)}
+
+		<!-- Read indicator (featured only) -->
+		{isFeatured && (
+			<div class="mt-8 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-brand-accent opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500">
+				<span>View Case File</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
 			</div>
 		)}
 	</div>

@@ -94,7 +94,7 @@ export const POST = async (context: any) => {
 		if (!messages || !conversation_id || !visitor_id) {
 			return new Response(
 				JSON.stringify({
-					error: '/// HUBERT_PROTOCOL_ERROR: MISSING_REQUIRED_FIELDS',
+					error: 'HUBERT_PROTOCOL_ERROR: MISSING_REQUIRED_FIELDS',
 					details: 'messages, conversation_id, and visitor_id are required'
 				}),
 				{ status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -111,7 +111,7 @@ export const POST = async (context: any) => {
 		const openRouterApiKey = env?.OPENROUTER_API_KEY;
 		if (!openRouterApiKey) {
 			console.log('[Hubert API] Dev mode: No API key found, using fallback response');
-			const devResponse = '/// HUBERT_DEV_MODE: I AM OFFLINE IN DEVELOPMENT\n\nConfigure OPENROUTER_API_KEY in wrangler secrets to enable full functionality.';
+			const devResponse = 'HUBERT_DEV_MODE: I AM OFFLINE IN DEVELOPMENT\n\nConfigure OPENROUTER_API_KEY in wrangler secrets to enable full functionality.';
 
 			if (db) {
 				await saveMessage(db, conversation_id, 'assistant', devResponse);
@@ -177,7 +177,7 @@ IMPORTANT: When a visitor tells you their name, you MUST call the save_visitor_n
 			console.error('[Hubert] OpenRouter API error:', errorText);
 			return new Response(
 				JSON.stringify({
-					error: '/// HUBERT_MALFUNCTION: TRY_AGAIN',
+					error: 'HUBERT_MALFUNCTION: TRY_AGAIN',
 					details: 'OpenRouter API call failed'
 				}),
 				{ status: response.status, headers: { 'Content-Type': 'application/json' } }
@@ -235,7 +235,7 @@ IMPORTANT: When a visitor tells you their name, you MUST call the save_visitor_n
 		console.error('[Hubert] Chat error:', error);
 		return new Response(
 			JSON.stringify({
-				error: '/// HUBERT_MALFUNCTION: TRY_AGAIN',
+				error: 'HUBERT_MALFUNCTION: TRY_AGAIN',
 				details: error instanceof Error ? error.message : String(error),
 			}),
 			{ status: 500, headers: { 'Content-Type': 'application/json' } }

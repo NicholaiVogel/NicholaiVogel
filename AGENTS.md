@@ -38,7 +38,7 @@ before starting any feature, fix, refactor, content change, or design pass:
 site invariants (do not drift accidentally)
 ---
 
-- homepage order is: hero → experience → featured project → skills → latest blogs.
+- homepage order is: hero → experience → featured project → blog archive. the homepage is the single blog listing (no separate `/blog` index route). the skills/technical-arsenal section was removed.
 - blog posts are sorted by `pubDate` newest first.
 - featured blog post is the first post with `featured: true`, or the latest post as fallback.
 - individual posts calculate reading time at 200 wpm.
@@ -66,7 +66,7 @@ prevent these proactively:
 
 2. design language drift
    - modern design is the default for new work.
-   - industrial styling is reserved for hero, experience, and featured project sections unless explicitly requested.
+   - industrial styling is reserved for hero, experience, featured project, and the blog archive section unless explicitly requested.
    - do not spread mono/uppercase/technical styling across blog, navigation, or new general-purpose sections by accident.
 
 3. image path mistakes
@@ -130,7 +130,7 @@ content is managed via astro's content collections api with schema validation in
 - `blog/` - mdx blog posts
   - schema: `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `featured`, `category`, `tags`
   - sorted by `pubDate` newest first
-  - featured post is surfaced on homepage and blog index
+  - featured post is surfaced on the homepage blog archive
 
 - `sections/` - homepage section content
   - `hero`, `experience`, `skills`, `featured-project`
@@ -157,7 +157,7 @@ design system
 
 design direction is documented in [[design.json|design.json]].
 
-key rule: industrial styling is reserved for hero, experience, and featured project sections only. everything else should use the modern design language unless the task explicitly says otherwise.
+key rule: industrial styling covers hero, experience, featured project, and the blog archive (cards + section header). the blog archive lives on the homepage and shares the technical vocabulary so the homepage reads as one coherent industrial surface. everything else (general UI, individual post body pages) uses the modern design language unless the task explicitly says otherwise.
 
 modern design, default for new work:
 - rounded corners (`rounded-lg`, `rounded-xl`, `rounded-full`)
@@ -178,16 +178,12 @@ data flow patterns
 ---
 
 homepage ([[src/pages/index.astro|src/pages/index.astro]]):
-- fetches `hero`, `experience`, `skills`, and `featured-project` from content collections
-- queries the 3 most recent blog posts for the latest blogs section
-- renders in this order: hero → experience → featured project → skills → latest blogs
-
-blog index ([[src/pages/blog/index.astro|src/pages/blog/index.astro]]):
-- fetches all posts with `getCollection('blog')`
-- sorts by `pubDate` newest first
+- fetches `hero`, `experience`, and `featured-project` from content collections
+- fetches all blog posts with `getCollection('blog')`, sorted by `pubDate` newest first
 - identifies the featured post from `featured: true`, with fallback to the latest post
-- renders a featured hero plus a filterable grid of all posts
-- extracts unique categories for filter ui
+- renders in this order: hero → experience → featured project → blog archive (featured post + filterable grid of all posts)
+- the blog archive section has `id="blog"`; the nav "Blog" link points to `/#blog`
+- there is no separate blog index route — individual posts live at `/blog/{slug}`
 
 individual blog posts ([[src/pages/blog/[...slug].astro|src/pages/blog/[...slug].astro]]):
 - uses `getStaticPaths()` to generate routes

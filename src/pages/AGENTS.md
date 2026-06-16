@@ -22,9 +22,8 @@ src/pages/
 
 | Route | File | Purpose |
 |-------|------|---------|
-| `/` | [[src/pages/index.astro|index.astro]] | Homepage |
-| `/blog/` | [[src/pages/blog/index.astro|blog/index.astro]] | Blog listing |
-| `/blog/:slug` | [[src/pages/blog/[...slug].astro|blog/[...slug].astro]] | Individual posts |
+| `/` | [[src/pages/index.astro|index.astro]] | Homepage + blog archive (`/#blog`) |
+| `/blog/:slug` | [[src/pages/blog/[...slug].astro|[...slug].astro]] | Individual posts |
 | `/contact` | [[src/pages/contact.astro|contact.astro]] | Contact page |
 | `/rss.xml` | [[src/pages/rss.xml.js|rss.xml.js]] | RSS feed generator |
 | `/search.json` | [[src/pages/search.json.ts|search.json.ts]] | Search index JSON |

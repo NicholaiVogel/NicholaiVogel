@@ -1,82 +1,78 @@
 ---
 const today = new Date();
+
+const contactLinks = [
+	{ label: 'Email', value: 'nicholai@nicholai.work', href: 'mailto:nicholai@nicholai.work' },
+	{ label: 'Contact', value: 'Project inquiry', href: '/contact' },
+	{ label: 'GitHub', value: 'NicholaiVogel', href: 'https://github.com/NicholaiVogel' },
+	{ label: 'LinkedIn', value: 'Nicholai Vogel', href: 'https://www.linkedin.com/in/nicholai-vogel-7a6b85112/' },
+];
 ---
 
-<footer class="w-full bg-[var(--theme-bg-primary)] py-32 lg:py-48 relative overflow-hidden border-t border-[var(--theme-border-primary)]">
-    <div class="container mx-auto px-6 lg:px-12 relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-end">
-            
-            <!-- Left: Call to Action -->
-            <div class="lg:col-span-7">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-2 h-2 bg-brand-accent animate-pulse"></div>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-accent">SYS.TERMINAL /// SESSION_END</span>
-                </div>
-                
-                <h2 class="text-6xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)] mb-12">
-                    Let's Build<br>
-                    <span class="text-brand-accent">Reality.</span>
-                </h2>
-                
-                <div class="flex flex-wrap gap-4">
-                    <a href="mailto:nicholai@nicholai.work" class="group flex items-center gap-4 px-6 py-4 border border-brand-accent/30 bg-brand-accent/5 hover:bg-brand-accent hover:text-brand-dark transition-all duration-300 rounded-full">
-                        <span class="font-mono text-xs font-bold uppercase tracking-widest">Connect_Uplink</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                    <a href="/contact" class="group flex items-center gap-4 px-6 py-4 border border-[var(--theme-border-strong)] hover:border-brand-accent hover:bg-brand-accent/5 transition-all duration-300 rounded-full">
-                        <span class="font-mono text-xs font-bold uppercase tracking-widest text-[var(--theme-text-primary)]">Manual_Input</span>
-                    </a>
-                </div>
-            </div>
+<footer class="w-full bg-[var(--theme-bg-primary)] border-t border-[var(--theme-border-primary)] py-20 lg:py-28 relative overflow-hidden">
+	<div class="container mx-auto px-6 lg:px-8 relative z-10">
+		<!-- Minimal closing header -->
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 mb-12 lg:mb-16">
+			<div class="lg:col-span-7">
+				<div class="flex items-center gap-3 mb-6">
+					<div class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></div>
+					<span class="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-accent">SYS.TERMINAL · SESSION_END</span>
+				</div>
+				<h2 class="text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter leading-[0.88] text-[var(--theme-text-primary)]">
+					Let’s Build
+					<span class="block text-brand-accent">Reality</span>
+				</h2>
+			</div>
 
-            <!-- Right: Social & Metadata -->
-            <div class="lg:col-span-5 lg:text-right flex flex-col items-start lg:items-end">
-                <div class="w-full lg:max-w-xs">
-                    <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-8 flex items-center justify-start lg:justify-end gap-2">
-                        <span class="text-brand-accent">/</span> SOCIAL_MANIFEST
-                    </div>
-                    
-                    <ul class="space-y-4 mb-16">
-                        {[
-                            { label: 'LinkedIn', url: 'https://www.linkedin.com/in/nicholai-vogel-7a6b85112/', id: 'SIG.01' },
-                            { label: 'Instagram', url: 'https://instagram.com/nicholai.exe/', id: 'SIG.02' },
-                            { label: 'Website', url: 'https://nicholai.work', id: 'SIG.03' }
-                        ].map((link) => (
-                            <li class="group/link">
-                                <a href={link.url} class="flex items-baseline lg:justify-end gap-4 transition-colors">
-                                    <span class="font-mono text-[9px] text-brand-accent opacity-0 group-hover/link:opacity-100 transition-opacity">[{link.id}]</span>
-                                    <span class="text-xl font-bold uppercase tracking-tight text-[var(--theme-text-primary)] group-hover/link:text-brand-accent transition-colors">{link.label}</span>
-                                    <div class="w-2 h-2 rounded-full bg-brand-accent/20 group-hover/link:bg-brand-accent group-hover/link:animate-pulse transition-all mt-1"></div>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                    
-                    <div class="flex flex-col lg:items-end gap-2 font-mono text-[10px] text-[var(--theme-text-muted)] uppercase tracking-[0.2em]">
-                        <div class="flex items-center gap-3">
-                            <span class="text-[var(--theme-text-subtle)]">STATUS:</span>
-                            <span class="text-brand-accent">OPERATIONAL</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span>&copy; {today.getFullYear()}</span>
-                            <span class="text-[var(--theme-text-subtle)]">///</span>
-                            <span>V7 SYSTEM</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="lg:col-span-5 flex flex-col justify-end">
+				<p class="text-[var(--theme-text-secondary)] text-base lg:text-lg leading-relaxed border-l border-brand-accent/30 pl-6 max-w-md lg:ml-auto">
+					Available for VFX supervision, technical art, pipeline systems, and high-end visual production.
+				</p>
+			</div>
+		</div>
 
-    <!-- Decorative Industrial Background Text -->
-    <div class="absolute -bottom-12 lg:-bottom-20 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden h-[20rem] flex items-end justify-center">
-        <span class="text-[15rem] md:text-[25rem] lg:text-[35rem] font-bold text-[var(--theme-text-primary)] opacity-[0.02] uppercase leading-none whitespace-nowrap tracking-tighter">
-            VOGEL
-        </span>
-    </div>
-    
-    <!-- Scanning Line Effect -->
-    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-brand-accent/10"></div>
+		<!-- Contact rows -->
+		<div class="w-full border-t border-[var(--theme-border-primary)]">
+			{contactLinks.map((link, index) => (
+				<a
+					href={link.href}
+					class="group relative grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 py-6 px-0 md:px-4 border-b border-[var(--theme-border-primary)] hover:bg-white/[0.01] transition-all duration-500 overflow-hidden"
+					{...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+				>
+					<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+
+					<div class="md:col-span-3 flex items-center gap-3">
+						<span class="font-mono text-[10px] uppercase tracking-[0.2em] text-brand-accent opacity-70">0{index + 1}</span>
+						<span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">{link.label}</span>
+					</div>
+
+					<div class="md:col-span-7">
+						<span class="text-xl md:text-2xl font-bold tracking-tight text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors duration-300">
+							{link.value}
+						</span>
+					</div>
+
+					<div class="md:col-span-2 md:justify-self-end flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)] group-hover:text-brand-accent transition-colors duration-300">
+						<span>{link.href.startsWith('http') ? 'External' : 'Open'}</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="group-hover:translate-x-1 transition-transform duration-300">
+							<path d="M5 12h14M12 5l7 7-7 7" />
+						</svg>
+					</div>
+				</a>
+			))}
+		</div>
+
+		<!-- Bottom metadata -->
+		<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
+			<div class="flex items-center gap-3">
+				<span class="text-[var(--theme-text-subtle)]">Status:</span>
+				<span class="text-brand-accent">Operational</span>
+			</div>
+			<div class="flex items-center gap-3">
+				<span>&copy; {today.getFullYear()}</span>
+				<span class="text-[var(--theme-text-subtle)]">·</span>
+				<span>Nicholai Vogel</span>
+			</div>
+		</div>
+	</div>
 </footer>

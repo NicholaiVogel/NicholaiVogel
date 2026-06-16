@@ -28,7 +28,7 @@ export const GET = async ({ env }: { request: Request; env: Env }) => {
 		`).all();
 		
 		return Response.json({
-			status: '/// GUESTBOOK_ARCHIVE',
+			status: 'GUESTBOOK_ARCHIVE',
 			total: conversations.length,
 			conversations: conversations.map((conv: any) => ({
 				...conv,
@@ -41,7 +41,7 @@ export const GET = async ({ env }: { request: Request; env: Env }) => {
 		
 		return new Response(
 			JSON.stringify({
-				status: '/// GUESTBOOK_ERROR',
+				status: 'GUESTBOOK_ERROR',
 				error: 'Failed to retrieve conversations',
 			}),
 			{ status: 500, headers: { 'Content-Type': 'application/json' } }

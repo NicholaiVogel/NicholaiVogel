@@ -45,14 +45,14 @@ export const POST = async (context: any) => {
 		return Response.json({
 			visitor_id: visitorId,
 			conversation_id: conversationId,
-			status: '/// INTERVIEW_TERMINAL_READY',
+			status: 'INTERVIEW_TERMINAL_READY',
 		});
 	} catch (error) {
 		console.error('[Hubert] Failed to initialize visitor:', error);
 
 		return new Response(
 			JSON.stringify({
-				error: '/// HUBERT_INIT_FAILED',
+				error: 'HUBERT_INIT_FAILED',
 				details: String(error),
 			}),
 			{ status: 500, headers: { 'Content-Type': 'application/json' } }

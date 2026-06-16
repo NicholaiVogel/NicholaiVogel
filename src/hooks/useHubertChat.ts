@@ -54,13 +54,13 @@ const fetchWithTimeout = async (
 const parseError = (error: unknown): string => {
 	if (error instanceof Error) {
 		if (error.name === 'AbortError') {
-			return '/// ERROR: TIMEOUT - API_UNRESPONSIVE';
+			return 'ERROR: TIMEOUT - API_UNRESPONSIVE';
 		} else if (error.message.includes('Failed to fetch')) {
-			return '/// ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
+			return 'ERROR: NETWORK_FAILURE - CHECK_API_ROUTE';
 		}
-		return `/// ERROR: ${error.message}`;
+		return `ERROR: ${error.message}`;
 	}
-	return '/// ERROR: UNKNOWN_FAILURE';
+	return 'ERROR: UNKNOWN_FAILURE';
 };
 
 export function useHubertChat(options: UseHubertChatOptions = {}): UseHubertChatReturn {
@@ -227,7 +227,7 @@ export function useHubertChat(options: UseHubertChatOptions = {}): UseHubertChat
 				{
 					id: generateId(),
 					role: 'assistant',
-					content: '/// HUBERT_MALFUNCTION - TRY AGAIN',
+					content: 'HUBERT_MALFUNCTION - TRY AGAIN',
 					timestamp: new Date().toISOString(),
 				},
 			]);

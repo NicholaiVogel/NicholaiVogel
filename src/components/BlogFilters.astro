@@ -8,17 +8,13 @@ const { categories, class: className = '' } = Astro.props;
 ---
 
 <div class:list={['blog-filters', className]} data-blog-filters>
-	<!-- Filters row -->
 	<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
-		<!-- Category chips -->
-		<div class="flex flex-wrap items-center gap-1">
-			<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest mr-4">
-				/// SECTOR SELECT
-			</span>
+		<!-- Category chips: minimal text labels, active = accent color + underline -->
+		<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
 			<button
 				type="button"
 				data-category="all"
-				class="filter-chip active px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border-b-2 border-brand-accent text-[var(--theme-text-primary)] bg-[var(--theme-hover-bg-strong)] transition-all duration-300 hover:bg-[var(--theme-hover-bg-strong)]"
+				class="filter-chip active text-xs font-mono uppercase tracking-widest py-1 border-b border-brand-accent text-brand-accent transition-colors duration-300"
 			>
 				All
 			</button>
@@ -26,40 +22,36 @@ const { categories, class: className = '' } = Astro.props;
 				<button
 					type="button"
 					data-category={category}
-					class="filter-chip px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest border-b-2 border-transparent text-[var(--theme-text-muted)] hover:text-[var(--theme-text-primary)] hover:border-brand-accent/50 hover:bg-[var(--theme-hover-bg-strong)] transition-all duration-300"
+					class="filter-chip text-xs font-mono uppercase tracking-widest py-1 border-b border-transparent text-[var(--theme-text-muted)] hover:text-[var(--theme-text-primary)] transition-colors duration-300"
 				>
 					{category}
 				</button>
 			))}
 		</div>
-		
-		<!-- Search input -->
-		<div class="relative lg:w-80 group">
-			<div class="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none text-brand-accent">
-                <span class="font-mono text-xs">></span>
-			</div>
+
+		<!-- Search: minimal single-line input, accent on focus -->
+		<div class="relative lg:w-64 flex items-center">
+			<svg class="absolute left-0 w-4 h-4 text-[var(--theme-text-subtle)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+				<circle cx="11" cy="11" r="7" />
+				<path d="m21 21-4.3-4.3" />
+			</svg>
 			<input
 				type="text"
 				id="blog-search"
-				placeholder="SEARCH_DATABASE..."
-				class="w-full pl-6 pr-4 py-2 text-sm font-mono bg-transparent border-b border-[var(--theme-text-subtle)] text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] focus:border-brand-accent focus:outline-none transition-colors duration-300 uppercase"
+				placeholder="Search"
+				class="w-full pl-7 pr-4 py-1 text-sm bg-transparent border-b border-[var(--theme-border-secondary)] text-[var(--theme-text-primary)] placeholder:text-[var(--theme-text-subtle)] focus:border-brand-accent focus:outline-none transition-colors duration-300"
 			/>
 			<button
 				type="button"
 				id="clear-search"
-				class="absolute right-0 top-1/2 -translate-y-1/2 text-[var(--theme-text-muted)] hover:text-brand-accent transition-colors hidden"
+				class="absolute right-0 text-[var(--theme-text-muted)] hover:text-brand-accent transition-colors hidden"
+				aria-label="Clear search"
 			>
-				<span class="font-mono text-xs">[CLR]</span>
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 6 6 18M6 6l12 12" />
+				</svg>
 			</button>
 		</div>
-	</div>
-	
-	<!-- Results count -->
-	<div class="flex items-center gap-4 pb-6 border-b border-[var(--theme-border-primary)] mb-8">
-		<span class="text-[10px] font-mono text-[var(--theme-text-muted)] uppercase tracking-widest">
-			<span id="results-count">0</span> ARTICLES
-		</span>
-		<span class="h-px flex-grow bg-[var(--theme-border-secondary)]"></span>
 	</div>
 </div>
 
@@ -67,34 +59,33 @@ const { categories, class: className = '' } = Astro.props;
 	function initBlogFilters() {
 		const filterContainer = document.querySelector('[data-blog-filters]');
 		if (!filterContainer) return;
-		
+
 		const filterChips = filterContainer.querySelectorAll('.filter-chip');
 		const searchInput = document.getElementById('blog-search') as HTMLInputElement;
 		const clearSearchBtn = document.getElementById('clear-search');
-		const resultsCount = document.getElementById('results-count');
 		const postsGrid = document.querySelector('[data-posts-grid]');
 		const noResults = document.getElementById('no-results');
-		
+
 		if (!postsGrid) return;
-		
+
 		const allPosts = postsGrid.querySelectorAll('[data-post]');
 		let activeCategory = 'all';
 		let searchQuery = '';
-		
+
 		function filterPosts() {
 			let visibleCount = 0;
-			
+
 			allPosts.forEach((post) => {
 				const postEl = post as HTMLElement;
 				const postCategory = postEl.dataset.category || '';
 				const postTitle = postEl.dataset.title?.toLowerCase() || '';
 				const postDescription = postEl.dataset.description?.toLowerCase() || '';
-				
+
 				const matchesCategory = activeCategory === 'all' || postCategory === activeCategory;
-				const matchesSearch = !searchQuery || 
-					postTitle.includes(searchQuery.toLowerCase()) || 
+				const matchesSearch = !searchQuery ||
+					postTitle.includes(searchQuery.toLowerCase()) ||
 					postDescription.includes(searchQuery.toLowerCase());
-				
+
 				if (matchesCategory && matchesSearch) {
 					postEl.style.display = '';
 					visibleCount++;
@@ -102,51 +93,44 @@ const { categories, class: className = '' } = Astro.props;
 					postEl.style.display = 'none';
 				}
 			});
-			
-			if (resultsCount) {
-				resultsCount.textContent = String(visibleCount);
-			}
-			
-			// Show/hide no results message
+
 			if (noResults) {
 				noResults.classList.toggle('hidden', visibleCount > 0);
 			}
 		}
-		
+
 		// Category filter click handlers
 		filterChips.forEach((chip) => {
 			chip.addEventListener('click', () => {
 				const chipEl = chip as HTMLElement;
 				activeCategory = chipEl.dataset.category || 'all';
-				
-				// Update active state
-				// Reset all to inactive state
+
+				// Reset all to inactive
 				filterChips.forEach((c) => {
-					c.classList.remove('active', 'border-brand-accent', 'text-[var(--theme-text-primary)]', 'bg-[var(--theme-hover-bg-strong)]');
+					c.classList.remove('active', 'border-brand-accent', 'text-brand-accent');
 					c.classList.add('border-transparent', 'text-[var(--theme-text-muted)]');
 				});
-				
-				// Set clicked to active state
-				chipEl.classList.add('active', 'border-brand-accent', 'text-[var(--theme-text-primary)]', 'bg-[var(--theme-hover-bg-strong)]');
+
+				// Set clicked to active
+				chipEl.classList.add('active', 'border-brand-accent', 'text-brand-accent');
 				chipEl.classList.remove('border-transparent', 'text-[var(--theme-text-muted)]');
-				
+
 				filterPosts();
 			});
 		});
-		
+
 		// Search input handler
 		if (searchInput) {
 			searchInput.addEventListener('input', () => {
 				searchQuery = searchInput.value;
 				filterPosts();
-				
-				// Show/hide clear button
+
 				if (clearSearchBtn) {
 					clearSearchBtn.classList.toggle('hidden', !searchQuery);
 				}
 			});
 		}
-		
+
 		// Clear search button
 		if (clearSearchBtn) {
 			clearSearchBtn.addEventListener('click', () => {
@@ -158,22 +142,14 @@ const { categories, class: className = '' } = Astro.props;
 				}
 			});
 		}
-		
-		// Initial count
+
+		// Initial filter
 		filterPosts();
 	}
-	
+
 	// Run on page load
 	initBlogFilters();
-	
+
 	// Also run on Astro page transitions (View Transitions)
 	document.addEventListener('astro:page-load', initBlogFilters);
 </script>
-
-<style>
-	.filter-chip.active {
-		border-color: var(--color-brand-accent);
-		color: var(--theme-text-primary);
-		background-color: var(--theme-hover-bg-strong);
-	}
-</style>

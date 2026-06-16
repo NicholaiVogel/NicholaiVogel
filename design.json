@@ -1,8 +1,8 @@
 {
     "design_system": {
-        "version": "2.0",
-        "last_updated": "2026-01-20",
-        "description": "nicholai.work design language - evolved from industrial/technical to clean modern with selective technical accents"
+        "version": "2.1",
+        "last_updated": "2026-06-15",
+        "description": "nicholai.work design language - industrial/technical homepage (hero, experience, featured project, and blog archive) with modern readable treatment for individual post bodies and general UI"
     },
     "design_philosophy": {
         "core_principles": [
@@ -16,13 +16,14 @@
         "when_to_use_industrial": [
             "hero section only - establishes initial technical vibe",
             "experience/work history - professional credibility",
-            "featured projects - showcasing technical work"
+            "featured projects - showcasing technical work",
+            "blog archive (on homepage) - cards, featured post, and section header share the technical vocabulary so the homepage reads as one coherent industrial surface"
         ],
         "when_to_use_modern": [
             "navigation - clean, accessible",
-            "blog content - readable, focused",
-            "general UI elements - buttons, cards, badges",
-            "any new sections added to the site"
+            "general UI elements - buttons, badges",
+            "any new sections added to the site",
+            "note: blog content is rendered in the industrial language on the homepage archive (see BlogCard.astro); individual post body pages remain readable/modern"
         ]
     },
     "typography": {
@@ -33,7 +34,7 @@
                 "case": "normal case (not uppercase)",
                 "tracking": "normal or tracking-tight",
                 "line_height": "leading-tight",
-                "usage": "blog posts, new sections, readable content"
+                "usage": "blog post titles (BlogCard titles keep normal case for readability), new sections, readable content"
             },
             "industrial_style": {
                 "size": "text-5xl to text-9xl",
@@ -165,7 +166,7 @@
                 "decorative": {
                     "pulsing_dot": "w-2 h-2 bg-brand-accent animate-pulse",
                     "system_label": "font-mono text-[10px] uppercase tracking-[0.3em]",
-                    "format": "SYS.LABEL /// DESCRIPTION"
+                    "format": "SYS.LABEL · DESCRIPTION"
                 },
                 "usage": "hero, experience, featured projects only"
             }

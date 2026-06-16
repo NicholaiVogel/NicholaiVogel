@@ -211,7 +211,7 @@ export default function SearchDialog() {
 								<div className="w-2 h-2 bg-[var(--theme-border-strong)]" />
 							</div>
 							<span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">
-								/// SEARCH_QUERY
+								SEARCH_QUERY
 							</span>
 						</div>
 						<button
@@ -271,7 +271,7 @@ export default function SearchDialog() {
 						{isLoading ? (
 							<div className="p-16 text-center">
 								<div className="text-brand-accent font-mono text-sm uppercase tracking-widest mb-3 animate-pulse">
-									/// INITIALIZING SEARCH PROTOCOL
+									INITIALIZING SEARCH PROTOCOL
 								</div>
 								<div className="flex justify-center gap-1">
 									<div className="w-2 h-2 bg-brand-accent animate-pulse" style={{ animationDelay: '0ms' }} />
@@ -325,7 +325,7 @@ export default function SearchDialog() {
 						) : query ? (
 							<div className="p-16 text-center">
 								<div className="text-[var(--theme-text-muted)] font-mono text-sm uppercase tracking-widest mb-3">
-									/// NO RESULTS FOUND
+									NO RESULTS FOUND
 								</div>
 								<p className="text-[var(--theme-text-secondary)] text-sm font-mono">
 									Query returned 0 matches. Try different keywords.
@@ -334,7 +334,7 @@ export default function SearchDialog() {
 						) : (
 							<div className="p-16 text-center">
 								<div className="text-[var(--theme-text-muted)] font-mono text-sm uppercase tracking-widest mb-3">
-									/// AWAITING INPUT
+									AWAITING INPUT
 								</div>
 								<p className="text-[var(--theme-text-secondary)] text-sm font-mono">
 									Begin typing to search all blog content

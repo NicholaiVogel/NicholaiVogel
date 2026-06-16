@@ -1,23 +1,26 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import Experience from '../components/sections/Experience.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
-import Skills from '../components/sections/Skills.astro';
+import BlogFilters from '../components/BlogFilters.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import { getEntry, getCollection } from 'astro:content';
-import BlogCard from '../components/BlogCard.astro';
 import { calculateReadingTime } from '../utils/reading-time';
 
-// Fetch all section content
+// Fetch section content
 const heroEntry = await getEntry('sections', 'hero');
 const experienceEntry = await getEntry('sections', 'experience');
-const skillsEntry = await getEntry('sections', 'skills');
 const featuredProjectEntry = await getEntry('sections', 'featured-project');
 
-// Fetch 3 most recent blog posts
-const latestBlogs = (await getCollection('blog'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+// Fetch all blog posts (newest first)
+const allPosts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Unique categories for filters
+const categories = [...new Set(allPosts.map((post) => post.data.category).filter(Boolean))] as string[];
 
 // Extract content from entries
 const heroContent = {
@@ -37,13 +40,6 @@ const experienceContent = {
 	entries: experienceEntry.data.entries || [],
 };
 
-const skillsContent = {
-	sectionTitle: skillsEntry.data.sectionTitle || '',
-	sectionSubtitle: skillsEntry.data.sectionSubtitle || '',
-	description: skillsEntry.data.description || '',
-	skills: skillsEntry.data.skills || [],
-};
-
 const featuredProjectContent = {
 	role: featuredProjectEntry.data.role || '',
 	client: featuredProjectEntry.data.client || '',
@@ -61,86 +57,123 @@ const featuredProjectContent = {
 <BaseLayout usePadding={false}>
 	<Hero {...heroContent} />
 
-	<!-- Gradient Divider -->
-	<div class="w-full my-16 lg:my-24">
-		<div class="h-[1px] divider-gradient"></div>
-	</div>
 
 	<Experience {...experienceContent} />
 
-	<!-- Container Divider with accent hint -->
-	<div class="container mx-auto px-6 lg:px-12 my-8">
-		<div class="h-[1px] divider-gradient"></div>
-	</div>
-
 	<FeaturedProject {...featuredProjectContent} />
-	<Skills {...skillsContent} />
 
 	<!-- Container Divider -->
 	<div class="container mx-auto px-6 lg:px-12 my-8">
 		<div class="h-[1px] divider-gradient"></div>
 	</div>
 
-	<!-- Latest Blogs Section -->
-	<section id="latest-blogs" class="bg-[var(--theme-bg-primary)] py-20 lg:py-32 border-t border-[var(--theme-border-primary)]">
+	<!-- Blog Archive Section -->
+	<section id="blog" class="bg-[var(--theme-bg-primary)] py-20 lg:py-32 border-t border-[var(--theme-border-primary)] scroll-mt-24">
 		<div class="container mx-auto px-6 lg:px-8">
 
-			<!-- Header Section -->
-			<div class="mb-16 max-w-3xl">
-				<div class="mb-4">
-					<span class="inline-block px-3 py-1 rounded-full bg-brand-accent/10 text-xs text-brand-accent">
-						Latest Posts
-					</span>
+				<!-- Section Header (industrial) -->
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 lg:mb-24">
+				<div class="lg:col-span-8">
+									<h2 class="text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tighter leading-[0.85] text-[var(--theme-text-primary)]">
+						<span class="block text-brand-accent">Journal</span>
+					</h2>
 				</div>
-				<h2 class="text-4xl lg:text-5xl font-bold text-[var(--theme-text-primary)] mb-4 leading-tight">
-					Recent Writings
-				</h2>
-				<p class="text-lg text-[var(--theme-text-secondary)] leading-relaxed">
-					exploring vfx pipelines, ai workflows, and technical insights from the production trenches
-				</p>
+				<div class="lg:col-span-4 flex flex-col justify-end">
+									<p class="text-[var(--theme-text-secondary)] text-lg leading-relaxed border-l border-brand-accent/30 pl-6">
+                    lessons learned from my independent research telling visual stories.
+					</p>
+				</div>
 			</div>
 
-			<!-- Blog Cards Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-				{latestBlogs.map((post, index) => (
-					<div class={`animate-on-scroll slide-up stagger-${index + 1}`}>
-						<BlogCard
-							title={post.data.title}
-							description={post.data.description}
-							pubDate={post.data.pubDate}
-							heroImage={post.data.heroImage}
-							category={post.data.category}
-							tags={post.data.tags}
-							href={`/blog/${post.id}/`}
-							readTime={calculateReadingTime(post.body)}
-						/>
+			<!-- All Posts (minimal list format) -->
+			<div>
+				<div class="flex items-center gap-4 mb-8">
+					<span class="text-[10px] font-mono uppercase tracking-widest font-bold text-[var(--theme-text-muted)]">ALL_ENTRIES</span>
+					<span class="h-px flex-grow bg-[var(--theme-border-primary)]"></span>
+				</div>
+
+				<BlogFilters categories={categories} />
+
+				<!-- Posts List: industrial row format (same DNA as Experience section) -->
+				<div data-posts-grid class="w-full border-t border-[var(--theme-border-primary)]">
+					{allPosts.map((post, index) => (
+						<article
+							data-post
+							data-category={post.data.category || ''}
+							data-title={post.data.title}
+							data-description={post.data.description}
+							class:list={[
+								'group relative border-b border-[var(--theme-border-primary)] transition-all duration-500 overflow-hidden',
+								`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`
+							]}
+						>
+							<!-- Hover accent strip -->
+							<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+
+							<a href={`/blog/${post.id}/`} class="flex items-stretch">
+								<!-- Left image: fixed height for consistent rows, object-cover crops consistently -->
+								<div class="relative w-32 lg:w-80 h-36 lg:h-44 shrink-0 overflow-hidden bg-[var(--theme-bg-secondary)]">
+									{post.data.heroImage ? (
+										<Image
+											src={post.data.heroImage}
+											alt=""
+											width={512}
+											height={512}
+											class="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-105"
+										/>
+									) : (
+										<div class="w-full h-full flex items-center justify-center">
+											<span class="font-mono text-[9px] uppercase tracking-[0.3em] text-[var(--theme-text-subtle)]">NO_PREVIEW</span>
+										</div>
+									)}
+									<!-- Subtle scanline texture over the image -->
+									<div class="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,112,0.06))] bg-[length:100%_2px,3px_100%] opacity-[0.08] group-hover:opacity-0 transition-opacity duration-500"></div>
+									<!-- Minimal right-edge fade: dissolves the seam into the content -->
+									<div class="absolute inset-y-0 right-0 w-1/3 pointer-events-none" style="background: linear-gradient(to right, transparent, var(--theme-bg-primary));"></div>
+								</div>
+
+								<!-- Content: title first, metadata underneath -->
+								<div class="relative flex-1 flex items-center gap-4 lg:gap-8 py-5 lg:py-7 pr-4 lg:pr-8 pl-5 lg:pl-8">
+									<div class="flex-1 min-w-0">
+										<h3 class="text-lg lg:text-xl font-bold tracking-tight text-[var(--theme-text-primary)] group-hover:text-brand-accent transition-colors duration-300 leading-snug">
+											{post.data.title}
+										</h3>
+										<!-- Metadata line beneath the title -->
+										<div class="flex items-center gap-2 lg:gap-3 mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--theme-text-muted)] flex-wrap">
+											{post.data.featured && <span class="w-1.5 h-1.5 bg-brand-accent animate-pulse"></span>}
+											<FormattedDate date={post.data.pubDate} />
+											{post.data.category && <span class="text-[var(--theme-border-strong)]">/</span>}
+											{post.data.category && <span class="text-brand-accent">{post.data.category}</span>}
+											{post.data.featured && <span class="text-[var(--theme-border-strong)]">/</span>}
+											{post.data.featured && <span>FEATURED</span>}
+											<span class="text-[var(--theme-border-strong)]">/</span>
+											<span>{calculateReadingTime(post.body)}</span>
+										</div>
+										<p class="hidden lg:block text-sm text-[var(--theme-text-secondary)] leading-relaxed mt-2 line-clamp-1">
+											{post.data.description}
+										</p>
+									</div>
+									<!-- Hover arrow indicator -->
+									<div class="hidden lg:flex items-center justify-center w-9 h-9 shrink-0 border border-[var(--theme-border-secondary)] text-[var(--theme-text-muted)] group-hover:border-brand-accent group-hover:text-brand-accent transition-all duration-300">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+											<path d="M5 12h14M12 5l7 7-7 7"/>
+										</svg>
+									</div>
+								</div>
+							</a>
+						</article>
+					))}
+				</div>
+
+				<!-- Empty state (shown via JS when no results) -->
+				<div id="no-results" class="hidden text-center py-20">
+					<div class="text-[var(--theme-text-primary)] text-lg font-semibold mb-2">
+						no matching articles found
 					</div>
-				))}
-			</div>
-
-			<!-- View All Button -->
-			<div class="flex justify-center animate-on-scroll fade-in stagger-4">
-				<a
-					href="/blog"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--theme-border-primary)] bg-[var(--theme-hover-bg)] hover:border-brand-accent hover:bg-brand-accent/5 text-sm font-medium transition-all duration-300"
-				>
-					<span>View All Posts</span>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="transition-transform group-hover:translate-x-1"
-					>
-						<path d="M5 12h14" />
-						<path d="m12 5 7 7-7 7" />
-					</svg>
-				</a>
+					<p class="text-[var(--theme-text-secondary)] text-sm">
+						try adjusting your search or filter criteria
+					</p>
+				</div>
 			</div>
 
 		</div>
