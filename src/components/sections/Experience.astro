@@ -34,7 +34,7 @@ const { sectionLabel, entries } = Astro.props;
 const entryImages: ImageMetadata[] = [silhouetteImg, closeupPortrait];
 ---
 
-<div id="experience" class="bg-[var(--theme-bg-primary)] border-t border-[var(--theme-border-primary)]">
+<div id="experience" class="bg-[var(--theme-bg-primary)]">
 	<!-- Minimal intro -->
 	<div class="container mx-auto px-6 lg:px-8 py-20 lg:py-28">
 		<div class="flex items-center gap-3">
@@ -49,7 +49,7 @@ const entryImages: ImageMetadata[] = [silhouetteImg, closeupPortrait];
 		const textRight = index % 2 === 0; // alternate anchor side for editorial rhythm
 
 		return (
-			<section class:list={['group/chapter relative w-full overflow-hidden', index > 0 ? 'border-t border-[var(--theme-border-primary)]' : '']}>
+			<section class="group/chapter relative w-full overflow-hidden">
 				<!-- Full-bleed background image (oversized for parallax slack) -->
 				<div class="absolute inset-0 z-0">
 					<div class="absolute left-0 w-full h-[130%] -top-[15%]" data-parallax-media>
