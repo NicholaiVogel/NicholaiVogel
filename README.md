@@ -35,6 +35,8 @@
 <details>
 <summary>the details</summary>
 
+![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
+
 - VFX technical director. 
 - self-hosted everything. 
 - genuinely excited about new pens
