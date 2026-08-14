@@ -13,7 +13,6 @@
 - **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories, system prompts, session transcripts, institutional knowledge, and secrets between all of your favorite harnesses and models.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
 - **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
-- **[GHL](https://github.com/NicholaiVogel/GoHighLevel-CLI)** - An unofficial, local-first CLI for GoHighLevel CRM and agency operations, built for stable JSON output, guarded automation, and headless agent runtimes. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
 - **[comfyui-materia](https://github.com/NicholaiVogel/comfyui-materia)** - diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.
 - **[nicholai.work](https://nicholai.work)** - personal site
