@@ -1,6 +1,6 @@
 # hey, i'm nicholai
 
-**Colorado Springs.** VFX artist, mechanic of systems and tools.
+VFX artist, supervisor, vibeslopper
 
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -15,6 +15,7 @@
 - **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
 - **[comfyui-materia](https://github.com/NicholaiVogel/comfyui-materia)** - diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.
+- **[Pi Extensions](https://github.com/NicholaiVogel/pi)** - my vibeslopped Pi agent setup
 - **[nicholai.work](https://nicholai.work)** - personal site
 
 ### dotfiles
