@@ -2,18 +2,17 @@
 
 **Colorado Springs.** VFX artist, mechanic of systems and tools.
 
+![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Rust](https://img.shields.io/badge/-Rust-000000?style=flat-square&logo=rust&logoColor=white)
-![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Lua](https://img.shields.io/badge/-Lua-2C2D72?style=flat-square&logo=lua&logoColor=white)
-![Svelte](https://img.shields.io/badge/-Svelte-FF3E00?style=flat-square&logo=svelte&logoColor=white)
 ![Astro](https://img.shields.io/badge/-Astro-BC52EE?style=flat-square&logo=astro&logoColor=white)
 
 ## current work
 
-- **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
-- **[signetai](https://github.com/Signet-AI/signetai)** - open protocol for agent identity, knowledge, and trust. defines how an agent persists across sessions and carries its identity between tools.
+- **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories, system prompts, session transcripts, institutional knowledge, and secrets between all of your favorite harnesses and models.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
+- **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[GHL](https://github.com/NicholaiVogel/GoHighLevel-CLI)** - An unofficial, local-first CLI for GoHighLevel CRM and agency operations, built for stable JSON output, guarded automation, and headless agent runtimes. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
 - **[comfyui-materia](https://github.com/NicholaiVogel/comfyui-materia)** - diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.
@@ -26,7 +25,6 @@
 ## connect
 
 [![Website](https://img.shields.io/badge/-nicholai.work-000000?style=flat-square&logo=safari&logoColor=white)](https://nicholai.work)
-[![Gitea](https://img.shields.io/badge/-git.nicholai.work-609926?style=flat-square&logo=gitea&logoColor=white)](https://git.nicholai.work/Nicholai)
 [![X](https://img.shields.io/badge/-@Nicholai__exe-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/Nicholai_exe)
 [![Instagram](https://img.shields.io/badge/-nicholai.exe-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/nicholai.exe)
 
@@ -36,10 +34,5 @@
 <summary>the details</summary>
 
 ![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
-
-- VFX technical director. 
-- self-hosted everything. 
-- genuinely excited about new pens
-- draws in my free time
 
 </details>
