@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual essay about Signet's native substrate and edge deployment strategy.">
+  <title>The runtime should be boring / Signet</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f0e;
+      --paper: #101614;
+      --paper-2: #151c19;
+      --ink: #edf1eb;
+      --muted: #a3ada5;
+      --quiet: #68746c;
+      --line: #29352e;
+      --line-bright: #4c6656;
+      --mint: #b9dcc2;
+      --mint-deep: #122219;
+      --ochre: #dbc49a;
+      --sans: "Geist", "SF Pro Display", "Avenir Next", ui-sans-serif, system-ui, sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.7; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .045; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E"); z-index: 5; }
+    a { color: inherit; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; padding: 28px 0; color: var(--quiet); font: 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .topbar a { text-decoration: none; }
+    .topbar a:hover { color: var(--mint); }
+    .brand { color: var(--mint); }
+    .article-shell { display: grid; grid-template-columns: 180px minmax(0, 720px); gap: clamp(42px, 8vw, 120px); margin: 96px auto 0; }
+    .toc { position: sticky; top: 32px; align-self: start; padding-top: 8px; color: var(--quiet); font: 11px/1.5 var(--mono); }
+    .toc-label { margin-bottom: 18px; color: var(--mint); letter-spacing: .14em; text-transform: uppercase; }
+    .toc a { display: block; margin: 10px 0; text-decoration: none; }
+    .toc a:hover, .toc a.active { color: var(--ink); }
+    .toc a.active::before { content: "↳ "; color: var(--mint); }
+    .category { color: var(--mint); font: 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 830px; margin: 24px 0 30px; font: clamp(58px, 9vw, 112px)/.91 var(--serif); letter-spacing: -.07em; font-weight: 400; }
+    .dek { max-width: 690px; color: #c7d0c8; font-size: clamp(19px, 2.5vw, 26px); line-height: 1.4; letter-spacing: -.025em; }
+    .meta { display: flex; gap: 18px; margin-top: 38px; color: var(--quiet); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .rule { height: 1px; margin: 64px 0; background: var(--line); }
+    .prose { font-family: var(--serif); font-size: 20px; line-height: 1.75; color: #d4dbd4; }
+    .prose > p:first-child::first-letter { float: left; margin: .12em .12em 0 0; color: var(--mint); font-size: 4.4em; line-height: .72; }
+    .prose p { margin-bottom: 30px; }
+    .prose strong { color: var(--ink); font-weight: 500; }
+    h2 { margin: 106px 0 26px; font: clamp(38px, 6vw, 66px)/1 var(--serif); letter-spacing: -.055em; font-weight: 400; scroll-margin-top: 32px; }
+    h3 { margin: 0 0 12px; font: 27px/1.1 var(--serif); font-weight: 400; }
+    .eyebrow { color: var(--ochre); font: 10px var(--mono); letter-spacing: .15em; text-transform: uppercase; }
+    .pullquote { margin: 58px 0; padding: 30px 0 30px 30px; border-left: 1px solid var(--mint); color: var(--mint); font: clamp(26px, 4vw, 42px)/1.15 var(--serif); letter-spacing: -.04em; }
+    .figure { margin: 58px 0 72px; padding: 22px; border: 1px solid var(--line); background: var(--paper); font-family: var(--sans); }
+    .figure-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 22px; }
+    .figure-title { color: var(--ink); font-size: 14px; }
+    .figure-caption { margin: 16px 0 0; color: var(--quiet); font: 12px/1.5 var(--mono); }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; }
+    .control { cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 7px 10px; font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .control:hover, .control[aria-pressed="true"] { border-color: var(--mint); color: var(--mint); background: var(--mint-deep); }
+    svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .diagram-bg { fill: #0d1310; stroke: var(--line); }
+    .svg-label { fill: var(--quiet); font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .svg-title { fill: var(--ink); font: 16px var(--sans); font-weight: 500; }
+    .svg-copy { fill: var(--muted); font: 11px var(--sans); }
+    .svg-node { fill: var(--paper-2); stroke: var(--line-bright); stroke-width: 1; transition: fill 300ms cubic-bezier(.22,1,.36,1), stroke 300ms cubic-bezier(.22,1,.36,1); }
+    .svg-node:hover { fill: #1f2e25; stroke: var(--mint); }
+    .svg-node.core { fill: var(--mint); stroke: var(--mint); }
+    .svg-node.core .svg-title, .svg-node.core .svg-copy, .svg-node.core .svg-label { fill: var(--mint-deep); }
+    .svg-node.dim { opacity: .24; }
+    .svg-connector { fill: none; stroke: var(--line-bright); stroke-width: 1.2; stroke-dasharray: 5 7; }
+    .svg-connector.live { stroke: var(--mint); stroke-dasharray: 3 8; animation: flow 1.4s linear infinite; }
+    @keyframes flow { to { stroke-dashoffset: -22; } }
+    .hidden { display: none; }
+    .surface-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .surface { min-height: 176px; padding: 20px; border: 1px solid var(--line); background: var(--paper-2); cursor: pointer; transition: transform 350ms cubic-bezier(.22,1,.36,1), border-color 350ms cubic-bezier(.22,1,.36,1), background 350ms cubic-bezier(.22,1,.36,1); }
+    .surface:hover, .surface.selected { transform: translateY(-5px); border-color: var(--mint); background: var(--mint-deep); }
+    .surface p { margin: 34px 0 0; color: var(--muted); font: 13px/1.5 var(--sans); }
+    .surface.selected p { color: #c9dfcd; }
+    .side-note { margin: 32px 0; padding: 20px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); font: 13px/1.6 var(--sans); }
+    .side-note strong { color: var(--ink); font-weight: 500; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 48px; font-family: var(--sans); }
+    .step { min-height: 190px; padding: 20px; border-top: 1px solid var(--line-bright); }
+    .step strong { display: block; margin: 40px 0 10px; font-size: 16px; font-weight: 500; }
+    .step p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .endnote { margin: 100px 0 120px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--quiet); font: 12px/1.7 var(--mono); }
+    .endnote a { color: var(--muted); text-decoration: none; }
+    .endnote a:hover { color: var(--mint); }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px 0 58px; color: var(--quiet); font: 11px var(--mono); }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--mint); }
+    @media (max-width: 800px) {
+      .wrap { width: min(100% - 32px, 680px); }
+      .article-shell { display: block; margin-top: 72px; }
+      .toc { display: none; }
+      .meta { flex-wrap: wrap; line-height: 1.4; }
+      .prose { font-size: 18px; }
+      .figure { margin-left: -8px; margin-right: -8px; padding: 14px; }
+      .figure-head { display: block; }
+      .controls { margin-top: 16px; }
+      .surface-grid, .steps { grid-template-columns: 1fr; }
+      .surface { min-height: auto; }
+      .surface p { margin-top: 18px; }
+      footer { display: block; }
+      footer span { display: block; margin-bottom: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="/">Signet / field notes</a>
+    <a href="https://scriptc.dev/">research 01</a>
+  </header>
+
+  <div class="wrap article-shell">
+    <aside class="toc" aria-label="Article sections">
+      <div class="toc-label">On this page</div>
+      <a href="#constraint">The constraint</a>
+      <a href="#substrate">The substrate</a>
+      <a href="#embeddings">The edge profile</a>
+      <a href="#plan">The sequence</a>
+    </aside>
+
+    <article>
+      <div class="category">Architecture · edge deployment · 8 min read</div>
+      <h1>The runtime should be boring.</h1>
+      <p class="dek">Signet is a continuity layer, not an inference appliance. Infrastructure work starts when memory, failure, and resource boundaries become explicit.</p>
+      <div class="meta"><span>Signet research note</span><span>20 August 2026</span><span>Working direction</span></div>
+      <div class="rule"></div>
+
+      <div class="prose">
+        <p>There is a version of Signet that is easy to imagine and difficult to ship. It is a single daemon, a generous JavaScript dependency graph, a background memory pipeline, local inference, source watchers, a graph, a database, and a dashboard. It works. It also has a ceiling.</p>
+        <p>If that daemon can grow toward five gigabytes under load, it is not infrastructure yet. The problem is not that Bun is somehow disqualified. The problem is that the runtime has not made its expensive boundaries legible enough to own.</p>
+      </div>
+
+      <h2 id="constraint">The compiler is not the boundary.</h2>
+      <div class="prose">
+        <p><a href="https://scriptc.dev/">scriptc</a> makes an interesting offer: ordinary TypeScript can become a small native executable, with a static tier, an explicit dynamic tier, and an FFI surface. That could give Signet a small native control plane, fast tools, and a shared low-level substrate.</p>
+        <p>But a native addon loaded into Bun still lives inside the Bun process. Compiling code is not the same thing as containing it. If an addon allocates four gigabytes, the daemon still owns the consequence.</p>
+      </div>
+      <div class="pullquote">Compile where it helps. Isolate where it matters.</div>
+
+      <figure class="figure" aria-labelledby="architecture-title">
+        <div class="figure-head">
+          <div><div class="eyebrow">Interactive figure 01</div><div class="figure-title" id="architecture-title">Choose the boundary you want to see</div></div>
+          <div class="controls" role="group" aria-label="Architecture views">
+            <button class="control" data-view="overview" aria-pressed="true">Overview</button>
+            <button class="control" data-view="in-process" aria-pressed="false">Addon</button>
+            <button class="control" data-view="isolated" aria-pressed="false">Processes</button>
+          </div>
+        </div>
+        <svg viewBox="0 0 720 330" role="img" aria-labelledby="architecture-title architecture-desc">
+          <desc id="architecture-desc">An interactive diagram comparing a small supervisor, an in-process native addon, and isolated native services.</desc>
+          <rect class="diagram-bg" x="0" y="0" width="720" height="330" rx="2" />
+          <g id="view-overview">
+            <path class="svg-connector live" d="M190 165 H265"/><path class="svg-connector live" d="M455 165 H530"/>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">control plane</text><text class="svg-title" x="46" y="165">Small supervisor</text><text class="svg-copy" x="46" y="188">policy · health · IPC</text>
+            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">shared contract</text><text class="svg-title" x="283" y="165">Signet native ABI</text><text class="svg-copy" x="283" y="188">SQLite · keyring · vectors</text>
+            <rect class="svg-node" x="530" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="548" y="137">optional workers</text><text class="svg-title" x="548" y="165">Native services</text><text class="svg-copy" x="548" y="188">bounded · restartable</text>
+          </g>
+          <g id="view-in-process" class="hidden">
+            <path class="svg-connector live" d="M190 165 H530"/>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">bun process</text><text class="svg-title" x="46" y="165">Daemon</text><text class="svg-copy" x="46" y="188">API + memory + addon</text>
+            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">native addon</text><text class="svg-title" x="283" y="165">.node module</text><text class="svg-copy" x="283" y="188">faster, not isolated</text>
+            <rect class="svg-node" x="530" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="548" y="137">same RSS</text><text class="svg-title" x="548" y="165">Shared fate</text><text class="svg-copy" x="548" y="188">one process budget</text>
+          </g>
+          <g id="view-isolated" class="hidden">
+            <path class="svg-connector live" d="M190 165 H265"/><path class="svg-connector live" d="M455 110 H530"/><path class="svg-connector live" d="M455 220 H530"/>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">supervisor</text><text class="svg-title" x="46" y="165">API daemon</text><text class="svg-copy" x="46" y="188">small hot path</text>
+            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">IPC boundary</text><text class="svg-title" x="283" y="165">Work dispatch</text><text class="svg-copy" x="283" y="188">queue · timeout · budget</text>
+            <rect class="svg-node" x="530" y="55" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="80">process A</text><text class="svg-title" x="548" y="105">Database</text>
+            <rect class="svg-node" x="530" y="195" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="220">process B</text><text class="svg-title" x="548" y="245">Dreaming</text>
+          </g>
+        </svg>
+        <figcaption class="figure-caption">A native addon can improve implementation control. A process can impose a failure and memory boundary.</figcaption>
+      </figure>
+
+      <h2 id="substrate">Own the adapter, not every engine.</h2>
+      <div class="prose">
+        <p>The attractive version of the native-substrate idea is not writing a new database, inference engine, or image library. It is owning a narrow adapter around mature native libraries and exposing only the operations Signet needs.</p>
+        <p>One C ABI could support a Bun adapter, a scriptc FFI adapter, and an IPC service. The TypeScript layer would keep its current contracts while the implementation becomes more deliberate about allocations, ownership, and lifecycle.</p>
+      </div>
+
+      <figure class="figure" aria-labelledby="surface-title">
+        <div class="figure-head"><div><div class="eyebrow">Interactive figure 02</div><div class="figure-title" id="surface-title">The substrate, one boundary at a time</div></div><div class="eyebrow" id="surface-status">select a surface</div></div>
+        <div class="surface-grid" role="list">
+          <article class="surface" role="listitem" tabindex="0" data-surface="SQLite"><div class="eyebrow">01 · easiest first</div><h3>SQLite</h3><p>Link the amalgamation directly. Keep the database accessor as the compatibility contract.</p></article>
+          <article class="surface" role="listitem" tabindex="0" data-surface="Vectors"><div class="eyebrow">02 · query layer</div><h3>Vector search</h3><p>Compile the extension beside SQLite, or expose only the vector operations Signet uses.</p></article>
+          <article class="surface" role="listitem" tabindex="0" data-surface="Keyring"><div class="eyebrow">03 · platform edge</div><h3>Keyring</h3><p>Wrap each operating system's credential store behind one Signet interface.</p></article>
+        </div>
+        <figcaption class="figure-caption">The goal is a stable Signet contract, not five new package-shaped surfaces.</figcaption>
+      </figure>
+
+      <h2 id="embeddings">Embeddings become a capability, not a tax.</h2>
+      <div class="prose">
+        <p>Built-in ONNX embeddings bring model files, runtimes, platform behavior, and memory costs that do not belong in every edge deployment. Signet already has external paths such as OpenAI-compatible APIs, Ollama, and llama.cpp, as well as an explicit no-embeddings mode.</p>
+        <p>That means we do not need to recreate ONNX Runtime. We can make embeddings an explicit deployment capability and let the edge profile use SQLite FTS5, graph traversal, structured memory, and provenance-aware source retrieval.</p>
+      </div>
+      <div class="side-note"><strong>A quiet dependency removal:</strong> Signet does not appear to use image processing directly. The current sharp shim exists because Transformers.js imports sharp at package scope. Remove the local embedding stack and sharp likely leaves with it.</div>
+
+      <h2 id="plan">The sequence.</h2>
+      <div class="prose"><p>This is smaller and more defensible than trying to compile the entire daemon with scriptc. First remove the heavyweight baseline. Then prove one native contract. Then decide which work deserves a process boundary.</p></div>
+      <div class="steps">
+        <div class="step"><div class="eyebrow">01</div><strong>Drop ONNX</strong><p>Remove the built-in model, worker, warmup, cache, and runtime assets.</p></div>
+        <div class="step"><div class="eyebrow">02</div><strong>Define the ABI</strong><p>Start with SQLite, vectors, and keyring access.</p></div>
+        <div class="step"><div class="eyebrow">03</div><strong>Bind twice</strong><p>Implement Bun first, then prove scriptc FFI against the same contract.</p></div>
+        <div class="step"><div class="eyebrow">04</div><strong>Split heavy work</strong><p>Use child processes where RSS budgets and restart policy matter.</p></div>
+      </div>
+
+      <div class="endnote">This is a working direction, not a migration plan.<br><br>Sources: <a href="https://scriptc.dev/">scriptc</a> · <a href="https://scriptc.dev/limitations">limitations</a> · <a href="https://github.com/Signet-AI/signetai">Signet repository</a></div>
+    </article>
+  </div>
+
+  <footer class="wrap"><span>Signet / native substrate field note</span><span><a href="/">nicholai.work</a> · 2026.08</span></footer>
+
+  <script>
+    const viewButtons = document.querySelectorAll('[data-view]');
+    const views = document.querySelectorAll('[id^="view-"]');
+    viewButtons.forEach((button) => button.addEventListener('click', () => {
+      const view = button.dataset.view;
+      viewButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      views.forEach((group) => group.classList.toggle('hidden', group.id !== `view-${view}`));
+    }));
+
+    const status = document.querySelector('#surface-status');
+    const surfaces = document.querySelectorAll('.surface');
+    const selectSurface = (surface) => {
+      surfaces.forEach((item) => item.classList.toggle('selected', item === surface));
+      if (status) status.textContent = `${surface.dataset.surface} / selected`;
+    };
+    surfaces.forEach((surface) => {
+      surface.addEventListener('click', () => selectSurface(surface));
+      surface.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectSurface(surface); } });
+    });
+
+    const links = [...document.querySelectorAll('.toc a')];
+    const headings = links.map((link) => document.querySelector(link.getAttribute('href')));
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) links.forEach((link, index) => link.classList.toggle('active', headings[index] === entry.target));
+    }), { rootMargin: '-15% 0px -70% 0px' });
+    headings.forEach((heading) => heading && observer.observe(heading));
+  </script>
+</body>
+</html>
