@@ -133,55 +133,55 @@
 
       <div class="prose">
         <p>There is a version of Signet that is easy to imagine and difficult to ship. It is a single daemon, a generous JavaScript dependency graph, a background memory pipeline, local inference, source watchers, a graph, a database, and a dashboard. It works. It also has a ceiling.</p>
-        <p>If that daemon can grow toward five gigabytes under load, it is not infrastructure yet. The problem is not that Bun is somehow disqualified. The problem is that the runtime has not made its expensive boundaries legible enough to own.</p>
+        <p>If that daemon can grow toward five gigabytes under load, it is not infrastructure yet. The production goal is to drop Bun from the runtime entirely and ship Signet as one self-contained binary compiled from TypeScript with scriptc.</p>
       </div>
 
       <h2 id="constraint">The compiler is not the boundary.</h2>
       <div class="prose">
-        <p><a href="https://scriptc.dev/">scriptc</a> makes an interesting offer: ordinary TypeScript can become a small native executable, with a static tier, an explicit dynamic tier, and an FFI surface. That could give Signet a small native control plane, fast tools, and a shared low-level substrate.</p>
-        <p>But a native addon loaded into Bun still lives inside the Bun process. Compiling code is not the same thing as containing it. If an addon allocates four gigabytes, the daemon still owns the consequence.</p>
+        <p><a href="https://scriptc.dev/">scriptc</a> makes the relevant offer: ordinary TypeScript can become a native executable, with a static tier, an explicit dynamic tier, and an FFI surface. The target is not a Bun daemon with better addons. The target is the Signet daemon itself, compiled into a binary with a controlled native substrate behind it.</p>
+        <p>A native addon loaded into Bun would still live inside the Bun process. That is useful as a temporary development bridge, but it is not the destination. Signet should own one production runtime: scriptc-compiled TypeScript calling SQLite, vectors, and keyring facilities through a narrow FFI contract.</p>
       </div>
-      <div class="pullquote">Compile where it helps. Isolate where it matters.</div>
+      <div class="pullquote">Compile the runtime. Isolate only what cannot fit.</div>
 
       <figure class="figure" aria-labelledby="architecture-title">
         <div class="figure-head">
           <div><div class="eyebrow">Interactive figure 01</div><div class="figure-title" id="architecture-title">Choose the boundary you want to see</div></div>
           <div class="controls" role="group" aria-label="Architecture views">
             <button class="control" data-view="overview" aria-pressed="true">Overview</button>
-            <button class="control" data-view="in-process" aria-pressed="false">Addon</button>
-            <button class="control" data-view="isolated" aria-pressed="false">Processes</button>
+            <button class="control" data-view="in-process" aria-pressed="false">Addon contrast</button>
+            <button class="control" data-view="isolated" aria-pressed="false">Optional isolation</button>
           </div>
         </div>
         <svg viewBox="0 0 720 330" role="img" aria-labelledby="architecture-title architecture-desc">
-          <desc id="architecture-desc">An interactive diagram comparing a small supervisor, an in-process native addon, and isolated native services.</desc>
+          <desc id="architecture-desc">An interactive diagram comparing the scriptc production binary, an in-process addon as a temporary bridge, and optional isolated services.</desc>
           <rect class="diagram-bg" x="0" y="0" width="720" height="330" rx="2" />
           <g id="view-overview">
             <path class="svg-connector live" d="M190 165 H265"/><path class="svg-connector live" d="M455 165 H530"/>
-            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">control plane</text><text class="svg-title" x="46" y="165">Small supervisor</text><text class="svg-copy" x="46" y="188">policy · health · IPC</text>
-            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">shared contract</text><text class="svg-title" x="283" y="165">Signet native ABI</text><text class="svg-copy" x="283" y="188">SQLite · keyring · vectors</text>
-            <rect class="svg-node" x="530" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="548" y="137">optional workers</text><text class="svg-title" x="548" y="165">Native services</text><text class="svg-copy" x="548" y="188">bounded · restartable</text>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">production runtime</text><text class="svg-title" x="46" y="165">scriptc binary</text><text class="svg-copy" x="46" y="188">all Signet TypeScript</text>
+            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">native FFI</text><text class="svg-title" x="283" y="165">Signet ABI</text><text class="svg-copy" x="283" y="188">SQLite · keyring · vectors</text>
+            <rect class="svg-node" x="530" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="548" y="137">linked substrate</text><text class="svg-title" x="548" y="165">Native libraries</text><text class="svg-copy" x="548" y="188">one deployment unit</text>
           </g>
           <g id="view-in-process" class="hidden">
             <path class="svg-connector live" d="M190 165 H530"/>
-            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">bun process</text><text class="svg-title" x="46" y="165">Daemon</text><text class="svg-copy" x="46" y="188">API + memory + addon</text>
-            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">native addon</text><text class="svg-title" x="283" y="165">.node module</text><text class="svg-copy" x="283" y="188">faster, not isolated</text>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">temporary bridge</text><text class="svg-title" x="46" y="165">Bun daemon</text><text class="svg-copy" x="46" y="188">development only</text>
+            <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">native addon</text><text class="svg-title" x="283" y="165">.node module</text><text class="svg-copy" x="283" y="188">not the destination</text>
             <rect class="svg-node" x="530" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="548" y="137">same RSS</text><text class="svg-title" x="548" y="165">Shared fate</text><text class="svg-copy" x="548" y="188">one process budget</text>
           </g>
           <g id="view-isolated" class="hidden">
             <path class="svg-connector live" d="M190 165 H265"/><path class="svg-connector live" d="M455 110 H530"/><path class="svg-connector live" d="M455 220 H530"/>
-            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">supervisor</text><text class="svg-title" x="46" y="165">API daemon</text><text class="svg-copy" x="46" y="188">small hot path</text>
+            <rect class="svg-node core" x="28" y="110" width="162" height="110" rx="2"/><text class="svg-label" x="46" y="137">scriptc binary</text><text class="svg-title" x="46" y="165">Signet runtime</text><text class="svg-copy" x="46" y="188">single deployment</text>
             <rect class="svg-node" x="265" y="110" width="190" height="110" rx="2"/><text class="svg-label" x="283" y="137">IPC boundary</text><text class="svg-title" x="283" y="165">Work dispatch</text><text class="svg-copy" x="283" y="188">queue · timeout · budget</text>
-            <rect class="svg-node" x="530" y="55" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="80">process A</text><text class="svg-title" x="548" y="105">Database</text>
-            <rect class="svg-node" x="530" y="195" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="220">process B</text><text class="svg-title" x="548" y="245">Dreaming</text>
+            <rect class="svg-node" x="530" y="55" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="80">escape hatch A</text><text class="svg-title" x="548" y="105">Database</text>
+            <rect class="svg-node" x="530" y="195" width="162" height="80" rx="2"/><text class="svg-label" x="548" y="220">escape hatch B</text><text class="svg-title" x="548" y="245">Dreaming</text>
           </g>
         </svg>
-        <figcaption class="figure-caption">A native addon can improve implementation control. A process can impose a failure and memory boundary.</figcaption>
+        <figcaption class="figure-caption">The target is one scriptc binary. Native addons are only a bridge; child processes remain an escape hatch for workloads that cannot fit safely inside it.</figcaption>
       </figure>
 
-      <h2 id="substrate">Own the adapter, not every engine.</h2>
+      <h2 id="substrate">Own the substrate. Compile the runtime.</h2>
       <div class="prose">
         <p>The attractive version of the native-substrate idea is not writing a new database, inference engine, or image library. It is owning a narrow adapter around mature native libraries and exposing only the operations Signet needs.</p>
-        <p>One C ABI could support a Bun adapter, a scriptc FFI adapter, and an IPC service. The TypeScript layer would keep its current contracts while the implementation becomes more deliberate about allocations, ownership, and lifecycle.</p>
+        <p>One C ABI can support scriptc FFI directly, with a temporary Bun adapter for development and migration. The TypeScript layer keeps its current contracts while the implementation becomes more deliberate about allocations, ownership, and lifecycle.</p>
       </div>
 
       <figure class="figure" aria-labelledby="surface-title">
@@ -202,12 +202,12 @@
       <div class="side-note"><strong>A quiet dependency removal:</strong> Signet does not appear to use image processing directly. The current sharp shim exists because Transformers.js imports sharp at package scope. Remove the local embedding stack and sharp likely leaves with it.</div>
 
       <h2 id="plan">The sequence.</h2>
-      <div class="prose"><p>This is smaller and more defensible than trying to compile the entire daemon with scriptc. First remove the heavyweight baseline. Then prove one native contract. Then decide which work deserves a process boundary.</p></div>
+      <div class="prose"><p>This is the replacement-runtime plan. First remove the heavyweight baseline. Then prove one native contract. Then compile the full supported Signet surface into the scriptc binary, using process isolation only where a workload cannot meet the binary's resource budget.</p></div>
       <div class="steps">
         <div class="step"><div class="eyebrow">01</div><strong>Drop ONNX</strong><p>Remove the built-in model, worker, warmup, cache, and runtime assets.</p></div>
         <div class="step"><div class="eyebrow">02</div><strong>Define the ABI</strong><p>Start with SQLite, vectors, and keyring access.</p></div>
-        <div class="step"><div class="eyebrow">03</div><strong>Bind twice</strong><p>Implement Bun first, then prove scriptc FFI against the same contract.</p></div>
-        <div class="step"><div class="eyebrow">04</div><strong>Split heavy work</strong><p>Use child processes where RSS budgets and restart policy matter.</p></div>
+        <div class="step"><div class="eyebrow">03</div><strong>Compile Signet</strong><p>Make scriptc FFI the production binding and ship one self-contained binary.</p></div>
+        <div class="step"><div class="eyebrow">04</div><strong>Isolate only if needed</strong><p>Use child processes as an escape hatch where an internal workload cannot meet the binary's budget.</p></div>
       </div>
 
       <div class="endnote">This is a working direction, not a migration plan.<br><br>Sources: <a href="https://scriptc.dev/">scriptc</a> · <a href="https://scriptc.dev/limitations">limitations</a> · <a href="https://github.com/Signet-AI/signetai">Signet repository</a></div>
