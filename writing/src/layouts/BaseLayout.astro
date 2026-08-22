@@ -23,7 +23,9 @@ const currentPath = Astro.url.pathname;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f4f5f2" />
     <link rel="canonical" href={new URL(currentPath, Astro.site ?? 'https://blog.nicholai.work')} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
