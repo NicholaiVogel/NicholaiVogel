@@ -1,0 +1,18 @@
+# Directory structure to create for a new project
+# Run: mkdir -p <each-path>
+
+src/components
+src/components/ui
+src/layouts
+src/lib
+src/pages/api
+src/pages/blog/tag
+src/pages/blog/category
+src/styles
+src/utils
+src/emails
+src/content/blog/images
+src/assets/images
+public/assets/fonts
+public/assets/images/logos
+public/assets/video
