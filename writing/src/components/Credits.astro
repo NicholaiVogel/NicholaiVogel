@@ -1,0 +1,166 @@
+---
+/* Film-style credits: department headings, role left, names right,
+   Instagram profiles linked. Data from the project's official credits
+   lists (Stink Films / Church Edit / Biohazard VFX / Twin22status). */
+
+interface CreditPerson {
+  name: string;
+  ig?: string;
+}
+
+interface CreditRole {
+  role: string;
+  people: string | CreditPerson[];
+}
+
+interface CreditSection {
+  heading?: string;
+  roles: CreditRole[];
+}
+
+const p = (name: string, ig?: string): CreditPerson => ({ name, ig });
+
+const sections: CreditSection[] = [
+  {
+    roles: [
+      { role: 'Client', people: [p('G-Star', 'gstarraw')] },
+      { role: 'CMO', people: [p('Gwenda van Vliet', 'gwendavanvliet')] },
+      { role: 'Senior Global Brand Manager', people: [p('Yasemin Görgeç', 'yasgor')] },
+      { role: 'Head Stylist', people: [p('Alexander Gabriel', 'alexandergabriel_official')] },
+    ],
+  },
+  {
+    heading: 'Agency Longstoryshort',
+    roles: [
+      { role: 'Creatives', people: [p('Joris Kuijpers', 'joris_kuijpers'), p('Tamara Pruis', 'instamara.jpg')] },
+      { role: 'Producers', people: [p('Vanessa Janssen', 'vanessa._.janssen'), p('Fione van Wijk', 'wvf')] },
+    ],
+  },
+  {
+    heading: 'A Stink Films Production',
+    roles: [
+      { role: 'Executive Producer', people: [p('Blake Powell', 'blakepowell9')] },
+      { role: 'Producers', people: [p('Maddy Perkins', 'maddy_b_perkins'), p('Shea Coleman')] },
+      { role: 'Directed by', people: [p('Felix Brady', 'felixbrady')] },
+      { role: 'Director of Photography', people: [p('David Foulkes', 'davidfoulkes_')] },
+      { role: 'Athlete', people: [p('Rhys McClenaghan', 'rhysmcc1')] },
+      { role: 'Photographer', people: [p('Rob Rusling', 'robrusling123')] },
+    ],
+  },
+  {
+    heading: 'Edited by Church Edit',
+    roles: [
+      { role: 'Executive Producer', people: [p('Laurenn Reed', '_laurenn_noel_')] },
+      { role: 'Post Producer', people: [p('Kylie DeVries', 'kyliemaedev')] },
+      { role: 'Editor', people: [p('Mah Ferraz', 'mahferraz')] },
+      { role: 'Next Gen Editor', people: [p('Arie Abraham', 'rariesthetics')] },
+      { role: 'Edit Assistant', people: [p('Logan Tarter', 'logan.tarter')] },
+    ],
+  },
+  {
+    heading: 'Visual Effects by Biohazard VFX',
+    roles: [
+      { role: 'VFX Supervisor & Lead Artist', people: [p('Nicholai Vogel', 'nicholai.exe')] },
+      { role: 'Post Producer', people: [p('Daniel Pianezza', 'danielpianezza')] },
+      { role: 'Executive Producer', people: [p('Davané', 'davaneh')] },
+      { role: 'Head of Production', people: [p('Parth Gupta', 'nuke_fx')] },
+      { role: 'VFX Editorial', people: [p('Xander Pasley')] },
+      { role: 'Conform', people: [p('Nicholai Vogel', 'nicholai.exe')] },
+      { role: 'Compositing Lead', people: [p('Mikaiel Russ', 'tenebrismethod')] },
+      { role: 'CG Lead', people: [p('Nicholai Vogel', 'nicholai.exe')] },
+      { role: 'Prep Lead', people: [p('Tanvir Hossain', 'tanvirhc1')] },
+      { role: 'Compositors', people: [
+        p('Wing Sau Yip', 'ideas.re.bulletproof'),
+        p('Anurag Raj', 'infinite__vfx'),
+        p('Parth Gupta', 'nuke_fx'),
+        p('Nicholai Vogel', 'nicholai.exe'),
+        p('Ben Morse', 'benvmorse'),
+        p('Ryan Game', 'ryangamevfx'),
+        p('Steele Turner', 'steelej.fx'),
+      ] },
+      { role: 'Environments & Props', people: [
+        p('Miguel Fernandes', 'miguelfernandes.vfx'),
+        p('Jason Probst'),
+        p('Fiftyrock', 'fiftyrock_'),
+        p('Daichi Sakane', 'daichisakane'),
+        p('Nicholai Vogel', 'nicholai.exe'),
+      ] },
+      { role: 'Rotoscopy', people: [
+        p('Imran Sarker'), p('Anamul Kabir'), p('Nobir Hossain'), p('Sakil Ahmed'),
+        p('Jahid Mia'), p('Sarikul Islam'), p('Jannati Aktar'), p('Abdur Razzak'),
+        p('Golam Ajam'), p('Nazmul Hossain Rana'), p('Suzan Kabir'), p('Fauzia Rahman'),
+        p('Sabina Yasmin'), p('Mouli Bathula'), p('Venu Gopal Kattaboyina'),
+        p('Maruthy Prasad'), p('Sai Chand Nandeti'),
+      ] },
+      { role: 'Matchmove', people: [
+        p('Santosh Dash'), p('Debasis Sahu'), p('Amol More'),
+        p('Roshan Khairnar'), p('Sudhakar Asampelli'),
+      ] },
+    ],
+  },
+  {
+    heading: 'Additional Visual Effects by Twin22status',
+    roles: [
+      { role: 'Post Producer', people: [p('Tony Twin', '22tonyyy')] },
+      { role: '3D Modeler', people: [p('Dmitriy Lisafin', 'blasidoverhead')] },
+    ],
+  },
+  {
+    heading: 'Colour by Harbor Picture Co.',
+    roles: [
+      { role: 'Colourist', people: [p('Alex Gregory', 'alexgregorycolour')] },
+      { role: 'Colour Assistant', people: [p('Adam Mears', 'adam.m.colour')] },
+      { role: 'Colour Producer', people: [p('Charlie Morris', 'charlesedmorris')] },
+    ],
+  },
+  {
+    heading: 'Director’s Cut',
+    roles: [
+      { role: 'Music & Additional SFX', people: [p('Yaaqov', 'yaaqov.audio')] },
+      { role: 'Sound Design', people: [p('Studio Cardinal Paris', 'studio_cardinal_paris')] },
+      { role: 'Postproduction Versioning', people: [p('Biohazard VFX', 'biohazardvfx')] },
+    ],
+  },
+  {
+    heading: 'Agency Edit',
+    roles: [
+      { role: 'Colour', people: [p('Crabsalad'), p('Laurens Orij', 'laurensorij')] },
+      { role: 'Postproduction Versioning', people: [p('The Compound', 'thecompound.postproduction')] },
+      { role: 'Soundtrack', people: [p('Ambassadors Berlin', 'ambassadors.berlin'), p('Rachel Tauwnaar', 'racheltauwnaar')] },
+      { role: 'Foley', people: [p('Public Audio', 'publicaudioamsterdam')] },
+    ],
+  },
+  {
+    roles: [
+      { role: 'Special Thanks', people: [p('Fox Renderfarm'), p('Tom Luf'), p('Z')] },
+    ],
+  },
+];
+
+const igUrl = (handle: string) => `https://www.instagram.com/${handle}/`;
+const isList = (v: string | CreditPerson[]): v is CreditPerson[] => Array.isArray(v);
+---
+
+<div class="film-credits">
+  {sections.map((section) => (
+    <section class="film-credits__block">
+      {section.heading && <h3 class="film-credits__heading">{section.heading}</h3>}
+      <dl class="film-credits__roles">
+        {section.roles.map(({ role, people }) => (
+          <div class="film-credits__row">
+            <dt class="film-credits__role">{role}</dt>
+            <dd class="film-credits__names">
+              {isList(people) && people.map((person) => (
+                person.ig ? (
+                  <a href={igUrl(person.ig)} target="_blank" rel="noopener noreferrer">{person.name}</a>
+                ) : (
+                  <span>{person.name}</span>
+                )
+              ))}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  ))}
+</div>

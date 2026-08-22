@@ -63,6 +63,15 @@ export function displayTag(tag: string) {
   return tag.split('/').slice(1).join(' / ') || tag;
 }
 
+/* One tag per card on listings: the deepest segment of the note-type tag
+   (note-type/writing/case-study -> case-study; note-type/recipe -> recipe). */
+export function primaryTag(tags: string[]) {
+  const noteType = tags.find((tag) => tag.toLowerCase().startsWith('note-type/'));
+  const source = noteType ?? tags[0] ?? '';
+  const segments = source.split('/').filter(Boolean);
+  return segments[segments.length - 1] || source;
+}
+
 export function displayTags(tags: string[]) {
   const seen = new Set<string>();
   return tags

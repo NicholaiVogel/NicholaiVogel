@@ -13,6 +13,7 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nicholai.work',
+  server: { port: 4321 },
   integrations: [mdx(), sitemap(), react()],
 
   adapter: cloudflare({

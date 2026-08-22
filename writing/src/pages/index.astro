@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WritingCard from '../components/WritingCard.astro';
-import { getWritingEntries, tagGroups, titleCase } from '../lib/writing';
+import { getWritingEntries, tagGroups } from '../lib/writing';
 
 const entries = await getWritingEntries();
 const noteTypeGroup = tagGroups(entries).find(({ group }) => group === 'note-type');
+const shortLabel = (value: string) => value.split('/').pop() || value;
 ---
 <BaseLayout title="Nicholai's writing" description="Essays, journalism, and technical writing from Nicholai Vogel.">
   <div class="container home-shell">
@@ -15,13 +16,24 @@ const noteTypeGroup = tagGroups(entries).find(({ group }) => group === 'note-typ
 
       <section class="archive-controls" aria-label="Writing filters">
         {noteTypeGroup && (
-          <label class="filter-field">
-            <span>{titleCase(noteTypeGroup.group)}</span>
-            <select data-writing-filter="note-type">
-              <option value="">All</option>
-              {noteTypeGroup.values.map(([tag, value]) => <option value={tag}>{value}</option>)}
-            </select>
-          </label>
+          <div class="filter-dropdown" data-writing-filter="note-type">
+            <span class="filter-dropdown__sizer" aria-hidden="true">
+              {noteTypeGroup.values.map(([tag, value]) => <span>{shortLabel(value)}</span>)}
+              <span>All</span>
+            </span>
+            <button type="button" class="dropdown-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-trigger__value" data-dropdown-label>All</span>
+              <svg class="dropdown-trigger__chevron" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" fill="none">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" aria-label="Filter by note type" hidden>
+              <li role="option" aria-selected="true" data-value=""><button type="button">All</button></li>
+              {noteTypeGroup.values.map(([tag, value]) => (
+                <li role="option" aria-selected="false" data-value={tag}><button type="button">{shortLabel(value)}</button></li>
+              ))}
+            </ul>
+          </div>
         )}
         <span class="filter-status" data-filter-status aria-live="polite">{entries.length} {entries.length === 1 ? 'piece' : 'pieces'}</span>
       </section>
@@ -42,20 +54,25 @@ const noteTypeGroup = tagGroups(entries).find(({ group }) => group === 'note-typ
 
 <script>
   function initWritingFilter() {
-    const filter = document.querySelector('[data-writing-filter="note-type"]');
+    const root = document.querySelector('[data-writing-filter="note-type"]');
     const status = document.querySelector('[data-filter-status]');
 
-    if (!filter || filter.dataset.bound === 'true') return;
-    filter.dataset.bound = 'true';
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
 
-    function applyFilters() {
+    const trigger = root.querySelector('.dropdown-trigger');
+    const label = root.querySelector('[data-dropdown-label]');
+    const menu = root.querySelector('.dropdown-menu');
+    const options = [...menu.querySelectorAll('li[role="option"]')];
+
+    function applyFilters(value) {
       const cards = [...document.querySelectorAll('[data-writing-card]')];
-      const active = filter.value ? [filter.value] : [];
+      const active = value ? [value] : [];
       let visible = 0;
 
       cards.forEach((card) => {
         const tags = (card.getAttribute('data-tags') || '').split('|');
-        const matches = active.every((value) => tags.includes(value.toLowerCase()));
+        const matches = active.every((filterTag) => tags.includes(filterTag.toLowerCase()));
         card.hidden = !matches;
         if (matches) visible += 1;
       });
@@ -63,8 +80,71 @@ const noteTypeGroup = tagGroups(entries).find(({ group }) => group === 'note-typ
       if (status) status.textContent = `${visible} ${visible === 1 ? 'piece' : 'pieces'}`;
     }
 
-    filter.addEventListener('change', applyFilters);
-    applyFilters();
+    function select(option) {
+      const value = option.dataset.value || '';
+      options.forEach((o) => {
+        o.setAttribute('aria-selected', String(o === option));
+      });
+      label.textContent = option.textContent.trim();
+      applyFilters(value);
+      close();
+      trigger.focus();
+    }
+
+    function open() {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function close() {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', () => {
+      if (menu.hidden) open();
+      else close();
+    });
+
+    menu.addEventListener('click', (event) => {
+      const option = event.target.closest('li[role="option"]');
+      if (option) select(option);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!root.contains(event.target)) close();
+    });
+
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        if (!menu.hidden) {
+          close();
+          trigger.focus();
+        }
+        return;
+      }
+      if (menu.hidden) return;
+      const current = options.findIndex((o) => o.getAttribute('aria-selected') === 'true');
+      let next = -1;
+      if (event.key === 'ArrowDown') next = Math.min(current + 1, options.length - 1);
+      else if (event.key === 'ArrowUp') next = Math.max(current - 1, 0);
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = options.length - 1;
+      else if (event.key === 'Tab') { close(); return; }
+      else if (event.key === 'Enter' || event.key === ' ') {
+        if (document.activeElement?.closest('.dropdown-menu')) {
+          event.preventDefault();
+          select(options[Math.max(current, 0)]);
+        }
+        return;
+      }
+      if (next >= 0) {
+        event.preventDefault();
+        options[next].querySelector('button').focus();
+      }
+    });
+
+    applyFilters('');
   }
 
   document.addEventListener('astro:page-load', initWritingFilter);

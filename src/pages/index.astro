@@ -7,17 +7,46 @@ import DevProjects from '../components/sections/DevProjects.astro';
 import FeaturedProject from '../components/sections/FeaturedProject.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import junoImg from '../assets/juno.avif';
-import { getEntry, getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
 
 // Fetch section content
 const heroEntry = await getEntry('sections', 'hero');
 const experienceEntry = await getEntry('sections', 'experience');
 const featuredProjectEntry = await getEntry('sections', 'featured-project');
 
-// Fetch all blog posts (newest first)
-const allPosts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const BLOG_URL = 'https://blog.nicholai.work';
+
+// Latest writing from the blog site (fetched at build time)
+interface BlogItem {
+	title: string;
+	link: string;
+	pubDate: Date | null;
+	description: string | null;
+}
+
+async function fetchLatestWriting(): Promise<{ items: BlogItem[]; total: number | null }> {
+	try {
+		const res = await fetch(`${BLOG_URL}/rss.xml`);
+		if (!res.ok) return { items: [], total: null };
+		const xml = await res.text();
+		const items: BlogItem[] = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => {
+			const pick = (tag: string) => m[1].match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1]?.trim() ?? null;
+			const decode = (s: string | null) =>
+				s ? s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&') : null;
+			return {
+				title: decode(pick('title')) ?? 'Untitled',
+				link: decode(pick('link')),
+				pubDate: pick('pubDate') ? new Date(pick('pubDate')!) : null,
+				description: decode(pick('description')),
+			};
+		}).filter((item) => item.link);
+		return { items, total: items.length };
+	} catch {
+		return { items: [], total: null };
+	}
+}
+
+const { items: writingItems, total: writingTotal } = await fetchLatestWriting();
 
 // Extract content from entries
 const heroContent = {
@@ -90,69 +119,85 @@ const featuredProjectContent = {
 						<span class="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-accent">SYS.WRITINGS · FIELD_NOTES</span>
 					</div>
 					<h2 class="text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-tighter leading-[0.9] text-[var(--theme-text-primary)]">
-						Journal
+						Writing
 					</h2>
 				</div>
 
 				<div class="lg:col-span-5 flex flex-col justify-end">
 					<p class="text-[var(--theme-text-secondary)] text-base lg:text-lg leading-relaxed border-l border-brand-accent/30 pl-6 max-w-md lg:ml-auto">
-						Notes on VFX pipelines, technical art, and experiments in autonomous systems.
+						Essays and field notes on VFX pipelines, technical art, and experiments in autonomous systems.
 					</p>
 				</div>
 			</div>
 
-			<!-- Minimal file list (teaser: latest 5) -->
-			<div class="w-full border-t border-[var(--theme-border-primary)]">
-				{allPosts.slice(0, 5).map((post, index) => (
-					<article
-						class:list={[
-							'group relative border-b border-[var(--theme-border-primary)] transition-all duration-300 overflow-hidden',
-							`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`
-						]}
-					>
-						<!-- Accent strip on hover -->
-						<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+			{writingItems.length > 0 ? (
+				<!-- Minimal file list (latest 5 from blog.nicholai.work) -->
+				<div class="w-full border-t border-[var(--theme-border-primary)]">
+					{writingItems.slice(0, 5).map((item, index) => (
+						<article
+							class:list={[
+								'group relative border-b border-[var(--theme-border-primary)] transition-all duration-300 overflow-hidden',
+								`animate-on-scroll slide-up stagger-${Math.min((index % 6) + 1, 6)}`
+							]}
+						>
+							<!-- Accent strip on hover -->
+							<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
 
-						<a href={`/blog/${post.id}/`} class="block py-5 px-4 lg:px-8 relative z-10">
-							<div class="flex items-baseline justify-between gap-6">
-								<div class="flex items-baseline gap-4 lg:gap-8 min-w-0">
-									<span class="font-mono text-[10px] uppercase tracking-[0.2em] text-brand-accent shrink-0 w-12">
-										LOG.{String(index + 1).padStart(2, '0')}
-									</span>
-									<h3 class="text-base lg:text-lg font-normal text-[var(--theme-text-secondary)] group-hover:text-brand-accent transition-colors duration-300 truncate">
-										{post.data.title}
-									</h3>
-								</div>
-								<div class="flex items-center gap-4 lg:gap-8 shrink-0">
-									{post.data.category && (
-										<span class="hidden md:block font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-muted)]">
-											{post.data.category}
+							<a href={item.link} target="_blank" rel="noopener noreferrer" class="block py-5 px-4 lg:px-8 relative z-10">
+								<div class="flex items-baseline justify-between gap-6">
+									<div class="flex items-baseline gap-4 lg:gap-8 min-w-0">
+										<span class="font-mono text-[10px] uppercase tracking-[0.2em] text-brand-accent shrink-0 w-12">
+											LOG.{String(index + 1).padStart(2, '0')}
 										</span>
-									)}
-									<span class="font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-subtle)] hidden sm:block">
-										<FormattedDate date={post.data.pubDate} />
-									</span>
-									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-[var(--theme-text-muted)] group-hover:text-brand-accent group-hover:translate-x-1 transition-all duration-300">
-										<path d="M5 12h14M12 5l7 7-7 7" />
-									</svg>
+										<h3 class="text-base lg:text-lg font-normal text-[var(--theme-text-secondary)] group-hover:text-brand-accent transition-colors duration-300 truncate">
+											{item.title}
+										</h3>
+									</div>
+									<div class="flex items-center gap-4 lg:gap-8 shrink-0">
+										<span class="font-mono text-[10px] uppercase tracking-widest text-[var(--theme-text-subtle)] hidden sm:block">
+											{item.pubDate && <FormattedDate date={item.pubDate} />}
+										</span>
+										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-[var(--theme-text-muted)] group-hover:text-brand-accent group-hover:translate-x-1 transition-all duration-300">
+											<path d="M5 12h14M12 5l7 7-7 7" />
+										</svg>
+									</div>
 								</div>
-							</div>
-						</a>
-					</article>
-				))}
-			</div>
+							</a>
+						</article>
+					))}
+				</div>
+			) : (
+				<!-- Fallback when the blog feed is unreachable -->
+				<div class="w-full border-t border-[var(--theme-border-primary)]">
+					<a
+						href={BLOG_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group flex items-center justify-between border-b border-[var(--theme-border-primary)] py-5 px-4 lg:px-8"
+					>
+						<span class="text-base lg:text-lg font-normal text-[var(--theme-text-secondary)] group-hover:text-brand-accent transition-colors duration-300">
+							Read the latest writing at blog.nicholai.work
+						</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="text-[var(--theme-text-muted)] group-hover:text-brand-accent group-hover:translate-x-1 transition-all duration-300">
+							<path d="M5 12h14M12 5l7 7-7 7" />
+						</svg>
+					</a>
+				</div>
+			)}
 
-			<!-- Link to the full archive -->
+			<!-- Link to the blog site -->
 			<div class="flex items-center justify-between border-t border-[var(--theme-border-primary)] pt-8">
 				<div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
 					<span>Records:</span>
-					<span class="text-brand-accent">{allPosts.length.toString().padStart(2, '0')}</span>
+					<span class="text-brand-accent">{writingTotal !== null ? writingTotal.toString().padStart(2, '0') : '--'}</span>
 				</div>
 				<a
-					href="/blog"
+					href={BLOG_URL}
+					target="_blank"
+					rel="noopener noreferrer"
 					class="group inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-brand-accent hover:gap-4 transition-all duration-300"
 				>
-					<span>Browse full archive</span>
+					<span>Visit blog.nicholai.work</span>
 					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" class="group-hover:translate-x-1 transition-transform duration-300">
 						<path d="M5 12h14M12 5l7 7-7 7" />
 					</svg>

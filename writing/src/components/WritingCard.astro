@@ -1,5 +1,5 @@
 ---
-import { displayTags, formatDate, readingTime, slugFor, type WritingEntry } from '../lib/writing';
+import { formatDate, primaryTag, readingTime, slugFor, type WritingEntry } from '../lib/writing';
 
 interface Props {
   entry: WritingEntry;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const tags = displayTags(entry.data.tags);
+const tag = primaryTag(entry.data.tags);
 ---
 <article class="writing-row" data-writing-card data-tags={entry.data.tags.join('|').toLowerCase()}>
   <div class="writing-row__date">
@@ -17,7 +17,7 @@ const tags = displayTags(entry.data.tags);
   <div class="writing-row__content">
     <h2><a href={`/writing/${slugFor(entry)}/`}>{entry.data.title}</a></h2>
     <ul class="writing-row__tags" aria-label="Tags">
-      {tags.map((tag) => <li>{tag}</li>)}
+      <li>{tag}</li>
     </ul>
   </div>
   <a class="writing-row__arrow" href={`/writing/${slugFor(entry)}/`} aria-label={`Read ${entry.data.title}`}>↗</a>

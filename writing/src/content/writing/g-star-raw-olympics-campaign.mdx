@@ -1,0 +1,116 @@
+---
+title: 'G-Star Raw Olympics Campaign'
+description: "VFX supervision and delivery on G-Star RAW's Olympics brand film 'Pommel Horse Champion' with Rhys McClenaghan: six full-CG worlds, digital garments, and an in-house AI roto model, for Stink Films and director Felix Brady."
+created: '2024-08-15'
+image: '../../assets/g-star-image.avif'
+tags:
+  - note-type/writing/case-study
+  - domain/vfx
+draft: false
+---
+
+import Figure from '../../components/media/Figure.astro'
+import Credits from '../../components/Credits.astro'
+import MediaGrid from '../../components/media/MediaGrid.astro'
+
+In 2024, G-Star RAW set out to make an Olympics film with a gymnast and a pommel horse. The film was directed by [Felix Brady](https://stinkfilms.com/directors/felix-brady/) and produced by [Stink Films](https://stinkfilms.com), and [Biohazard VFX](https://biohazardvfx.com) came on board to supervise and deliver the visual effects: shot in one day, serviced for five weeks, finalized after six months of refinement. This is the project that best reflects how we work — we will always see it through.
+
+**G-Star RAW 'Pommel Horse Champion'** — agency Longstoryshort, edited by Church Edit, color by Harbor Picture Co., starring Olympic gymnast Rhys McClenaghan. The campaign was recognized in Craft at the [ADCN Awards 2025](https://www.oneclub.org/awards/adcn/-award/58951/pommelhorse/), and written about by [WWD](https://wwd.com/sourcing-journal/sj-denim/g-star-raw-olympic-gymnast-champion-rhys-mcclenaghan-denim-campaign-fall-24-1238839148/) and [G-Star themselves](https://www.g-star.com/en_us/stories/collaborations/rhys-mcclenaghan).
+
+<Figure src="/media/gstr/gstr-poster.webp" alt="G-Star RAW 'Pommel Horse Champion' campaign poster" width={1200} height={1600} caption="CAMPAIGN POSTER" imgClass="md:!w-3/5" />
+
+<div class="video-container my-10" style="position:relative;width:100%;aspect-ratio:16/9;">
+  <iframe src="https://www.youtube-nocookie.com/embed/vikxP8igJtk" title="G-Star RAW 'Pommel Horse Champion'" style="position:absolute;inset:0;width:100%;height:100%;border:1px solid rgba(255,255,255,.1);" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <p class="text-slate-500 text-sm mt-3 font-mono">FINAL FILM</p>
+</div>
+
+## The Multiverse
+
+The film follows Rhys as he enters a flow state and transcends dimensions through his craft. We built six distinct worlds for him to travel through: the backrooms, a brutalist headquarters, an overpass, a subway platform, and red city — before his ultimate test in the Leap environment, where a fall leaves him poised hundreds of feet above the ground. The pommel horse, the spine of the film, extends from its standard length to over 20 feet. Rhys pulls himself up, takes a leap of faith into darkness, and lands back in the backrooms to finish his routine clean.
+
+## The Backrooms
+
+The most frequently used location was the Backrooms — an extended version of the on-set build, with a concrete floor and a ceiling that stretches off into a black abyss. The on-set practical lighting array was rebuilt as a custom procedural lighting rig in the drop ceiling, designed to replicate the fixtures the film crew actually shot under.
+
+The environment was treated as a character. It was rigged with our procedural lighting framework and animated per shot, with reactive flicker matched to the intensity of Rhys's performance. By the end of the project the Backrooms had taken on a life of its own.
+
+<MediaGrid class="media-grid--backrooms">
+  <Figure src="/media/gstr/backrooms-finished-widescreen-scene.webp" alt="Finished widescreen frame of Rhys performing in the Backrooms" width={1600} height={670} caption="FINISHED FRAME — BACKROOMS" />
+  <Figure src="/media/gstr/GSTR_01_260_breakdown.gif" alt="Shot breakdown animation: Backrooms environment build and composite" width={440} height={302} caption="SHOT BREAKDOWN 01" />
+  <Figure src="/media/gstr/backrooms-set-bts.webp" alt="Behind-the-scenes photo of the practical Backrooms set build" width={1920} height={1440} caption="SET BUILD" />
+  <Figure src="/media/gstr/backrooms-wip-01.webp" alt="Work-in-progress render of the digital Backrooms environment extension" width={1920} height={1318} caption="ENVIRONMENT WIP" />
+</MediaGrid>
+
+## The Matchcut Worlds
+
+Four environments carry the matchcut sequence as Rhys travels between dimensions:
+
+- **Headquarters** — brutalist design inspired by G-Star's actual Amsterdam HQ: concrete, glass, and metal.
+- **Overpass** — a hand-modeled town square wrapped in overpasses, sunlight cutting between the structures.
+- **Platform** — an underground subway station lit by a soft orange glow from the skylights above. This environment never stopped iterating — revisions continued up to two weeks before delivery.
+- **Red City** — a blue-hour cityscape built with procedural building generation tools and stock assets, Rhys on a rooftop bathed in red against the blue sky.
+
+Every one of these went through the full stack: rotoscoping, keying, matchmove, cleanup, 3D environment and digital set design, and 2D compositing.
+
+## The Leap
+
+The Leap is an expansive, procedurally generated cityscape spanning 2 miles by 4 miles, surrounded on all sides by a CG ocean, built on OSM data from New York City and Chicago. Rhys's pommel horse instantly relocates to a rooftop there, replacing a steel beam on a building under construction.
+
+The environment demanded a new rendering and denoising pipeline: a custom Intel Open Image Denoise compilation paired with a procedural motion vector setup in Nuke. Each shot incorporates over 10,000 unique light objects rendered into 20 distinct light AOVs. Rendering the full sequence on Fox Renderfarm's dual RTX 4090 nodes consumed nearly three months of machine time.
+
+<MediaGrid class="media-grid--leap">
+  <Figure src="/media/gstr/leap-green-screen-panorama.webp" alt="Panorama of the green screen set for The Leap sequence" width={2048} height={762} caption="GREEN SCREEN SET" />
+  <Figure src="/media/gstr/leap-finished-widescreen-scene.webp" alt="Finished widescreen frame of Rhys on the pommel horse above The Leap cityscape" width={1600} height={670} caption="FINISHED FRAME — THE LEAP" />
+  <Figure src="/media/gstr/GSTR_03_070_breakdown.gif" alt="Shot breakdown animation: The Leap cityscape build and composite" width={440} height={302} caption="SHOT BREAKDOWN 02" />
+  <Figure src="/media/gstr/leap-bts-render01.webp" alt="The Leap environment render in progress" width={1367} height={936} caption="RENDER 01" />
+  <Figure src="/media/gstr/leap-bts-render02.webp" alt="The Leap environment render in progress" width={1359} height={934} caption="RENDER 02" />
+</MediaGrid>
+
+## Digital Doubles and Garments
+
+The director's cut called for full CG shots with close-up garment detail. We built the CG garments from scratch using the actual patterns supplied by G-Star, and created a digital double of Rhys, hand-animated to match his routine — including two 3D animated inserts shot from a body-mounted camera POV. These assets gave Felix entire shots to work into his edit that didn't exist on the day.
+
+<MediaGrid class="media-grid--duo">
+  <Figure src="/media/gstr/garments-in-backrooms-hero-showcase.gif" alt="The CG garments in the Backrooms, hero showcase loop" width={720} height={494} caption="GARMENTS IN THE BACKROOMS" />
+  <Figure src="/media/gstr/cg-garments-wip.webp" alt="Work-in-progress on the CG garments built from G-Star's actual patterns" width={900} height={1600} caption="CG GARMENTS WIP" />
+</MediaGrid>
+
+<MediaGrid class="media-grid--trio">
+  <Figure src="/media/gstr/full-cg-backrooms-pov-01.webp" alt="Full-CG Backrooms shot from a body-mounted camera POV" width={1600} height={1098} caption="POV INSERT 01" />
+  <Figure src="/media/gstr/full-cg-backrooms-pov-02.webp" alt="Full-CG Backrooms shot from a body-mounted camera POV" width={1920} height={1318} caption="POV INSERT 02" />
+  <Figure src="/media/gstr/full-cg-backrooms-pov-03.webp" alt="Full-CG Backrooms shot from a body-mounted camera POV" width={1920} height={1318} caption="POV INSERT 03" />
+</MediaGrid>
+
+<Figure src="/media/gstr/full-cg-backrooms-garments-and-animation-test.gif" alt="Full-CG garments and animation test loop" width={720} height={498} caption="FULL-CG GARMENTS AND ANIMATION TEST" />
+
+## Roto, Revolution, and a Model Trained in Production
+
+We leveraged machine learning directly in the Nuke compositing pipeline. To expedite prep, our roto team only rotoed the middle frames of each shot, leaving the handles untouched. The rotoed frames trained our in-house roto model, which filled in the rest.
+
+Then the 2024 revolution in Bangladesh disrupted our prep team's internet access — they were sending roto files as lines of code over text message. Because the model existed, we kept working straight through the downtime. No delays.
+
+<MediaGrid class="media-grid--pair">
+  <Figure src="/media/gstr/closeup-hands-wireframe.webp" alt="Wireframe view of the digital double's hands in close-up" width={1920} height={1316} caption="WIREFRAME — CLOSE-UP HANDS" />
+  <Figure src="/media/gstr/closeup-hands-finished-widescreen.webp" alt="Finished widescreen frame of the close-up on Rhys's hands" width={1600} height={670} caption="FINISHED FRAME — CLOSE-UP" />
+</MediaGrid>
+
+## By the Numbers
+
+- 6,000 frames rendered
+- 60 shots delivered
+- 15 terabytes of storage
+- 3 months of render time on dual RTX 4090 nodes
+- One government overthrown by revolutionaries mid-production
+
+## Making Of
+
+The full-length behind the scenes.
+
+<div class="video-container my-10" style="position:relative;width:100%;aspect-ratio:16/9;">
+  <iframe src="https://www.youtube-nocookie.com/embed/nnNlTkqAlEA" title="G-Star 'Pommel Horse Champion' — making of" style="position:absolute;inset:0;width:100%;height:100%;border:1px solid rgba(255,255,255,.1);" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <p class="text-slate-500 text-sm mt-3 font-mono">MAKING OF</p>
+</div>
+
+## Credits
+
+<Credits />
