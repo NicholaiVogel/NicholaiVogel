@@ -1,0 +1,38 @@
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+  <span class="theme-toggle__track" aria-hidden="true"><span class="theme-toggle__thumb"></span></span>
+  <span class="sr-only" data-theme-label>system</span>
+</button>
+
+<script>
+  function initThemeToggle() {
+    const button = document.querySelector('[data-theme-toggle]');
+    const label = document.querySelector('[data-theme-label]');
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    if (!button || button.dataset.bound === 'true') return;
+    button.dataset.bound = 'true';
+
+    function updateThemeToggle() {
+      const mode = document.documentElement.dataset.colorMode || 'system';
+      const isDark = mode === 'dark' || (mode === 'system' && media.matches);
+      button.setAttribute('aria-pressed', String(isDark));
+      button.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      if (label) label.textContent = mode;
+    }
+
+    button.addEventListener('click', () => {
+      const mode = document.documentElement.dataset.colorMode || 'system';
+      const isDark = mode === 'dark' || (mode === 'system' && media.matches);
+      const next = isDark ? 'light' : 'dark';
+      document.documentElement.dataset.colorMode = next;
+      localStorage.setItem('nicholai-color-mode', next);
+      updateThemeToggle();
+    });
+
+    media.addEventListener?.('change', updateThemeToggle);
+    updateThemeToggle();
+  }
+
+  document.addEventListener('astro:page-load', initThemeToggle);
+  initThemeToggle();
+</script>

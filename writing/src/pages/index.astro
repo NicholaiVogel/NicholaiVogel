@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WritingCard from '../components/WritingCard.astro';
+import { getWritingEntries, tagGroups, titleCase } from '../lib/writing';
+
+const entries = await getWritingEntries();
+const noteTypeGroup = tagGroups(entries).find(({ group }) => group === 'note-type');
+---
+<BaseLayout title="Nicholai's writing" description="Essays, journalism, and technical writing from Nicholai Vogel.">
+  <div class="container home-shell">
+    <section class="writing-index" aria-labelledby="writing-index-title">
+      <header class="index-heading">
+        <h1 id="writing-index-title">Writing</h1>
+      </header>
+
+      <section class="archive-controls" aria-label="Writing filters">
+        {noteTypeGroup && (
+          <label class="filter-field">
+            <span>{titleCase(noteTypeGroup.group)}</span>
+            <select data-writing-filter="note-type">
+              <option value="">All</option>
+              {noteTypeGroup.values.map(([tag, value]) => <option value={tag}>{value}</option>)}
+            </select>
+          </label>
+        )}
+        <span class="filter-status" data-filter-status aria-live="polite">{entries.length} {entries.length === 1 ? 'piece' : 'pieces'}</span>
+      </section>
+
+      {entries.length > 0 ? (
+        <div class="writing-list" data-writing-list>
+          {entries.slice(0, 8).map((entry) => <WritingCard entry={entry} />)}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <h2>Uh oh, no writing is loading!</h2>
+          <p>This probably means that something is broken.</p>
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  function initWritingFilter() {
+    const filter = document.querySelector('[data-writing-filter="note-type"]');
+    const status = document.querySelector('[data-filter-status]');
+
+    if (!filter || filter.dataset.bound === 'true') return;
+    filter.dataset.bound = 'true';
+
+    function applyFilters() {
+      const cards = [...document.querySelectorAll('[data-writing-card]')];
+      const active = filter.value ? [filter.value] : [];
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const tags = (card.getAttribute('data-tags') || '').split('|');
+        const matches = active.every((value) => tags.includes(value.toLowerCase()));
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
+
+      if (status) status.textContent = `${visible} ${visible === 1 ? 'piece' : 'pieces'}`;
+    }
+
+    filter.addEventListener('change', applyFilters);
+    applyFilters();
+  }
+
+  document.addEventListener('astro:page-load', initWritingFilter);
+  initWritingFilter();
+</script>

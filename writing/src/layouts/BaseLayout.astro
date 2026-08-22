@@ -1,0 +1,57 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  eyebrow?: string;
+}
+
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="en" data-color-mode="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4f5f2" />
+    <link rel="canonical" href={new URL(currentPath, Astro.site ?? 'https://blog.nicholai.work')} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(currentPath, Astro.site ?? 'https://blog.nicholai.work')} />
+    <title>{title}</title>
+    <ClientRouter />
+    <script is:inline>
+      (() => {
+        const storageKey = 'nicholai-color-mode';
+        const storedMode = () => localStorage.getItem(storageKey) || 'system';
+        const applyMode = (documentElement) => {
+          documentElement.dataset.colorMode = storedMode();
+        };
+
+        applyMode(document.documentElement);
+        document.addEventListener('astro:before-swap', (event) => {
+          applyMode(event.newDocument.documentElement);
+        });
+        document.addEventListener('astro:after-swap', () => {
+          applyMode(document.documentElement);
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header currentPath={currentPath} />
+    <main id="main-content"><slot /></main>
+    <Footer />
+  </body>
+</html>
