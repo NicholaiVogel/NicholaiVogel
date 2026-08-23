@@ -1,6 +1,6 @@
 # Visual QA and Design Loop
 
-Visual QA is rendered evidence, not a source-code inspection. Use the running Astro dev server, browser or desktop tools, and `vision_analyze` when a screenshot or visual reading is needed. `bun run build` proves compilation; it does not prove layout, hierarchy, content rendering, or state behavior.
+Visual QA is rendered evidence, not source-code inspection. Separate two jobs: design QA asks whether the page is good; technical QA asks whether it works. Run design QA first — a technically flawless generic page still fails the brief. Use the running Astro dev server, browser or desktop tools, and `vision_analyze` when a screenshot or visual reading is needed. `bun run build` proves compilation; it does not prove layout, hierarchy, content rendering, or state behavior.
 
 ## Required Loop
 
@@ -14,30 +14,56 @@ Visual QA is rendered evidence, not a source-code inspection. Use the running As
 
 Restart only after dependency changes, Astro/Vite/Wrangler configuration changes, environment changes, or an actual server failure. Do not restart as a substitute for inspecting stale browser state.
 
-## Minimum Render Matrix
+## Design QA (always)
 
-Use browser tooling or an equivalent deterministic harness to inspect:
+Inspect the rendered first viewport against the execution contract:
 
-| Dimension | Minimum cases |
-|---|---|
-| Width | narrow phone around 375px, tablet boundary around 768px, desktop around 1440px |
-| Theme | system default, explicit light, explicit dark when supported |
-| Content | short title, long title, realistic prose, headings, lists, links, images, and empty state when applicable |
-| Navigation | direct load, internal link, back/forward navigation, refreshed detail route |
-| Interaction | keyboard focus, menu open/close, form states, filters, theme toggle, touch-sized controls |
-| Motion | normal motion and `prefers-reduced-motion: reduce` |
+- Hierarchy: what the viewer notices first, second, and third matches the contract.
+- Rhythm: spacing levels group content legibly; no arbitrary per-section margins.
+- Emphasis, grouping, alignment, and density reflect the intended structure.
+- The beauty bar in `design-doctrine.md`: dominant idea, point of view, signature treatment.
+- Real content fits without special pleading: longest title, real prose, actual media.
+- Mobile is a deliberate recomposition, not a compressed desktop.
 
-These are verification widths, not universal design values.
+Contradiction rule: if rendered evidence contradicts the brief or contract, either fix the page or revise the contract with the user. Never rationalize the mismatch away, and never silently redefine the requirement after implementation.
+
+## Evidence Completeness
+
+Evidence must show the state being verified:
+
+- A dropdown claim needs the menu open with options visible.
+- A hover or focus claim needs that state captured.
+- A responsive claim needs the narrow viewport itself, not a crop of desktop.
+- A media claim needs the image rendered (`naturalWidth > 0`), not a 200 response.
+- A theme claim needs that theme actually active in the capture.
+
+A cropped, default-state, or pre-load screenshot verifies nothing. If the evidence does not show the state, the state is unverified.
+
+## Technical QA Matrix (conditional — run the rows the project uses)
+
+| Dimension | When | Minimum cases |
+|---|---|---|
+| Width | always | narrow phone ~375px, tablet boundary ~768px, desktop ~1440px |
+| Content | always in the slice | short and long titles, realistic prose, lists, links, images, empty state when applicable |
+| Navigation | always | direct load, internal link, back/forward, refreshed detail route |
+| Theme | when the site has light and dark | explicit light, explicit dark, system default |
+| Interaction | what the project uses | keyboard focus, menu open/close, form states, filters, touch-sized controls |
+| Motion | when motion exists | normal motion and `prefers-reduced-motion: reduce` |
+| Custom controls | only when a custom control is built | Arrow keys, Enter, Escape, outside click, selection state, ARIA attributes. Prefer a native `select` or the simplest accessible primitive unless the design genuinely justifies custom |
+| Media-heavy pages | galleries, bento grids, long media routes | scroll to trigger lazy loads; assert each figure's rendered box and the image's `naturalWidth` |
+| Complex grid architecture | container queries, placement rules, competing selectors | `getComputedStyle()` checks at each breakpoint; keep placement rules and responsive resets inside the same component boundary |
+
+These are verification widths and conditional rows, not universal design values or a standing audit.
 
 ## Geometry Checks
 
-Inspect the rendered result, not just the CSS declarations:
+When layout is complex, inspect the rendered result, not just the CSS declarations:
 
 - No horizontal overflow at narrow widths.
 - Parent grids collapse or recompose instead of forcing a desktop side column into a text strip.
 - Body copy has a readable measure and line-height.
 - Headings wrap without clipping, overlap, or accidental `nowrap`.
-- Navigation and controls remain reachable with a keyboard and have usable touch targets.
+- Navigation and controls remain keyboard reachable with usable touch targets.
 - Images respect their container, preserve intended crops, and have a fallback when media is absent or slow.
 - Fixed, sticky, and absolute elements do not cover content or create hidden scroll regions.
 - The first viewport communicates the job before decorative effects become visible.
@@ -71,6 +97,17 @@ For theme, filters, menus, search, reading preferences, or other client state:
 
 When Astro client-side navigation or view transitions are used, bind and clean up lifecycle work at the appropriate Astro page lifecycle events. Do not rely on a one-time module evaluation or a single page-load callback for state that must survive navigation.
 
+## Corrections Become Invariants
+
+After a user corrects a concrete defect, add a targeted check so it cannot silently regress:
+
+- Dropdown width wobbled across options: assert `max(widths) - min(widths)` stays within tolerance.
+- Labels wrapped unexpectedly: assert single-line rendered height.
+- A filter stopped filtering: assert the result count changes when the filter changes.
+- A menu state broke: assert `aria-expanded` toggles with open and close.
+
+Keep invariants proportional: a handful of assertions tied to real corrections, not an audit of everything. Validate that test-harness variables actually represent the behavior being tested before trusting a result.
+
 ## Self-Critique Questions
 
 Before asking for user review, answer these internally:
@@ -92,7 +129,7 @@ A verification claim needs evidence appropriate to the claim:
 
 - Build claim: `bun run build` output and expected artifacts.
 - Route claim: direct route inspection and destination check.
-- Visual claim: rendered browser inspection or image evidence.
+- Visual claim: rendered browser inspection or image evidence showing the state.
 - Responsive claim: inspection at the relevant widths.
 - State claim: a repeatable navigation or interaction sequence.
 - Image claim: rendered optimized output, not merely an imported source file.

@@ -4,7 +4,7 @@ A design brief records what the site must accomplish. This reference converts th
 
 ## Core Rule
 
-The agent owns reasonable low-impact design decisions. Do not extend the interview to decide every spacing value, card treatment, or component arrangement. Record those choices as assumptions in the brief, then validate them in a rendered prototype.
+The agent owns reasonable low-impact design decisions. Do not extend the `interview` to decide every spacing value, card treatment, or component arrangement. Record those choices as assumptions in the brief, then validate them in a rendered prototype.
 
 When a high-impact visual choice cannot be settled in prose, build two or three small alternatives. Compare the alternatives through hierarchy, content fit, responsive behavior, and the stated outcome. Do not resolve uncertainty by adding more adjectives to the brief.
 
@@ -32,14 +32,26 @@ Record these fields in `DESIGN-BRIEF.md` before broad implementation:
 - `Composition grammar`: alignment, column behavior, section rhythm, grouping, and intentional asymmetry or symmetry.
 - `Type roles`: display, heading, body, metadata, code, and their relationship.
 - `Spacing rhythm`: the small set of spacing levels that repeat across the system.
-- `Surface rules`: background layers, borders, radii, shadows, and when not to use them.
+- `Surface rules`: background layers, borders, radii, and shadows — and which one system (hairlines, tints, or cards) the site uses.
 - `Media rules`: aspect ratios, crops, art direction, loading, fallback, and whether media is evidence or atmosphere.
-- `Interaction rules`: navigation, filters, forms, hover, focus, transitions, and persistence.
+- `Interaction rules`: navigation, filters, forms, hover, focus, and persistence.
 - `Responsive behavior`: what stacks, collapses, scrolls, disappears, or changes priority at narrow widths.
 - `Motion budget`: what motion communicates, what is static, and the reduced-motion path.
+- `Signature moves`: the one or two distinctive treatments that make the site specific to this client.
 - `Anti-patterns`: visible choices that would make the site wrong or generic.
 - `Real-content fixture`: the actual route and content used to test the design.
 - `Decision ownership`: user decisions, project constraints, and agent-owned assumptions.
+
+## Choose Composition From Real Geometry
+
+Before committing to a hero pattern or page archetype, measure the actual content:
+
+- The longest realistic title (character count, expected wrap lines).
+- Media orientation and aspect ratio for the primary image.
+- Content volume on the primary route (3 projects vs 30).
+- Fixed geometry the design must respect (sidebar width, reading measure, aside rail).
+
+Then pick the composition that fits that geometry. A three-line title next to a landscape still in a side-by-side split squeezes the image into a thumbnail; the same split with a short title and a portrait image can be the strongest layout on the page. Test the densest realistic case, not placeholder content. Placeholder titles are short; real titles are long.
 
 ## First-Viewport Test
 
@@ -51,7 +63,7 @@ Before adding secondary sections, confirm that the first viewport answers:
 4. What visual or textual evidence makes it credible?
 5. What remains visible and usable on a narrow screen?
 
-If a decorative device competes with those answers, remove or demote it.
+If a decorative device competes with the composition, remove or demote it.
 
 ## Vertical Slice
 
@@ -75,6 +87,10 @@ Before asking the user to review, inspect the slice and fix:
 - P2: minor polish such as small timing, border, or spacing refinements.
 
 The agent should resolve P0 and P1 issues without making the user enumerate them.
+
+## When the User Reverses a Decision
+
+The user's structural reversal supersedes earlier design decisions. Apply the reset protocol from `design-doctrine.md`: record the superseded decision, replace the structure in one pass, remove what the old decision created (schema fields, frontmatter keys, dead CSS), sweep for orphans, and verify at both widths. When prose cannot settle which direction is right, build two or three small alternatives and let the rendered result decide.
 
 ## Refactor Rule
 

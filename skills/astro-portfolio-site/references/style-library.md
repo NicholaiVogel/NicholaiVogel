@@ -1,6 +1,6 @@
 # Ready-to-Go Style Library
 
-These are starting directions, not mandatory themes. They synthesize the local project patterns and the supplied Scandinavian, taste-skill, soft-skill, [[design-taste-frontend]], and [[high-end-visual-design]] references. Source URLs: `https://github.com/ericzakariasson/scandinavian-design`, `https://github.com/Leonxlnx/taste-skill/blob/main/skills/taste-skill/SKILL.md`, and `https://github.com/Leonxlnx/taste-skill/blob/main/skills/soft-skill/SKILL.md`. The user’s brand, supplied styleguide, `globals.css`, reference URL, content, accessibility needs, and performance constraints outrank every preset.
+These are starting directions, not mandatory themes. They synthesize the local project patterns and the supplied Scandinavian, taste-skill, soft-skill, [[design-taste-frontend]], and [[high-end-visual-design]] references. Source URLs: `https://github.com/ericzakariasson/scandinavian-design`, `https://github.com/Leonxlnx/taste-skill/blob/main/skills/taste-skill/SKILL.md`, and `https://github.com/Leonxlnx/taste-skill/blob/main/skills/soft-skill/SKILL.md`. The user's brand, supplied styleguide, `globals.css`, reference URL, content, accessibility needs, and performance constraints outrank every preset.
 
 ## Style Dials
 
@@ -50,13 +50,13 @@ Dial values are a communication aid, not a substitute for a brief. Every option 
 - Layout: spacious blocks, curved or custom section transitions, clear visual grouping, and fewer nested cards.
 - Media: tactile close crops, quiet product photography, and calm transitions.
 - Motion: low to moderate; use easing, opacity, and short transforms rather than constant movement.
-- Risks: can become generic “soft UI.” Give it a specific material, editorial voice, image rule, or typographic gesture.
+- Risks: can become generic "soft UI." Give it a specific material, editorial voice, image rule, or typographic gesture.
 
 ## 5. Editorial Luxury
 
 - Best for: heritage, fashion, hospitality, real estate, premium craft, and high-consideration services.
 - Palette: brand-specific dark/light contrast or a disciplined warm palette; never assume beige and brass.
-- Type: high-contrast serif only when the client’s voice and reading context justify it, paired with a practical text face.
+- Type: high-contrast serif only when the client's voice and reading context justify it, paired with a practical text face.
 - Layout: editorial split, wide margins, full-bleed photography, intentional sequencing, and slow reveal.
 - Media: art-directed photography, texture, material closeups, and strong crops.
 - Motion: measured and quiet; prioritize timing, scale, and opacity over spectacle.
@@ -70,7 +70,7 @@ Dial values are a communication aid, not a substitute for a brief. Every option 
 - Layout: hard edges, visible rules, asymmetric offsets, dense but deliberate information, and direct navigation.
 - Media: real artifacts, documentation, diagrams, or raw work; avoid fake interface screenshots.
 - Motion: low; use state, focus, and navigation transitions rather than decorative animation.
-- Risks: “raw” can become inaccessible or merely messy. Keep contrast, focus, hierarchy, and responsive collapse non-negotiable.
+- Risks: "raw" can become inaccessible or merely messy. Keep contrast, focus, hierarchy, and responsive collapse non-negotiable.
 
 ## 7. Atmospheric Media
 
@@ -82,11 +82,75 @@ Dial values are a communication aid, not a substitute for a brief. Every option 
 - Motion: moderate; sequence atmosphere without blocking navigation, content, or reduced-motion users.
 - Risks: a beautiful hero can obscure what the client does. State the offer early and keep media optional when it fails.
 
+## Composition Examples
+
+Concrete sketches showing how a direction is specified through element order, grid, and type treatment rather than adjectives. Use these as the level of specificity expected when presenting a direction.
+
+### Editorial case study (Editorial Dark Grid or Editorial Luxury)
+
+Use when the work needs authority, craft, and a sense of process.
+
+Composition:
+
+- Navigation and metadata stay compact and quiet.
+- The title carries the strongest typographic scale on the page.
+- One dominant media moment instead of several competing thumbnails.
+- Article body, media, and any table of contents align to one visible grid.
+
+Element order: back-link, raw-text tags, display title, dense metadata row, full-width 16:9 banner, body.
+
+Avoid:
+
+- glassmorphism and decorative gradient blobs
+- pill badges for every metadata piece
+- a tiny image squeezed beside a long headline
+- a divider that visually disconnects the hero from the article
+
+Good variations: full-width hero below the title block; asymmetric title/image split when the title is short; large opening image followed by structured project facts.
+
+### Studio portfolio index (Nordic Restraint or Raw Utility)
+
+Use when the work itself should remain the focus.
+
+Composition:
+
+- Feature one project instead of making every project visually equal.
+- A strong list or index carries the secondary work.
+- Project titles and categories create the rhythm.
+- Hover reveals image, year, role, or a short descriptor.
+
+Element order: compact header, one featured project with large media, index rows (title / category / year), contact path.
+
+Avoid:
+
+- six identical cards
+- fake statistics
+- generic services/process/testimonials blocks
+- a hero that explains the studio before showing its work
+
+Good variations: featured project as a full-bleed banner; index rows with hover image reveal; a type-only index with an oversized running label.
+
+### Service business (Soft Structuralism or Nordic Restraint)
+
+Use when trust and a contact path drive the outcome.
+
+Composition:
+
+- The offer states what, for whom, and the next action in the first viewport.
+- Proof (work, results, clients) follows immediately, not four sections later.
+- Grouping through spacing and one surface system — hairlines or cards, not both mixed.
+
+Element order: offer headline, one-line clarification, primary CTA, proof, practical information, contact.
+
+Avoid: atmosphere without an offer, vague slogans, a buried contact path, testimonial walls without specifics.
+
+Good variations: split offer with one supporting image; a quiet services index with per-service anchors; locality and practical facts as a structured block.
+
 ## Selection Protocol
 
 1. Derive three candidates from the interview, not from personal preference or a single reference project.
 2. Include a fourth `Custom Reference` candidate whenever the user provides a URL, local project, `globals.css`, styleguide, palette, or brand system.
-3. Present each candidate with: content mode, first-viewport job, composition grammar, design read, dials, palette, type, layout, media, motion, density, mobile collapse, accessibility risks, anti-patterns, and tradeoffs.
+3. Present each candidate with: content mode, first-viewport job, composition grammar, design read, dials, palette, type, layout, media, motion, density, mobile collapse, accessibility risks, anti-patterns, and tradeoffs. Include a concrete composition sketch — element order, grid proportions, and type treatment — not adjectives alone.
 4. Describe the behavior of the direction, not only its adjectives. State what the page prioritizes, what it refuses, and how it recomposes on mobile.
 5. Let the user select, combine, reject all, or override a token. Record the choice and the rejected directions in `DESIGN-BRIEF.md`.
 6. Freeze the execution contract before broad implementation: palette, type roles, spacing rhythm, radius/border rules, image treatment, motion rules, composition grammar, responsive behavior, and the first-viewport job.
