@@ -9,8 +9,6 @@ tags:
 
 *Pork and green chile stewed with tomatoes and lemon. From Dan Vogel, December 2002.*
 
-![Vogel Verde Chili](./FC41B337-72B4-416C-83F3-B8FD928FB702%201.png)
-
 ## Ingredients
 
 **Chilies**
