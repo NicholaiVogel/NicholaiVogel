@@ -11,6 +11,7 @@ VFX artist, supervisor, vibeslopper
 ## current work
 
 - **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories, system prompts, session transcripts, institutional knowledge, and secrets between all of your favorite harnesses and models.
+- **[Sushi](https://github.com/NicholaiVogel/sushi)** - Browser-based reimplementation of Strudel for importing, writing, and arranging music with Tidal Cycles syntax.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
 - **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
