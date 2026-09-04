@@ -1,5 +1,7 @@
 # hey, i'm nicholai
 
+![Chapa Badge of NicholaiVogel](https://chapa.thecreativetoken.com/u/NicholaiVogel/badge.svg)
+
 VFX artist, supervisor, vibeslopper
 
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
