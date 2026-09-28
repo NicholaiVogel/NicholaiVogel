@@ -5,6 +5,7 @@ modified: 2026-06-15
 image: "./The Temporal Contract-1787364244665.webp"
 tags:
   - note-type/writing/thinking
+draft: false
 ---
 
 Writing notes without reading them is just letting your past self go unheard. 

@@ -14,6 +14,7 @@ prep_time:
 cook_time: 45–60 min
 last_made: 2026-08-15
 rating: 5/5
+draft: false
 ---
 _One sheet pan, done on the grill: chicken thighs and sausage roasted over eggplant, zucchini, peppers, tomatoes, and olives with a lemon-oregano dressing, finished with feta and parsley._
 

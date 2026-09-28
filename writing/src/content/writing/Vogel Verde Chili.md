@@ -5,6 +5,7 @@ modified: 2026-08-25
 image: "./FC41B337-72B4-416C-83F3-B8FD928FB702 1.png"
 tags:
   - recipe
+draft: false
 ---
 
 *Pork and green chile stewed with tomatoes and lemon. From Dan Vogel, December 2002.*

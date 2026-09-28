@@ -13,6 +13,7 @@ prep_time: 30 min - 2h marinate
 cook_time: ~13 min
 last_made:
 rating:
+draft: false
 ---
 *"The best fucking steak you can make in a cast iron skillet"*
 

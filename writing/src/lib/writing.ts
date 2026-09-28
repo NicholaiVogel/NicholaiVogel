@@ -2,8 +2,8 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type WritingEntry = CollectionEntry<'writing'>;
 
-export async function getWritingEntries() {
-  const entries = await getCollection('writing');
+export async function getWritingEntries(includeDrafts = false) {
+  const entries = await getCollection('writing', (entry) => includeDrafts || !entry.data.draft);
   return entries.sort((a: WritingEntry, b: WritingEntry) => dateValue(b) - dateValue(a));
 }
 
