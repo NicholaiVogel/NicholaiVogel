@@ -1,6 +1,6 @@
 # Design Execution Contract
 
-A design brief records what the site must accomplish. This reference converts that brief into decisions the agent can implement and verify without asking the user to design the page in their head.
+A design brief records what the site must accomplish. This reference converts the user-selected creative identity into decisions the agent can implement and verify without asking the user to design the page in their head. Load it after seeded exploration and taste calibration, never as explorer input.
 
 ## Core Rule
 
@@ -26,6 +26,9 @@ Choose the dominant content mode before choosing components. A site can combine 
 Record these fields in `DESIGN-BRIEF.md` before broad implementation:
 
 - `Content mode`: the dominant mode and any secondary mode.
+- `Emotional target`: the intended feeling or response.
+- `Concept spine`: the durable idea connecting the visual system across routes.
+- `Reference-quality baseline`: the examples used by the independent critic.
 - `Primary page archetype`: the composition model for the priority route.
 - `First-viewport job`: what a visitor should understand or do immediately.
 - `Hierarchy`: the order of attention from first viewport through supporting sections.
@@ -33,14 +36,19 @@ Record these fields in `DESIGN-BRIEF.md` before broad implementation:
 - `Type roles`: display, heading, body, metadata, code, and their relationship.
 - `Spacing rhythm`: the small set of spacing levels that repeat across the system.
 - `Surface rules`: background layers, borders, radii, and shadows — and which one system (hairlines, tints, or cards) the site uses.
+- `Material rules`: the selected material language and where it is deliberately absent.
 - `Media rules`: aspect ratios, crops, art direction, loading, fallback, and whether media is evidence or atmosphere.
 - `Interaction rules`: navigation, filters, forms, hover, focus, and persistence.
 - `Responsive behavior`: what stacks, collapses, scrolls, disappears, or changes priority at narrow widths.
 - `Motion budget`: what motion communicates, what is static, and the reduced-motion path.
 - `Signature moves`: the one or two distinctive treatments that make the site specific to this client.
+- `Explicit refusals`: visible choices and familiar patterns the selected identity rejects.
 - `Anti-patterns`: visible choices that would make the site wrong or generic.
 - `Real-content fixture`: the actual route and content used to test the design.
 - `Decision ownership`: user decisions, project constraints, and agent-owned assumptions.
+- `Design-system approach`: the token, layer, theme, and component conventions used; keep implementation conventions separate from visual identity.
+- `CSS ownership`: one primary stylesheet/component owner and any deliberate interoperability boundary.
+- `Token source of truth`: the file or module where reusable design values are defined.
 
 ## Choose Composition From Real Geometry
 
@@ -78,15 +86,15 @@ The first implementation pass contains:
 
 Do not fill the rest of the site with generic components before this slice has passed visual QA.
 
-## Self-Critique Rubric
+## Pre-critic sanity triage
 
-Before asking the user to review, inspect the slice and fix:
+Before asking the user to review or launching the independent critic, resolve only P0/P1 functional and obvious fit defects:
 
 - P0: broken routes, unreadable text, overflow, missing content, unusable interaction, accidental private content, or failed theme/navigation state.
 - P1: wrong page archetype, weak hierarchy, generic composition, poor content measure, inconsistent tokens, or mobile layout that merely shrinks desktop.
 - P2: minor polish such as small timing, border, or spacing refinements.
 
-The agent should resolve P0 and P1 issues without making the user enumerate them.
+Do not use this triage as aesthetic completion, a replacement for seeded exploration, or a substitute for the fresh-context critic. The implementer must not assign its own beauty score or declare the design finished.
 
 ## When the User Reverses a Decision
 

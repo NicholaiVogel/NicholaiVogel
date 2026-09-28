@@ -43,8 +43,8 @@ Use these lessons: a strong brand can justify custom type and media, but express
 ## Cross-Project Defaults
 
 - Treat each project’s existing `package.json`, scripts, Astro config, content model, design tokens, and deployment notes as the source of truth before scaffolding or changing versions.
-- Prefer Astro 5, TypeScript, Tailwind CSS 4 through Vite, and Bun when creating a new site only when that matches the chosen project contract; do not silently upgrade an existing project.
-- Use a token-driven `global.css` with `@import "tailwindcss"` first, then fonts, theme variables, base styles, utilities, motion, reduced-motion rules, and safe viewport helpers.
+- Prefer Astro, TypeScript, and the repository’s package manager when creating a new site; choose one primary styling system from the project contract. Do not silently add Lumos, Tailwind, or another CSS owner to an existing project, and do not silently upgrade its Astro major version.
+- Use a token-driven `global.css` with an explicit import and layer order; include Tailwind only when it is the selected primary styling owner. Apply the Lumos-derived principles for token ownership, fluid sizing, theme inheritance, and accessible primitives without requiring the Lumos framework.
 - Use Astro layouts for shell and metadata, content collections or MDX for repeated content, and data-driven components for lists and cards.
 - Use real assets with explicit dimensions, optimized formats, meaningful `alt` text, and mobile fallbacks.
 - Treat responsive navigation, keyboard behavior, focus, empty/error states, theme initialization, and route lifecycle cleanup as core architecture.

@@ -148,11 +148,11 @@ Good variations: split offer with one supporting image; a quiet services index w
 
 ## Selection Protocol
 
-1. Derive three candidates from the interview, not from personal preference or a single reference project.
-2. Include a fourth `Custom Reference` candidate whenever the user provides a URL, local project, `globals.css`, styleguide, palette, or brand system.
-3. Present each candidate with: content mode, first-viewport job, composition grammar, design read, dials, palette, type, layout, media, motion, density, mobile collapse, accessibility risks, anti-patterns, and tradeoffs. Include a concrete composition sketch — element order, grid proportions, and type treatment — not adjectives alone.
-4. Describe the behavior of the direction, not only its adjectives. State what the page prioritizes, what it refuses, and how it recomposes on mobile.
-5. Let the user select, combine, reject all, or override a token. Record the choice and the rejected directions in `DESIGN-BRIEF.md`.
+1. Load this library only after seeded explorers have produced rendered candidates and the user has selected or requested a new direction.
+2. Use the library as implementation vocabulary and constraint checking, never as an input to isolated explorers and never as a replacement for external-seed variety.
+3. Translate the selected identity into content mode, first-viewport job, composition grammar, dials, palette, type, layout, media, motion, density, mobile collapse, accessibility risks, anti-patterns, and tradeoffs.
+4. Describe the behavior of the selected direction, not only its adjectives. State what the page prioritizes, what it refuses, and how it recomposes on mobile.
+5. Record the durable choice and rejected directions in `DESIGN-BRIEF.md`; keep raw seeds and exploration receipts in Hermes scratch.
 6. Freeze the execution contract before broad implementation: palette, type roles, spacing rhythm, radius/border rules, image treatment, motion rules, composition grammar, responsive behavior, and the first-viewport job.
 7. Build a vertical slice before applying the direction to every route. Do not ask the user to review a full site when the primary composition has not been proven with real content.
 

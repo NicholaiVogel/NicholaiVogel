@@ -1,6 +1,6 @@
 # Visual QA and Design Loop
 
-Visual QA is rendered evidence, not source-code inspection. Separate two jobs: design QA asks whether the page is good; technical QA asks whether it works. Run design QA first — a technically flawless generic page still fails the brief. Use the running Astro dev server, browser or desktop tools, and `vision_analyze` when a screenshot or visual reading is needed. `bun run build` proves compilation; it does not prove layout, hierarchy, content rendering, or state behavior.
+Visual QA is rendered evidence, not source-code inspection. Separate two jobs: design QA asks whether the page is good; technical QA asks whether it works. Run the independent critic loop in `references/design-critic.md` for design approval; implementer self-review never satisfies that gate. Run design QA first — a technically flawless generic page still fails the brief. Use the running Astro dev server, browser or desktop tools, and `vision_analyze` when a screenshot or visual reading is needed. `bun run build` proves compilation; it does not prove layout, hierarchy, content rendering, or state behavior.
 
 ## Required Loop
 
@@ -108,9 +108,9 @@ After a user corrects a concrete defect, add a targeted check so it cannot silen
 
 Keep invariants proportional: a handful of assertions tied to real corrections, not an audit of everything. Validate that test-harness variables actually represent the behavior being tested before trusting a result.
 
-## Self-Critique Questions
+## Implementer Preflight (not an acceptance gate)
 
-Before asking for user review, answer these internally:
+Use these questions to prepare the review bundle and catch obvious defects, but never treat them as independent design approval. Before asking for user review, answer these internally:
 
 - Does the composition fit the content mode, or did a generic marketing pattern take over?
 - Is the hierarchy obvious without explaining it?

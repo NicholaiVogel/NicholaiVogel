@@ -1,6 +1,6 @@
 # Design Doctrine
 
-The taste layer for standalone websites: concrete composition recipes, heuristics, and anti-patterns with examples. `design-execution.md` records decisions; this file teaches how to make them well. Load it during the art-direction pass and before every design critique.
+The taste layer for standalone websites: concrete composition recipes, heuristics, and anti-patterns with examples. `design-execution.md` records decisions; this file teaches how to make the selected identity well. Load it after taste calibration during identity definition and when preparing a review target. Do not pass it as generic direction to isolated explorers or as hidden context to the independent critic.
 
 ## The Beauty Bar
 

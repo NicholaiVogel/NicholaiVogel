@@ -70,6 +70,10 @@
 - Reduced-motion behavior:
 - Anti-patterns to avoid:
 - Agent-owned assumptions:
+- Design-system approach:
+- CSS owner and cascade boundary:
+- Token source of truth:
+- Theme model:
 
 ## Style Direction
 

@@ -1,6 +1,6 @@
 # Token-Driven Design System
 
-This reference defines a neutral implementation contract for `global.css`. Adapt the values to the execution contract and selected style direction. It is not a visual preset and must not force a pixel, dark, glass, luxury, Scandinavian, or “AI” look.
+This reference defines a neutral implementation contract for `global.css`. Adapt the values to the execution contract and selected style direction. It is not a visual preset and must not force a pixel, dark, glass, luxury, Scandinavian, or “AI” look. For the source-informed token, cascade, fluid-sizing, theme, and accessibility baseline, load `references/lumos-derived-standards.md`; those principles do not require installing Lumos or copying its source.
 
 ## Principles
 
