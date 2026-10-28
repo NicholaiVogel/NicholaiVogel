@@ -1834,7 +1834,7 @@ h2 {
 
 /* --- heading anchors ------------------------------------------------ */
 
-.heading-anchor {
+.article-content .heading-anchor {
   margin-left: 0.4em;
   color: var(--faint);
   font-weight: 400;
