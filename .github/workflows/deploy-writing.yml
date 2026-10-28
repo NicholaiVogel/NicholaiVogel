@@ -26,6 +26,12 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
+      # Vite also loads the repo-root tsconfig.json, which extends
+      # astro/tsconfigs/strict, so the root dependencies must be present too.
+      - name: Install root dependencies
+        working-directory: .
+        run: bun install --frozen-lockfile
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
