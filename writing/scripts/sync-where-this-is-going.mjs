@@ -41,6 +41,8 @@ const WIPES = {
 const attr = (value) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 function convert(note) {
+  // Obsidian comments (%% ... %%) are private notes and never publish.
+  note = note.replace(/%%[\s\S]*?%%/g, '');
   const imports = new Set();
   const used = new Set();
 
@@ -77,7 +79,7 @@ function convert(note) {
   const prose = body
     .replace(/<p class="media-caption">[^\n]*<\/p>/g, '')
     .replace(/<\/?(WipeCompare|MediaGrid|Figure)\b[\s\S]*?>/g, '');
-  const risky = prose.match(/[{}<>]/g);
+  const risky = prose.replace(/^>\s?/gm, '').match(/[{}<>]/g);
   if (risky) throw new Error(`Note prose contains MDX-sensitive characters: ${[...new Set(risky)].join(' ')}`);
 
   body = body.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
