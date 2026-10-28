@@ -1,0 +1,41 @@
+name: Deploy writing site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'writing/**'
+      - '.github/workflows/deploy-writing.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-writing
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    defaults:
+      run:
+        working-directory: writing
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: writing
+          command: pages deploy ./dist --project-name nicholai-writing --branch main --commit-hash ${{ github.sha }}
