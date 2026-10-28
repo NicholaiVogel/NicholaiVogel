@@ -1,9 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Lightbox from '../../components/media/Lightbox.astro';
-import { displayTags, formatDate, readingTime, slugFor, type WritingEntry } from '../../lib/writing';
+import AuthorNote from '../../components/AuthorNote.astro';
+import HeadingAnchors from '../../components/HeadingAnchors.astro';
+import { ARTICLE_IMAGE_SIZES } from '../../lib/images';
+import { displayTags, formatDate, getWritingEntries, readingTime, slugFor, type WritingEntry } from '../../lib/writing';
 
 export async function getStaticPaths() {
   const entries = await getCollection('writing');
@@ -30,6 +33,9 @@ const { entry } = Astro.props as { entry: WritingEntry };
 const { Content } = await render(entry);
 const title = entry.data.title;
 const heroImage = entry.data.image;
+const socialImage = heroImage
+  ? new URL((await getImage({ src: heroImage, width: 1200, format: 'jpg' })).src, Astro.site).href
+  : undefined;
 const displayTagList = displayTags(entry.data.tags);
 const description = entry.data.description ?? `Writing by Nicholai Vogel: ${title}`;
 const seenHeadingIds = new Map<string, number>();
@@ -37,19 +43,34 @@ const headings = [...entry.body.matchAll(/^(#{2,3})\s+(.+)$/gm)].map((match) => 
   const text = match[2].replace(/\s+#+\s*$/, '').trim();
   return { depth: match[1].length, id: headingId(text, seenHeadingIds), text };
 });
+const hasToc = headings.length > 0;
+
+const published = await getWritingEntries();
+const index = published.findIndex((item) => item.id === entry.id);
+const older = index >= 0 ? published[index + 1] : published[0];
+const newer = index > 0 ? published[index - 1] : undefined;
 ---
-<BaseLayout title={`${title} - Nicholai`} description={description}>
-  <article class="article-shell container">
+<BaseLayout
+  title={`${title} - Nicholai`}
+  description={description}
+  image={socialImage}
+  type="article"
+  publishedTime={entry.data.created}
+  modifiedTime={entry.data.modified}
+>
+  <article class:list={['article-shell container article-shell--single', { 'article-shell--toc': hasToc }]}>
     <header class="article-header">
-      <a class="back-link" href="/"><span class="back-link__arrow" aria-hidden="true">&larr;</span> All writing</a>
-      <ul class="article-tags">
-        {displayTagList.map((tag) => <li>{tag}</li>)}
-      </ul>
-      <h1>{title}</h1>
-      <div class="article-meta">
-        <time datetime={entry.data.created?.toISOString()}>{formatDate(entry)}</time>
-        <span aria-hidden="true">/</span>
-        <span>{readingTime(entry.body)}</span>
+      <div class="article-header__text">
+        <a class="back-link" href="/"><span class="back-link__arrow" aria-hidden="true">&larr;</span> All writing</a>
+        <ul class="article-tags">
+          {displayTagList.map((tag) => <li>{tag}</li>)}
+        </ul>
+        <h1>{title}</h1>
+        <div class="article-meta">
+          <time datetime={entry.data.created?.toISOString()}>{formatDate(entry)}</time>
+          <span aria-hidden="true">/</span>
+          <span>{readingTime(entry.body)}</span>
+        </div>
       </div>
       {heroImage && (
         <figure class="article-hero">
@@ -57,7 +78,7 @@ const headings = [...entry.body.matchAll(/^(#{2,3})\s+(.+)$/gm)].map((match) => 
             src={heroImage}
             alt={title}
             widths={[640, 960, 1280, 1920]}
-            sizes="100vw"
+            sizes={ARTICLE_IMAGE_SIZES}
             quality={82}
             loading="eager"
           />
@@ -65,12 +86,9 @@ const headings = [...entry.body.matchAll(/^(#{2,3})\s+(.+)$/gm)].map((match) => 
       )}
     </header>
 
-    <div class="article-layout">
-      <div class="prose article-content">
-        <Content />
-      </div>
-      <aside class="article-aside">
-        {headings.length > 0 && (
+    <div class="article-layout article-layout--single">
+      {hasToc && (
+        <aside class="article-aside">
           <nav class="article-toc" aria-label="On this page">
             <p class="article-toc__label">On this page</p>
             <ol>
@@ -81,10 +99,33 @@ const headings = [...entry.body.matchAll(/^(#{2,3})\s+(.+)$/gm)].map((match) => 
               ))}
             </ol>
           </nav>
+        </aside>
+      )}
+      <div class="prose article-content">
+        <Content />
+      </div>
+      <footer class="article-end">
+        <AuthorNote />
+        {(older || newer) && (
+          <nav class="article-pager" aria-label="More writing">
+            {older && (
+              <a class="article-pager__link" href={`/writing/${slugFor(older)}/`}>
+                <span class="article-pager__label">{index >= 0 ? 'Previous' : 'Latest'}</span>
+                <span class="article-pager__title">{older.data.title}</span>
+              </a>
+            )}
+            {newer && (
+              <a class="article-pager__link article-pager__link--next" href={`/writing/${slugFor(newer)}/`}>
+                <span class="article-pager__label">Next</span>
+                <span class="article-pager__title">{newer.data.title}</span>
+              </a>
+            )}
+          </nav>
         )}
-        <a class="article-top-link" href="#main-content">Back to top ↑</a>
-      </aside>
+        <a class="article-top-link article-top-link--end" href="#main-content">Back to top ↑</a>
+      </footer>
     </div>
   </article>
   <Lightbox />
+  <HeadingAnchors />
 </BaseLayout>

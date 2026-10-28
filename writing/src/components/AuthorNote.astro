@@ -1,0 +1,9 @@
+---
+import { SOCIAL_LINKS } from '../consts';
+
+const instagram = SOCIAL_LINKS.find((link) => link.label === 'Instagram')!;
+const x = SOCIAL_LINKS.find((link) => link.label === 'X')!;
+---
+<aside class="author-note" aria-label="About the author">
+  <p><strong>Nicholai Vogel</strong> is a VFX supervisor and artist who runs <a href="https://biohazardvfx.com" target="_blank" rel="noreferrer">Biohazard VFX</a>. More of his work is on <a href={instagram.href} target="_blank" rel="noreferrer">Instagram</a> and <a href={x.href} target="_blank" rel="noreferrer">X</a>.</p>
+</aside>

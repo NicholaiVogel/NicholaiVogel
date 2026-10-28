@@ -9,9 +9,20 @@ interface Props {
   title?: string;
   description?: string;
   eyebrow?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
 }
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image = new URL('/og-default.png', Astro.site ?? 'https://blog.nicholai.work').href,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 <!doctype html>
@@ -21,24 +32,46 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f4f5f2" />
+    <meta name="theme-color" content="#f4f5f2" media="(prefers-color-scheme: light)" data-light="#f4f5f2" data-dark="#181c19" />
+    <meta name="theme-color" content="#181c19" media="(prefers-color-scheme: dark)" data-light="#f4f5f2" data-dark="#181c19" />
     <link rel="canonical" href={new URL(currentPath, Astro.site ?? 'https://blog.nicholai.work')} />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE_TITLE} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={new URL(currentPath, Astro.site ?? 'https://blog.nicholai.work')} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Nicholai_exe" />
+    <meta name="twitter:creator" content="@Nicholai_exe" />
+    <meta name="twitter:image" content={image} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+    {type === 'article' && <meta property="article:author" content="Nicholai Vogel" />}
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
     <title>{title}</title>
     <ClientRouter />
     <script is:inline>
       (() => {
         const storageKey = 'nicholai-color-mode';
         const storedMode = () => localStorage.getItem(storageKey) || 'system';
-        const applyMode = (documentElement) => {
-          documentElement.dataset.colorMode = storedMode();
+        const syncThemeColor = (doc, mode) => {
+          doc.querySelectorAll('meta[name="theme-color"][data-light]').forEach((meta) => {
+            const forced = mode === 'light' || mode === 'dark' ? meta.dataset[mode] : null;
+            meta.content = forced ?? (meta.media.includes('dark') ? meta.dataset.dark : meta.dataset.light);
+          });
         };
+        const applyMode = (documentElement) => {
+          const mode = storedMode();
+          documentElement.dataset.colorMode = mode;
+          syncThemeColor(documentElement.ownerDocument, mode);
+        };
+        new MutationObserver(() => {
+          syncThemeColor(document, document.documentElement.dataset.colorMode || 'system');
+        }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-color-mode'] });
 
         applyMode(document.documentElement);
         document.addEventListener('astro:before-swap', (event) => {

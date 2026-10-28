@@ -1,0 +1,31 @@
+<script>
+  // Adds a link mark to article headings that have ids; clicking it updates
+  // the address bar and copies the section URL.
+  function addAnchors() {
+    document.querySelectorAll<HTMLElement>('.article-content :is(h2, h3)[id]').forEach((heading) => {
+      if (heading.querySelector('.heading-anchor')) return;
+      const link = document.createElement('a');
+      link.className = 'heading-anchor';
+      link.href = `#${heading.id}`;
+      link.setAttribute('aria-label', `Copy link to section: ${heading.textContent?.trim() ?? ''}`);
+      link.textContent = '#';
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const url = `${location.origin}${location.pathname}#${heading.id}`;
+        history.replaceState(null, '', `#${heading.id}`);
+        heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        navigator.clipboard?.writeText(url).then(
+          () => {
+            link.dataset.copied = 'true';
+            window.setTimeout(() => delete link.dataset.copied, 1600);
+          },
+          () => {},
+        );
+      });
+      heading.append(link);
+    });
+  }
+
+  addAnchors();
+  document.addEventListener('astro:page-load', addAnchors);
+</script>

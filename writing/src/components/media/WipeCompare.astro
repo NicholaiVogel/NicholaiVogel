@@ -1,0 +1,247 @@
+---
+import { ARTICLE_IMAGE_SIZES, responsiveImage, type ImageInput } from '../../lib/images';
+
+interface Props {
+  before: ImageInput;
+  after: ImageInput;
+  alt: string;
+  width?: number;
+  height?: number;
+  beforeLabel?: string;
+  afterLabel?: string;
+  caption?: string;
+  start?: number;
+  sizes?: string;
+}
+
+const {
+  before,
+  after,
+  alt,
+  beforeLabel = 'WIP',
+  afterLabel = 'Final',
+  caption,
+  start = 50,
+  sizes = ARTICLE_IMAGE_SIZES,
+} = Astro.props;
+const beforeImage = await responsiveImage(before);
+const afterImage = await responsiveImage(after);
+const width = Astro.props.width ?? afterImage.width ?? beforeImage.width ?? 16;
+const height = Astro.props.height ?? afterImage.height ?? beforeImage.height ?? 9;
+---
+<figure class="wipe-compare media-figure" style={`--wipe: ${start}%;`} data-start={start}>
+  <div class="wipe-compare__frame" style={`aspect-ratio: ${width} / ${height};`}>
+    <img
+      class="wipe-compare__img"
+      src={beforeImage.src}
+      srcset={beforeImage.srcset}
+      sizes={beforeImage.srcset ? sizes : undefined}
+      alt={`${alt} (${beforeLabel})`}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    />
+    <img
+      class="wipe-compare__img wipe-compare__img--after"
+      src={afterImage.src}
+      srcset={afterImage.srcset}
+      sizes={afterImage.srcset ? sizes : undefined}
+      alt={`${alt} (${afterLabel})`}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    />
+    <span class="wipe-compare__label wipe-compare__label--before" aria-hidden="true">{beforeLabel}</span>
+    <span class="wipe-compare__label wipe-compare__label--after" aria-hidden="true">{afterLabel}</span>
+    <span class="wipe-compare__handle" aria-hidden="true"></span>
+    <input
+      class="wipe-compare__range"
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      value={start}
+      aria-label={`Wipe between ${beforeLabel.toLowerCase()} and ${afterLabel.toLowerCase()}: ${alt}`}
+    />
+  </div>
+  {caption && <figcaption class="media-caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function bind(figure: HTMLElement) {
+    const frame = figure.querySelector<HTMLElement>('.wipe-compare__frame');
+    const range = figure.querySelector<HTMLInputElement>('.wipe-compare__range');
+    if (!frame || !range || figure.dataset.bound) return;
+    figure.dataset.bound = 'true';
+
+    let touched = false;
+    let hintFrame = 0;
+
+    const set = (value: number) => {
+      const clamped = Math.min(100, Math.max(0, value));
+      figure.style.setProperty('--wipe', `${clamped}%`);
+      range.value = String(Math.round(clamped));
+    };
+
+    const takeOver = () => {
+      touched = true;
+      if (hintFrame) cancelAnimationFrame(hintFrame);
+    };
+
+    const fromPointer = (event: PointerEvent) => {
+      const rect = frame.getBoundingClientRect();
+      set(((event.clientX - rect.left) / rect.width) * 100);
+    };
+
+    range.addEventListener('input', () => {
+      takeOver();
+      set(Number(range.value));
+    });
+
+    frame.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      takeOver();
+      frame.setPointerCapture(event.pointerId);
+      frame.classList.add('is-dragging');
+      fromPointer(event);
+    });
+    frame.addEventListener('pointermove', (event) => {
+      if (frame.hasPointerCapture(event.pointerId)) fromPointer(event);
+    });
+    const end = (event: PointerEvent) => {
+      if (frame.hasPointerCapture(event.pointerId)) frame.releasePointerCapture(event.pointerId);
+      frame.classList.remove('is-dragging');
+    };
+    frame.addEventListener('pointerup', end);
+    frame.addEventListener('pointercancel', end);
+
+    /* One gentle nudge of the divider the first time the frame is mostly in
+       view, so readers can tell it moves. Skipped for reduced motion. */
+    if (reduceMotion.matches || !('IntersectionObserver' in window)) return;
+    const start = Number(figure.dataset.start ?? 50);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        if (touched) return;
+        const duration = 1400;
+        const t0 = performance.now();
+        const step = (now: number) => {
+          if (touched) return;
+          const t = Math.min(1, (now - t0) / duration);
+          set(start + Math.sin(t * Math.PI * 2) * 10 * (1 - t));
+          if (t < 1) hintFrame = requestAnimationFrame(step);
+          else set(start);
+        };
+        hintFrame = requestAnimationFrame(step);
+      },
+      { threshold: 0.75 },
+    );
+    observer.observe(frame);
+  }
+
+  const init = () => document.querySelectorAll<HTMLElement>('.wipe-compare').forEach(bind);
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .wipe-compare__frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 0.35rem;
+    cursor: ew-resize;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .wipe-compare__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .wipe-compare__img--after {
+    clip-path: inset(0 0 0 var(--wipe));
+  }
+
+  .wipe-compare__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--wipe);
+    width: 2px;
+    transform: translateX(-1px);
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25);
+    pointer-events: none;
+  }
+
+  .wipe-compare__handle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.9rem;
+    height: 2.4rem;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+  }
+
+  .wipe-compare__label {
+    position: absolute;
+    bottom: 0.5rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.25rem;
+    background: rgb(10 12 16 / 0.72);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+
+  .wipe-compare__label--before {
+    left: 0.5rem;
+  }
+
+  .wipe-compare__label--after {
+    right: 0.5rem;
+  }
+
+  .wipe-compare__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .wipe-compare__frame:has(.wipe-compare__range:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>

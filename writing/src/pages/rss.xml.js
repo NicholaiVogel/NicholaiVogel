@@ -1,5 +1,5 @@
 import rss from '@astrojs/rss';
-import { getWritingEntries, slugFor } from '../lib/writing';
+import { excerpt, getWritingEntries, slugFor } from '../lib/writing';
 import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
 
 export async function GET(context) {
@@ -10,7 +10,7 @@ export async function GET(context) {
     site: context.site ?? SITE_URL,
     items: entries.map((entry) => ({
       title: entry.data.title,
-      description: entry.data.description ?? entry.body.slice(0, 220),
+      description: entry.data.description ?? excerpt(entry.body, 220),
       pubDate: entry.data.created,
       link: `/writing/${slugFor(entry)}/`,
     })),

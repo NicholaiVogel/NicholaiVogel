@@ -1,13 +1,16 @@
 @import "tailwindcss";
+@import "@fontsource-variable/schibsted-grotesk/wght.css";
+@import "@fontsource-variable/schibsted-grotesk/wght-italic.css";
 
 :root {
   color-scheme: light;
-  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-reading: var(--font-body);
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --paper: #f4f5f2;
   --paper-raised: #fafbf8;
   --ink: #202621;
+  --text: #2e352f;
   --muted: #687168;
   --muted-strong: #4f5a50;
   --faint: #8b938b;
@@ -28,6 +31,7 @@
     --paper: #181c19;
     --paper-raised: #202520;
     --ink: #edf0e9;
+    --text: #dbe0d8;
     --muted: #aeb7ad;
     --muted-strong: #c6cec5;
     --faint: #7d887e;
@@ -47,6 +51,7 @@
   --paper: #181c19;
   --paper-raised: #202520;
   --ink: #edf0e9;
+  --text: #dbe0d8;
   --muted: #aeb7ad;
   --faint: #7d887e;
   --line: #3a443b;
@@ -79,6 +84,8 @@ body {
   font-size: 1rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -269,7 +276,7 @@ h1 {
 h2 {
   font-size: clamp(1.35rem, 2.5vw, 2rem);
   line-height: 1.12;
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 .home-shell,
@@ -323,8 +330,8 @@ h2 {
   align-items: baseline;
   gap: 1rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
   text-transform: lowercase;
 }
 
@@ -387,8 +394,9 @@ h2 {
   gap: 0.2rem;
   padding-top: 0.25rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
   line-height: 1.45;
   text-transform: uppercase;
   transition: color 260ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -428,8 +436,8 @@ h2 {
   margin: 0;
   padding: 0;
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.61rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
   list-style: none;
   text-transform: lowercase;
   transition: color 260ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -608,7 +616,7 @@ h2 {
 .filter-status {
   margin: 0 0 0 auto;
   color: var(--faint);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   white-space: nowrap;
 }
@@ -632,10 +640,10 @@ h2 {
 
 .prose {
   max-width: var(--reading-measure);
-  color: var(--muted);
+  color: var(--text);
   font-family: var(--font-reading);
-  font-size: 1.08rem;
-  line-height: 1.82;
+  font-size: 1.2rem;
+  line-height: 1.65;
 }
 
 .prose > :first-child {
@@ -733,16 +741,18 @@ h2 {
 
 .prose h2,
 .prose h3 {
-  margin: 5rem 0 1rem;
+  margin: 3.75rem 0 1rem;
   color: var(--ink);
 }
 
 .prose h2 {
   font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
 }
 
 .prose h3 {
-  margin-top: 4.25rem;
+  margin-top: 3.25rem;
   font-family: var(--font-body);
   font-size: 1.1rem;
   font-weight: 650;
@@ -750,13 +760,17 @@ h2 {
 }
 
 .prose a {
-  color: var(--accent);
+  color: inherit;
   text-decoration: underline;
-  text-decoration-color: var(--line);
-  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-skip-ink: auto;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
 }
 
 .prose a:hover {
+  color: var(--accent);
   text-decoration-color: var(--accent);
 }
 
@@ -851,9 +865,9 @@ h2 {
 
 .film-credits__role {
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -942,9 +956,9 @@ h2 {
 
 .article-tags li {
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.03em;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
   text-transform: lowercase;
 }
 
@@ -972,9 +986,9 @@ h2 {
   gap: 0.5rem;
   margin-top: 1.6rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0;
   text-transform: lowercase;
 }
 
@@ -1021,8 +1035,9 @@ h2 {
 .article-toc__label {
   margin-bottom: 0.7rem;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
   line-height: 1.82;
   text-transform: uppercase;
 }
@@ -1381,14 +1396,17 @@ h2 {
 .media-grid + .media-grid {
   margin-top: 0.75rem;
 }
+/* inside a grid the gap handles spacing; the stacked-figure margin would offset siblings */
+.media-grid > .media-figure + .media-figure {
+  margin-top: 0;
+}
 
 .media-caption {
   margin-top: 0.4rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
 
 .media-grid {
@@ -1409,6 +1427,10 @@ h2 {
   background: rgb(10 12 16 / 0.72);
   border-radius: 0.25rem;
   backdrop-filter: blur(4px);
+  color: #e6e9e4;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
 }
 
 .media-grid .media-figure {
@@ -1571,10 +1593,9 @@ h2 {
 .lightbox__caption {
   margin-top: 0.7rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
 
 /* close button inside the modal, pinned to the stage's top-right corner */
@@ -1613,4 +1634,236 @@ h2 {
 .article-content .media-figure img,
 .article-hero img {
   cursor: zoom-in;
+}
+
+/* --- single-column articles (no table of contents) ------------------ */
+
+/* Articles use one centered reading column shared by text and media; the
+   table of contents never shares it. */
+.article-shell--single {
+  --reading-measure: 45rem;
+  --wide-measure: 58rem;
+}
+
+.article-shell--single .article-header {
+  width: min(100%, var(--wide-measure));
+}
+
+.article-shell--single .article-header__text {
+  max-width: var(--reading-measure);
+  margin-inline: auto;
+}
+
+.article-shell--single .article-layout--single {
+  display: block;
+}
+
+.article-shell--single .article-content.prose {
+  width: 100%;
+  max-width: var(--reading-measure);
+  margin-inline: auto;
+}
+
+.article-shell--single .article-content > :is(.media-figure, .media-grid, .media-caption) {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.article-shell--single .article-hero {
+  max-width: var(--reading-measure);
+  margin-inline: auto;
+}
+
+.article-top-link--end {
+  display: block;
+  max-width: var(--reading-measure);
+  margin: 3rem auto 0;
+  font-size: 0.78rem;
+}
+
+/* Table of contents: a compact list above the text by default; on wide
+   screens it moves into the left gutter. */
+.article-shell--toc {
+  --toc-width: 10rem;
+  --toc-gap: 2rem;
+}
+
+.article-shell--single .article-aside {
+  position: static;
+  max-width: var(--reading-measure);
+  margin: 0 auto 2.75rem;
+  padding: 0;
+}
+
+.article-shell--single .article-toc {
+  margin: 0;
+}
+
+.article-shell--single .article-toc ol {
+  gap: 0.35rem;
+}
+
+@media (min-width: 74rem) {
+  .article-shell--toc.container {
+    width: min(calc(100% - 3rem), calc(var(--reading-measure) + 2 * (var(--toc-width) + var(--toc-gap))));
+  }
+
+  .article-shell--toc .article-layout--single {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--reading-measure)) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .article-shell--toc .article-content.prose {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .article-shell--toc .article-end {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .article-shell--toc .article-aside {
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    top: 2rem;
+    justify-self: start;
+    width: var(--toc-width);
+    max-width: none;
+    margin: 0;
+    padding-top: 0.3rem;
+  }
+}
+
+.article-content :is(h2, h3) {
+  scroll-margin-top: 2rem;
+}
+
+/* --- article end: author note and pager ----------------------------- */
+
+.article-end {
+  max-width: var(--reading-measure);
+  margin: 4rem auto 0;
+}
+
+.author-note {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.author-note p {
+  margin: 0;
+}
+
+.author-note strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.author-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.author-note a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.article-pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.article-pager__link {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+}
+
+.article-pager__link--next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.article-pager__label {
+  color: var(--faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.article-pager__title {
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  text-wrap: balance;
+  transition: color 160ms ease;
+}
+
+.article-pager__link:hover .article-pager__title {
+  color: var(--accent);
+}
+
+.article-end .article-top-link--end {
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .article-pager {
+    grid-template-columns: 1fr;
+  }
+
+  .article-pager__link--next {
+    grid-column: 1;
+    text-align: left;
+  }
+}
+
+/* --- heading anchors ------------------------------------------------ */
+
+.heading-anchor {
+  margin-left: 0.4em;
+  color: var(--faint);
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.article-content :is(h2, h3):hover .heading-anchor,
+.heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.heading-anchor:hover {
+  color: var(--accent);
+}
+
+.heading-anchor[data-copied]::after {
+  content: 'Link copied';
+  margin-left: 0.6em;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+@media (hover: none) {
+  .heading-anchor {
+    opacity: 0.45;
+  }
 }

@@ -18,10 +18,12 @@ export function formatDate(entry: WritingEntry) {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   }).format(date);
 }
 
 export function slugFor(entry: WritingEntry) {
+  if (entry.data.slug) return entry.data.slug;
   return entry.data.title
     .toLowerCase()
     .replace(/&/g, ' and ')
