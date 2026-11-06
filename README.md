@@ -1,7 +1,5 @@
 # hey, i'm nicholai
 
-![Chapa Badge of NicholaiVogel](https://chapa.thecreativetoken.com/u/NicholaiVogel/badge.svg)
-
 VFX artist, supervisor, vibeslopper
 
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
@@ -14,6 +12,8 @@ VFX artist, supervisor, vibeslopper
 
 - **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories, system prompts, session transcripts, institutional knowledge, and secrets between all of your favorite harnesses and models.
 - **[Sushi](https://github.com/NicholaiVogel/sushi)** - Browser-based reimplementation of Strudel for importing, writing, and arranging music with Tidal Cycles syntax.
+- **[The Hill](https://github.com/NicholaiVogel/thehill)** - A typing trainer in the spirit of monkeytype, with one difficulty: a small neural network that learns which keystrokes slow you down and feeds you text built from them. 
+- **[plate](https://github.com/NicholaiVogel/plate)** - Color-managed media player for VFX review on Linux.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
 - **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
