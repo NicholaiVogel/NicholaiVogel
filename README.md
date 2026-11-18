@@ -14,6 +14,7 @@ VFX artist, supervisor, vibeslopper
 - **[Sushi](https://github.com/NicholaiVogel/sushi)** - Browser-based reimplementation of Strudel for importing, writing, and arranging music with Tidal Cycles syntax.
 - **[The Hill](https://github.com/NicholaiVogel/thehill)** - A typing trainer in the spirit of monkeytype, with one difficulty: a small neural network that learns which keystrokes slow you down and feeds you text built from them. 
 - **[plate](https://github.com/NicholaiVogel/plate)** - Color-managed media player for VFX review on Linux.
+- **[Terminal-Quill](https://github.com/NicholaiVogel/terminal-quill)** - A craftable terminal for Minecraft (Fabric 26.3). Right-click it like a book and quill to open a real terminal running herdr, with agent notifications in-game.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
 - **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
