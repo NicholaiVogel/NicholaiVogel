@@ -4,7 +4,6 @@
 - Lead Developer of [Signet](https://signetai.sh/).
 - Sometimes I help with [Odysseus](https://odysseus-dev.github.io/odysseus/).
 
-![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Rust](https://img.shields.io/badge/-Rust-000000?style=flat-square&logo=rust&logoColor=white)
@@ -14,16 +13,15 @@
 ## current work
 
 - **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories.
+- **[Strata](https://github.com/Biohazard-VFX/strata)** - Deep data from images and video (Materia)
+- **[comfyui-materia](https://github.com/NicholaiVogel/comfyui-materia)** - diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.
+- **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[Sushi](https://github.com/NicholaiVogel/sushi)** - Browser-based reimplementation of Strudel for importing, writing, and arranging music with Tidal Cycles syntax.
 - **[The Hill](https://github.com/NicholaiVogel/thehill)** - A typing trainer in the spirit of monkeytype, with one difficulty: a small neural network that learns which keystrokes slow you down and feeds you text built from them. 
 - **[plate](https://github.com/NicholaiVogel/plate)** - Color-managed media player for VFX review on Linux.
 - **[Terminal-Quill](https://github.com/NicholaiVogel/terminal-quill)** - A craftable terminal for Minecraft (Fabric 26.3). Right-click it like a book and quill to open a real terminal running herdr, with agent notifications in-game.
 - **[NXC](https://github.com/NicholaiVogel/Nextcloud-CLI)** - Unofficial client-side Nextcloud CLI for humans, shell scripts, and AI agents.
-- **[Odysseus](https://github.com/pewdiepie-archdaemon/odysseus)** - Contributing to Pewdiepie's self-hosted AI workspace. 
 - **[pr-reviewer](https://github.com/NicholaiVogel/pr-reviewer)** - self-hosted PR review daemon in Rust. watches repos, spawns a local AI coding CLI, posts review comments automatically.
-- **[comfyui-materia](https://github.com/NicholaiVogel/comfyui-materia)** - diffusion-based inverse rendering for ComfyUI. RGB to PBR material maps via NVIDIA Cosmos 7B.
-- **[Pi Extensions](https://github.com/NicholaiVogel/pi)** - my vibeslopped Pi agent setup
-- **[nicholai.work](https://nicholai.work)** - personal site
 
 ### dotfiles
 
@@ -34,3 +32,7 @@
 [![Website](https://img.shields.io/badge/-nicholai.work-000000?style=flat-square&logo=safari&logoColor=white)](https://nicholai.work)
 [![X](https://img.shields.io/badge/-@Nicholai__exe-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/Nicholai_exe)
 [![Instagram](https://img.shields.io/badge/-nicholai.exe-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/nicholai.exe)
+
+--- 
+
+![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
