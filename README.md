@@ -1,7 +1,10 @@
 # hey, i'm nicholai
 
-VFX artist, supervisor, vibeslopper
+- VFX Artist & Supervisor at [BiohazardVFX](https://biohazardvfx.com/).
+- Lead Developer of [Signet](https://signetai.sh/).
+- Sometimes I help with [Odysseus](https://odysseus-dev.github.io/odysseus/).
 
+![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Rust](https://img.shields.io/badge/-Rust-000000?style=flat-square&logo=rust&logoColor=white)
@@ -10,7 +13,7 @@ VFX artist, supervisor, vibeslopper
 
 ## current work
 
-- **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories, system prompts, session transcripts, institutional knowledge, and secrets between all of your favorite harnesses and models.
+- **[signetai](https://github.com/Signet-AI/signetai)** - Sync and store memories.
 - **[Sushi](https://github.com/NicholaiVogel/sushi)** - Browser-based reimplementation of Strudel for importing, writing, and arranging music with Tidal Cycles syntax.
 - **[The Hill](https://github.com/NicholaiVogel/thehill)** - A typing trainer in the spirit of monkeytype, with one difficulty: a small neural network that learns which keystrokes slow you down and feeds you text built from them. 
 - **[plate](https://github.com/NicholaiVogel/plate)** - Color-managed media player for VFX review on Linux.
@@ -31,12 +34,3 @@ VFX artist, supervisor, vibeslopper
 [![Website](https://img.shields.io/badge/-nicholai.work-000000?style=flat-square&logo=safari&logoColor=white)](https://nicholai.work)
 [![X](https://img.shields.io/badge/-@Nicholai__exe-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/Nicholai_exe)
 [![Instagram](https://img.shields.io/badge/-nicholai.exe-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/nicholai.exe)
-
----
-
-<details>
-<summary>the details</summary>
-
-![](https://komarev.com/ghpvc/?username=NicholaiVogel&color=dc143c&style=for-the-badge)
-
-</details>
